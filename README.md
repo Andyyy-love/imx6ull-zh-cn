@@ -30,6 +30,17 @@ docker run -it --rm \
     -w /workspace \
     imx-forge:latest
 ```
+```c
+#开始编译
+
+# 一键构建所有组件
+./scripts/release-all.sh
+
+# 或分步构建
+./scripts/build_helper/build-uboot.sh
+./scripts/build_helper/build-linux.sh
+./scripts/build_helper/build-busybox.sh
+```
 
 ## ✨ 为什么选择 IMX-Forge？
 
