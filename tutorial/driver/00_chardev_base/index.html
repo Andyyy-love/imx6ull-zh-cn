@@ -1,0 +1,5012 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="IMX-Forge，专注于IMX6ULL的教程文档网站">
+      
+      
+        <meta name="author" content="Charliechen114514">
+      
+      
+        <link rel="canonical" href="https://awesome-embedded-learning-studio.github.io/imx-forge/tutorial/driver/00_chardev_base/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="01_introduction/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../Awesome-Embedded.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>字符设备驱动教程 - IMX-Forge的教程文档</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#字符设备驱动教程" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../.." title="IMX-Forge的教程文档" class="md-header__button md-logo" aria-label="IMX-Forge的教程文档" data-md-component="logo">
+      
+  <img src="../../../Awesome-Embedded.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            IMX-Forge的教程文档
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              字符设备驱动教程
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换至暗色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换至暗色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="切换至亮色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换至亮色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  欢迎来到 IMX-Forge 教程文档
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../QUICK_START/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  IMX-Forge 快速入门指南
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../architecture/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Architecture
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ci/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Ci
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../development/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../logo/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Logo
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../modules/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Modules
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../scripts/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Scripts
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../todo/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Todo
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tutorial
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="IMX-Forge的教程文档" class="md-nav__button md-logo" aria-label="IMX-Forge的教程文档" data-md-component="logo">
+      
+  <img src="../../../Awesome-Embedded.png" alt="logo">
+
+    </a>
+    IMX-Forge的教程文档
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    欢迎来到 IMX-Forge 教程文档
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../QUICK_START/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IMX-Forge 快速入门指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../architecture/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../ci/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ci
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../development/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../logo/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logo
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../modules/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../scripts/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scripts
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../todo/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Todo
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorial
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../docker/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_2" id="__nav_10_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Docker
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../docker/01_docker_basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker 基础知识
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../docker/02_imx_forge_docker_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IMX-Forge Docker 开发指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Driver
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_3" id="__nav_10_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_10_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Driver
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_3_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="./" class="md-nav__link md-nav__link--active">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    00 chardev base
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link md-nav__link--active" for="__nav_10_3_2" id="__nav_10_3_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_10_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_10_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    00 chardev base
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="01_introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    字符设备驱动简介 - 从零开始理解内核驱动
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="02_kernel_space_basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    内核空间基础与硬件访问 - 跨越那道墙
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03_kernel_module_mechanism/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    内核模块机制 - Linux 的插件系统
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="04_kernel_print_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    内核打印详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="05_kernel_debug_techniques/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    内核调试技术
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="06_legacy_chardev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    老API字符设备驱动 - 从零开始踩坑实录
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="06p_ide_setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IDE 配置指南 - VSCode + clangd 驱动开发环境搭建
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="07_hardware_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从虚拟设备到真实硬件 —— LED驱动硬件基础
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="08_memory_mapped_io/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    内存映射 I/O - 别拿物理地址当指针用
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="09_hardware_abstraction_layer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    硬件抽象层 - 代码分层救我狗命
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="10_chardev_implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    字符设备驱动实现 - 让用户空间能玩硬件
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="11_build_test_deploy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    构建和部署实战指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="12_new_chardev_api_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    新字符设备驱动 API 概览
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="13_cdev_and_device_number/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    cdev 结构体与设备号管理
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="14_class_device_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    class 和 device 模型 - 自动创建设备节点的幕后机制
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="15_error_handling_patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    驱动错误处理模式 - 当资源分配失败时该怎么办
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="16_device_structure_in_new_api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    新 API 中的设备结构体 - 从全局变量到面向对象
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="17_new_api_driver_analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    新 API 驱动代码深度解析 - 我们是怎么把代码重构成人能读的样子
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="18_app_development_and_testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    应用开发与真实测试 - 我们是怎么验证驱动真的能用的
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../01_device_tree_base/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 device tree base
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../02_pinctrl_gpio/01_introduction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 pinctrl gpio
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../device_tree/01-Introduction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Device tree
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../firmware_apply/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Firmware apply
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../modules/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../kernel/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kernel
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_4" id="__nav_10_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Kernel
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernel/01_kernel_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从0开始认识Linux内核：那个让无数嵌入式工程师又爱又恨的庞然大物
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernel/02_kernel_compile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从0开始编译Linux内核：当你发现make时少了一个包，第17次
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernel/03_kernel_config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从0开始配置Linux内核：menuconfig不是黑魔法，只是有点绕
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernel/04_kernel_modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    内核模块详解：从 Hello World 到设备驱动
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernel/05_kernel_device_tree/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    设备树在内核中的使用：从硬件描述到驱动匹配
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernel/06_wsl_network_boot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WSL2 + TFTP + 网络启动：那些年我们一起踩过的防火墙坑
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernel/07_driver_basic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linux驱动开发入门：从Hello World到第一个字符驱动
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernel/08_kernel_boot_debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linux内核启动与调试：从bootargs到init进程的那几百万行代码
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../kernel/mainline/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mainline
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../practical/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Practical
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_5" id="__nav_10_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Practical
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../practical/01_practical_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    实战项目概述：我们要一起构建一个可用的 i.MX6ULL 系统
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../practical/02_build_system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从零构建完整系统：U-Boot、Linux 内核与 BusyBox Rootfs 的整合艺术
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../practical/03_boot_and_debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    系统启动与调试：见证系统启动的那一刻，并学会如何挽救它
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../practical/04-nfs-experience/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NFS rootfs 多版本切换：用 bind mount 解决嵌入式开发痛点
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../rootfs/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rootfs
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_6" id="__nav_10_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Rootfs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rootfs/01_rootfs_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rootfs 概述：Linux 系统的"最后一公里"，以及为什么内核启动后还需要它
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rootfs/02_busybox_compile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BusyBox 编译安装：一把瑞士军刀的自制指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rootfs/03_inittab_init/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    inittab 与 init 系统：Linux 启动的"第一号进程"全解析
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rootfs/04_rootfs_structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rootfs 目录结构创建：Linux 文件系统的"骨架"
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rootfs/05_nfs_wsl_troubleshoot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WSL + NFS 网络启动踩坑记：从挂载失败到成功启动的完整历程
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rootfs/06_apps_integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    应用集成：从最小化 Rootfs 到可用系统
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../start/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Start
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_7" id="__nav_10_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Start
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../start/01_start_from_toolchain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从 0 开始构建嵌入式 Linux 开发环境（Part 1）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../start/02_env_init_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    环境初始化指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../third_party/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Third party
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Third party
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../uboot/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uboot
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_9" id="__nav_10_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Uboot
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/01_what_is_uboot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从0开始理解 U-Boot：嵌入式系统的"第一道门"，以及我们为什么终于告别了硬编码时代
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/02_uboot_compile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从0开始编译 U-Boot：那些教程没告诉你的交叉编译原理和踩坑记录
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/03_uboot_porting_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    U-Boot完全移植概览：从官方源码到你的自制板，这条路有多远
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/04_board_config_basic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    板级配置基础：Kconfig系统的那些坑和我们的第一次移植
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/05_device_tree_basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    设备树基础：从硬编码噩梦到硬件描述分离
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/06_lcd_porting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第06章 LCD驱动移植
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/07_network_porting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第07章 网络驱动移植：从ping不通到tftp成功，那些让你抓狂的PHY时序问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/08_logo_splash/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第08章 Logo和启动画面
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/09_debugging_commands/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2026正点原子开发板移植（UBoot篇完结）：U-Boot调试命令：命令行是嵌入式开发的神器
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/bonus_qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    附录：常见问题解答（Q&amp;A）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#版本说明" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        版本说明
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#学习路径" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        学习路径
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="学习路径">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#-推荐学习路径完整版" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 推荐学习路径（完整版）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 推荐学习路径（完整版）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#阶段一基础理论1-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段一：基础理论（1-5）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#阶段二api-演进与实战6-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段二：API 演进与实战（6-10）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#阶段三新-api-专题12-18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段三：新 API 专题（12-18）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#阶段四参考文档" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段四：参考文档
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-快速路径有经验开发者" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 快速路径（有经验开发者）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-老用户迁移" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📖 老用户迁移
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#文件导航" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        文件导航
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="文件导航">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#基础教程前置知识" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        基础教程（前置知识）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="基础教程（前置知识）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01_introductionmd---字符设备驱动简介" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        01_introduction.md - 字符设备驱动简介
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#02_kernel_space_basicsmd---内核空间基础与硬件访问-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        02_kernel_space_basics.md - 内核空间基础与硬件访问 ⭐
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#03_kernel_module_mechanismmd---内核模块机制" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        03_kernel_module_mechanism.md - 内核模块机制
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#04_kernel_print_guidemd---内核打印详解" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        04_kernel_print_guide.md - 内核打印详解
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#05_kernel_debug_techniquesmd---内核调试技术" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        05_kernel_debug_techniques.md - 内核调试技术
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#字符设备驱动教程_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        字符设备驱动教程
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="字符设备驱动教程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-演进与实现" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API 演进与实现
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#实验文档" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实验文档
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#参考文档" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        参考文档
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#环境要求" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        环境要求
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="环境要求">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#硬件平台" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        硬件平台
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#软件环境" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        软件环境
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#内核源码路径" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        内核源码路径
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#快速开始" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        快速开始
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="快速开始">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-选择学习路径" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 选择学习路径
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-编译驱动" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 编译驱动
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-加载和测试" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 加载和测试
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#内核选择建议" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        内核选择建议
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="内核选择建议">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#开发阶段" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        开发阶段
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#学习最新特性" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        学习最新特性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#生产环境" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        生产环境
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#常见问题" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        常见问题
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="常见问题">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q-新老内核的-api-兼容吗" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: 新老内核的 API 兼容吗？
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-如何选择动态分配还是静态分配设备号" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: 如何选择动态分配还是静态分配设备号？
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-必须使用-class_create-和-device_create-吗" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: 必须使用 class_create 和 device_create 吗？
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-为什么要学习-02-05-基础教程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: 为什么要学习 02-05 基础教程？
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-06_development_stepsmd-去哪了" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: 06_development_steps.md 去哪了？
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#重构说明" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        重构说明
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#贡献和反馈" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        贡献和反馈
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#许可证" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        许可证
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="导航栏" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    欢迎来到 IMX-Forge 教程文档
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Tutorial
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Driver
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="./" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    00 chardev base
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="字符设备驱动教程">字符设备驱动教程<a class="headerlink" href="#字符设备驱动教程" title="链接到此章节">&para;</a></h1>
+<h2 id="版本说明">版本说明<a class="headerlink" href="#版本说明" title="链接到此章节">&para;</a></h2>
+<p>本教程提供多个内核版本的实现：</p>
+<ul>
+<li><strong>老内核版本</strong>（Linux 4.1.15）：仅供参考，标记为"历史版本"</li>
+<li><strong>新内核版本</strong>（Linux 6.12.49 / 7.0.0-rc4）：推荐学习，包含最新特性</li>
+</ul>
+<h2 id="学习路径">学习路径<a class="headerlink" href="#学习路径" title="链接到此章节">&para;</a></h2>
+<p>本教程采用渐进式学习路径，从基础概念到实际开发，系统性地掌握字符设备驱动开发技能。</p>
+<h3 id="-推荐学习路径完整版">🎯 推荐学习路径（完整版）<a class="headerlink" href="#-推荐学习路径完整版" title="链接到此章节">&para;</a></h3>
+<p>适合初学者，按顺序学习建立完整的知识体系：</p>
+<h4 id="阶段一基础理论1-5"><strong>阶段一：基础理论</strong>（1-5）<a class="headerlink" href="#阶段一基础理论1-5" title="链接到此章节">&para;</a></h4>
+<ol>
+<li><strong><a href="01_introduction/">01_introduction.md</a></strong> - 字符设备驱动简介</li>
+<li>字符设备的基本概念</li>
+<li>系统调用的工作机制</li>
+<li><code>file_operations</code> 结构体概述</li>
+<li>
+<p>设备号的概念</p>
+</li>
+<li>
+<p><strong><a href="02_kernel_space_basics/">02_kernel_space_basics.md</a></strong> - 内核空间基础与硬件访问</p>
+</li>
+<li>用户空间 vs 内核空间的区别</li>
+<li>系统调用的工作原理</li>
+<li>MMU 和虚拟地址映射</li>
+<li>ioremap 和硬件寄存器访问</li>
+<li><code>copy_to_user</code>/<code>copy_from_user</code> 数据传递</li>
+<li>
+<p>内核编程的限制和规则</p>
+</li>
+<li>
+<p><strong><a href="03_kernel_module_mechanism/">03_kernel_module_mechanism.md</a></strong> - 内核模块机制</p>
+</li>
+<li>什么是内核模块</li>
+<li>模块的加载和卸载</li>
+<li><code>module_init</code> / <code>module_exit</code> 机制</li>
+<li>模块参数的使用</li>
+<li>
+<p>模块依赖管理</p>
+</li>
+<li>
+<p><strong><a href="04_kernel_print_guide/">04_kernel_print_guide.md</a></strong> - 内核打印详解</p>
+</li>
+<li>为什么不能用 <code>printf</code></li>
+<li><code>printk</code> 的工作原理</li>
+<li>8 种日志级别详解</li>
+<li><code>pr_*</code> 宏使用</li>
+<li>
+<p>高级打印功能</p>
+</li>
+<li>
+<p><strong><a href="05_kernel_debug_techniques/">05_kernel_debug_techniques.md</a></strong> - 内核调试技术</p>
+</li>
+<li><code>dmesg</code> 日志分析</li>
+<li>动态调试（<code>CONFIG_DYNAMIC_DEBUG</code>）</li>
+<li>常见调试技巧</li>
+<li>问题排查方法</li>
+</ol>
+<h4 id="阶段二api-演进与实战6-10"><strong>阶段二：API 演进与实战</strong>（6-10）<a class="headerlink" href="#阶段二api-演进与实战6-10" title="链接到此章节">&para;</a></h4>
+<ol>
+<li><strong><a href="06_legacy_chardev/">06_legacy_chardev.md</a></strong> - 老API：虚拟字符设备 💻</li>
+<li><code>register_chrdev</code> 老方式</li>
+<li>完整的虚拟字符设备代码（无需硬件）</li>
+<li><strong>包含真实调试案例：缓冲区溢出、无限循环、返回值错误</strong></li>
+<li>老API的优缺点分析</li>
+<li>为新API学习做铺垫</li>
+</ol>
+<p><strong>📌 <a href="06p_ide_setup/">06p_ide_setup.md</a></strong> - IDE 配置指南 🛠️
+   - VSCode + clangd 环境搭建
+   - 内核 <code>compile_commands.json</code> 生成原理
+   - 项目配置说明
+   - 常见问题排查</p>
+<ol>
+<li><strong><a href="07_hardware_overview/">07_hardware_overview.md</a></strong> - 从虚拟设备到真实硬件：LED 硬件基础 🔥</li>
+<li>i.MX 6ULL LED 硬件连接与 GPIO 原理</li>
+<li>引脚复用（IOMUX）机制详解</li>
+<li>时钟树与 CCGR 寄存器</li>
+<li>
+<p><strong>从虚拟设备到真实硬件的过渡</strong></p>
+</li>
+<li>
+<p><strong><a href="08_memory_mapped_io/">08_memory_mapped_io.md</a></strong> - 内存映射 I/O 深度解析 ⭐⭐⭐</p>
+</li>
+<li>MMIO 与端口映射 I/O 的区别</li>
+<li><code>ioremap()</code>/<code>iounmap()</code> 源码分析</li>
+<li><code>writel()</code>/<code>readl()</code> 与内存屏障</li>
+<li>
+<p><strong>必读章节，理解硬件访问机制</strong></p>
+</li>
+<li>
+<p><strong><a href="09_hardware_abstraction_layer/">09_hardware_abstraction_layer.md</a></strong> - 硬件抽象层设计与实现 🔧</p>
+</li>
+<li>分层架构设计理念</li>
+<li><code>led_hw.c</code> 完整实现解析</li>
+<li>初始化流程详解（时钟、引脚复用、GPIO 配置）</li>
+<li>
+<p><strong>工程化驱动设计</strong></p>
+</li>
+<li>
+<p><strong><a href="10_chardev_implementation/">10_chardev_implementation.md</a></strong> - 字符设备驱动实现 💻</p>
+<ul>
+<li>文件操作接口（open/read/write/release）</li>
+<li>用户空间与内核空间数据交互</li>
+<li>与硬件抽象层的集成</li>
+<li><strong>完整的字符设备驱动代码</strong></li>
+</ul>
+</li>
+<li>
+<p><strong><a href="11_build_test_deploy/">11_build_test_deploy.md</a></strong> - 构建、测试与部署实战 🚀</p>
+<ul>
+<li>Makefile 解析与交叉编译</li>
+<li>模块加载与测试流程</li>
+<li>常见问题排查技巧</li>
+<li><strong>从代码到运行的全流程</strong></li>
+</ul>
+</li>
+</ol>
+<h4 id="阶段三新-api-专题12-18"><strong>阶段三：新 API 专题（12-18）</strong><a class="headerlink" href="#阶段三新-api-专题12-18" title="链接到此章节">&para;</a></h4>
+<ol>
+<li>
+<p><strong><a href="12_new_chardev_api_overview/">12_new_chardev_api_overview.md</a></strong> - 新 API 概览与设计理念 ⭐⭐⭐</p>
+<ul>
+<li>新老 API 对比</li>
+<li>"三步走" 流程设计理念</li>
+<li>资源霸占问题分析</li>
+<li>自动创建设备节点机制</li>
+<li><strong>必读章节，理解新 API 的设计思想</strong></li>
+</ul>
+</li>
+<li>
+<p><strong><a href="13_cdev_and_device_number/">13_cdev_and_device_number.md</a></strong> - cdev 结构体与设备号管理 ⭐⭐⭐</p>
+<ul>
+<li><code>struct cdev</code> 完整定义和字段详解</li>
+<li><code>cdev_init()</code>、<code>cdev_add()</code>、<code>cdev_del()</code> 详解</li>
+<li><code>cdev_device_add()</code> 统一 API</li>
+<li>设备号数据结构和宏（MKDEV/MAJOR/MINOR）</li>
+<li>动态分配 vs 静态注册</li>
+<li><code>/proc/devices</code> 查看</li>
+</ul>
+</li>
+<li>
+<p><strong><a href="14_class_device_model/">14_class_device_model.md</a></strong> - class 和 device 模型 ⭐⭐⭐</p>
+<ul>
+<li><code>struct class</code> 完整定义</li>
+<li><code>class_create()</code> 签名变更（owner 参数移除）</li>
+<li><code>device_create()</code> 和 <code>device_destroy()</code></li>
+<li>dev_groups 和 sysfs 属性</li>
+<li>udev/mdev 自动创建节点机制</li>
+<li>资源清理顺序</li>
+</ul>
+</li>
+<li>
+<p><strong><a href="15_error_handling_patterns/">15_error_handling_patterns.md</a></strong> - 驱动错误处理模式 ⭐⭐</p>
+<ul>
+<li>错误指针机制（ERR_PTR、PTR_ERR、IS_ERR）</li>
+<li>goto 错误处理模式</li>
+<li>资源清理的逆序原则</li>
+<li>常见错误码（-EINVAL、-EFAULT、-ENOMEM 等）</li>
+<li>防御性编程技巧</li>
+</ul>
+</li>
+<li>
+<p><strong><a href="16_device_structure_in_new_api/">16_device_structure_in_new_api.md</a></strong> - 新 API 中的设备结构体 ⭐⭐</p>
+<ul>
+<li>为什么要封装设备结构体</li>
+<li><code>struct IMXAesLED</code> 完整解析</li>
+<li>private_data 模式使用</li>
+<li>单设备 vs 多设备场景</li>
+<li>与 v1 驱动的对比</li>
+</ul>
+</li>
+<li>
+<p><strong><a href="17_new_api_driver_analysis/">17_new_api_driver_analysis.md</a></strong> - 新 API 驱动代码深度解析 ⭐⭐⭐</p>
+<ul>
+<li>v2 驱动完整代码结构</li>
+<li><code>init_led_handle()</code> 函数详解</li>
+<li><code>release_led_handle()</code> 函数详解</li>
+<li>新 API "三步走" 实际应用</li>
+<li>与硬件抽象层的集成</li>
+</ul>
+</li>
+<li>
+<p><strong><a href="18_app_development_and_testing/">18_app_development_and_testing.md</a></strong> - 应用开发与真实测试 ⭐⭐</p>
+<ul>
+<li><code>led_control.c</code> 应用程序解析</li>
+<li>参数验证和错误处理</li>
+<li>真实测试输出分析</li>
+<li>GPIO 寄存器值变化</li>
+<li>常见问题排查</li>
+</ul>
+</li>
+</ol>
+<h4 id="阶段四参考文档"><strong>阶段四：参考文档</strong><a class="headerlink" href="#阶段四参考文档" title="链接到此章节">&para;</a></h4>
+<ul>
+<li>API 迁移指南和内核特性对比文档正在更新中，敬请期待...</li>
+</ul>
+<h3 id="-快速路径有经验开发者">🚀 快速路径（有经验开发者）<a class="headerlink" href="#-快速路径有经验开发者" title="链接到此章节">&para;</a></h3>
+<p>如果你已经有内核开发经验：</p>
+<ol>
+<li>直接阅读 <strong><a href="12_new_chardev_api_overview/">12_new_chardev_api_overview.md</a></strong> 了解新API概览</li>
+<li>跟随 <strong><a href="13_cdev_and_device_number/">13_cdev_and_device_number.md</a></strong> 深入学习 cdev 和设备号</li>
+<li>跟随 <strong><a href="14_class_device_model/">14_class_device_model.md</a></strong> 了解 class 和 device 模型</li>
+<li>跟随 <strong><a href="17_new_api_driver_analysis/">17_new_api_driver_analysis.md</a></strong> 深入分析驱动代码</li>
+<li>跟随 <strong><a href="18_app_development_and_testing/">18_app_development_and_testing.md</a></strong> 了解应用开发和测试</li>
+</ol>
+<h3 id="-老用户迁移">📖 老用户迁移<a class="headerlink" href="#-老用户迁移" title="链接到此章节">&para;</a></h3>
+<p>如果你从老内核迁移：</p>
+<p>迁移指南文档正在更新中，敬请期待...</p>
+<hr />
+<h2 id="文件导航">文件导航<a class="headerlink" href="#文件导航" title="链接到此章节">&para;</a></h2>
+<h3 id="基础教程前置知识">基础教程（前置知识）<a class="headerlink" href="#基础教程前置知识" title="链接到此章节">&para;</a></h3>
+<h4 id="01_introductionmd---字符设备驱动简介"><a href="01_introduction/">01_introduction.md</a> - 字符设备驱动简介<a class="headerlink" href="#01_introductionmd---字符设备驱动简介" title="链接到此章节">&para;</a></h4>
+<ul>
+<li>字符设备的基本概念</li>
+<li>系统调用和 <code>file_operations</code></li>
+<li>老内核和新内核的实现对比</li>
+<li><strong>适合快速了解概念</strong></li>
+</ul>
+<h4 id="02_kernel_space_basicsmd---内核空间基础与硬件访问-"><a href="02_kernel_space_basics/">02_kernel_space_basics.md</a> - 内核空间基础与硬件访问 ⭐<a class="headerlink" href="#02_kernel_space_basicsmd---内核空间基础与硬件访问-" title="链接到此章节">&para;</a></h4>
+<ul>
+<li>用户空间 vs 内核空间的区别</li>
+<li>系统调用的工作机制</li>
+<li><strong>MMU 原理与地址映射</strong></li>
+<li><strong>ioremap/iounmap 使用</strong></li>
+<li><strong>I/O 内存访问函数（readl/writel）</strong></li>
+<li>"银行保险箱"生动比喻</li>
+<li>内核编程的限制和规则</li>
+<li><strong>必读章节</strong></li>
+</ul>
+<h4 id="03_kernel_module_mechanismmd---内核模块机制"><a href="03_kernel_module_mechanism/">03_kernel_module_mechanism.md</a> - 内核模块机制<a class="headerlink" href="#03_kernel_module_mechanismmd---内核模块机制" title="链接到此章节">&para;</a></h4>
+<ul>
+<li>什么是内核模块</li>
+<li>模块的加载和卸载</li>
+<li><code>module_init</code> / <code>module_exit</code> 机制</li>
+<li>模块参数的使用</li>
+<li>模块依赖管理</li>
+<li>模块引用计数</li>
+</ul>
+<h4 id="04_kernel_print_guidemd---内核打印详解"><a href="04_kernel_print_guide/">04_kernel_print_guide.md</a> - 内核打印详解<a class="headerlink" href="#04_kernel_print_guidemd---内核打印详解" title="链接到此章节">&para;</a></h4>
+<ul>
+<li>为什么不能用 <code>printf</code></li>
+<li><code>printk</code> 的工作原理</li>
+<li>8 种日志级别详解</li>
+<li><code>pr_fmt</code> 和统一前缀</li>
+<li>高级打印功能（<code>*_once</code>, <code>*_ratelimited</code>, <code>pr_cont</code>）</li>
+</ul>
+<h4 id="05_kernel_debug_techniquesmd---内核调试技术"><a href="05_kernel_debug_techniques/">05_kernel_debug_techniques.md</a> - 内核调试技术<a class="headerlink" href="#05_kernel_debug_techniquesmd---内核调试技术" title="链接到此章节">&para;</a></h4>
+<ul>
+<li><code>dmesg</code> 日志分析</li>
+<li>动态调试（<code>CONFIG_DYNAMIC_DEBUG</code>）</li>
+<li>常见调试技巧</li>
+<li>问题排查方法</li>
+<li>内核调试工具介绍</li>
+</ul>
+<h3 id="字符设备驱动教程_1">字符设备驱动教程<a class="headerlink" href="#字符设备驱动教程_1" title="链接到此章节">&para;</a></h3>
+<h4 id="api-演进与实现">API 演进与实现<a class="headerlink" href="#api-演进与实现" title="链接到此章节">&para;</a></h4>
+<p><strong><a href="06_legacy_chardev/">06_legacy_chardev.md</a></strong> - 老API：虚拟字符设备 ⭐
+- <code>register_chrdev</code> 老方式
+- 完整的虚拟字符设备代码（无需硬件）
+- <strong>包含真实调试案例：缓冲区溢出、无限循环、返回值错误</strong>
+- 老API的优缺点分析</p>
+<p><strong><a href="07_hardware_overview/">07_hardware_overview.md</a></strong> - 从虚拟设备到真实硬件：LED 硬件基础 🔥
+- i.MX 6ULL LED 硬件连接与 GPIO 原理
+- 引脚复用（IOMUX）机制详解
+- 时钟树与 CCGR 寄存器
+- <strong>从虚拟设备到真实硬件的过渡</strong></p>
+<p><strong><a href="08_memory_mapped_io/">08_memory_mapped_io.md</a></strong> - 内存映射 I/O 深度解析 ⭐⭐⭐
+- MMIO 与端口映射 I/O 的区别
+- <code>ioremap()</code>/<code>iounmap()</code> 源码分析
+- <code>writel()</code>/<code>readl()</code> 与内存屏障
+- <strong>必读章节，理解硬件访问机制</strong></p>
+<p><strong><a href="09_hardware_abstraction_layer/">09_hardware_abstraction_layer.md</a></strong> - 硬件抽象层设计与实现 🔧
+- 分层架构设计理念
+- <code>led_hw.c</code> 完整实现解析
+- 初始化流程详解（时钟、引脚复用、GPIO 配置）
+- <strong>工程化驱动设计</strong></p>
+<p><strong><a href="10_chardev_implementation/">10_chardev_implementation.md</a></strong> - 字符设备驱动实现 💻
+- 文件操作接口（open/read/write/release）
+- 用户空间与内核空间数据交互
+- 与硬件抽象层的集成
+- <strong>完整的字符设备驱动代码</strong></p>
+<p><strong><a href="11_build_test_deploy/">11_build_test_deploy.md</a></strong> - 构建、测试与部署实战 🚀
+- Makefile 解析与交叉编译
+- 模块加载与测试流程
+- 常见问题排查技巧
+- <strong>从代码到运行的全流程</strong></p>
+<p><strong><a href="12_new_chardev_api_overview/">12_new_chardev_api_overview.md</a></strong> - 新字符设备驱动API ⭐⭐⭐
+- 新API原理（"三步走"：领号→填表→进门）
+- 动态设备号分配
+- <code>cdev</code> 结构体
+- 自动创建设备节点（<code>class</code> + <code>device</code>）
+- 新老API对比
+- <strong>推荐学习</strong></p>
+<h4 id="实验文档">实验文档<a class="headerlink" href="#实验文档" title="链接到此章节">&para;</a></h4>
+<p><strong><a href="17_new_api_driver_analysis/">17_new_api_driver_analysis.md</a></strong> - 新API实战实验 🔥
+- 完整的新API LED驱动代码
+- 设备结构体封装
+- <code>private_data</code> 使用
+- 自动创建设备节点验证
+- <strong>包含真实硬件故障排除案例</strong></p>
+<h4 id="参考文档">参考文档<a class="headerlink" href="#参考文档" title="链接到此章节">&para;</a></h4>
+<p>参考文档（API 迁移指南、内核特性对比）正在更新中，敬请期待...</p>
+<hr />
+<h2 id="环境要求">环境要求<a class="headerlink" href="#环境要求" title="链接到此章节">&para;</a></h2>
+<h3 id="硬件平台">硬件平台<a class="headerlink" href="#硬件平台" title="链接到此章节">&para;</a></h3>
+<ul>
+<li>i.MX 6ULL 系列开发板（推荐）</li>
+<li>其他 ARM Cortex-A 系列开发板</li>
+</ul>
+<h3 id="软件环境">软件环境<a class="headerlink" href="#软件环境" title="链接到此章节">&para;</a></h3>
+<ul>
+<li><strong>老内核版本</strong>：Linux 4.1.15</li>
+<li><strong>新内核版本</strong>：</li>
+<li>Linux 6.12.49 (linux-imx)</li>
+<li>Linux 7.0.0-rc4 (mainline)</li>
+<li>交叉编译工具链：arm-linux-gnueabihf-gcc</li>
+</ul>
+<h3 id="内核源码路径">内核源码路径<a class="headerlink" href="#内核源码路径" title="链接到此章节">&para;</a></h3>
+<ul>
+<li><strong>老内核</strong>：已存档</li>
+<li><strong>linux-imx 内核</strong>：<code>third_party/linux-imx</code></li>
+<li><strong>mainline 内核</strong>：<code>third_party/linux_mainline</code></li>
+</ul>
+<hr />
+<h2 id="快速开始">快速开始<a class="headerlink" href="#快速开始" title="链接到此章节">&para;</a></h2>
+<h3 id="1-选择学习路径">1. 选择学习路径<a class="headerlink" href="#1-选择学习路径" title="链接到此章节">&para;</a></h3>
+<p><strong>新学习者推荐（完整路径）</strong>：
+1. 阅读 <a href="01_introduction/">01_introduction.md</a> 了解字符设备概念
+2. 学习 <a href="02_kernel_space_basics/">02_kernel_space_basics.md</a> 掌握内核空间和硬件访问
+3. 学习 <a href="03_kernel_module_mechanism/">03_kernel_module_mechanism.md</a> 理解内核模块机制
+4. 学习 <a href="05_kernel_debug_techniques/">05_kernel_debug_techniques.md</a> 掌握调试技术
+5. 学习 <a href="06_legacy_chardev/">06_legacy_chardev.md</a> 了解老API虚拟设备（包含真实调试案例）⭐
+6. 学习 <a href="07_hardware_overview/">07_hardware_overview.md</a> 了解 LED 硬件基础 🔥
+7. 学习 <a href="08_memory_mapped_io/">08_memory_mapped_io.md</a> 掌握内存映射 I/O ⭐⭐⭐
+8. 跟随 <a href="09_hardware_abstraction_layer/">09_hardware_abstraction_layer.md</a> 理解硬件抽象层设计
+9. 跟随 <a href="10_chardev_implementation/">10_chardev_implementation.md</a> 实现字符设备驱动
+10. 跟随 <a href="11_build_test_deploy/">11_build_test_deploy.md</a> 部署和测试驱动 🚀
+11. 学习 <a href="12_new_chardev_api_overview/">12_new_chardev_api_overview.md</a> 掌握新API（核心）
+12. 跟随 <a href="13_cdev_and_device_number/">13_cdev_and_device_number.md</a> 学习 cdev 和设备号管理
+13. 跟随 <a href="14_class_device_model/">14_class_device_model.md</a> 了解 class 和 device 模型
+14. 跟随 <a href="17_new_api_driver_analysis/">17_new_api_driver_analysis.md</a> 实践真实硬件驱动</p>
+<p><strong>有经验开发者（快速路径）</strong>：
+1. 直接阅读 <a href="12_new_chardev_api_overview/">12_new_chardev_api_overview.md</a> 了解新API
+2. 跟随 <a href="17_new_api_driver_analysis/">17_new_api_driver_analysis.md</a> 实践
+3. <strong>阅读 <a href="06_legacy_chardev/">06_legacy_chardev.md</a> 第七章了解常见陷阱</strong> ⭐</p>
+<p><strong>老用户迁移</strong>：
+迁移指南文档正在更新中，敬请期待...</p>
+<h3 id="2-编译驱动">2. 编译驱动<a class="headerlink" href="#2-编译驱动" title="链接到此章节">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1"></a><a href="#__codelineno-0-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 针对 linux-imx 内核</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2"></a><a href="#__codelineno-0-2"><span class="linenos" data-linenos="2 "></span></a>make<span class="w"> </span>-C<span class="w"> </span>../../third_party/linux-imx<span class="w"> </span><span class="nv">M</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="w"> </span>modules
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3"></a><a href="#__codelineno-0-3"><span class="linenos" data-linenos="3 "></span></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4"></a><a href="#__codelineno-0-4"><span class="linenos" data-linenos="4 "></span></a><span class="c1"># 针对 mainline 内核</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5"></a><a href="#__codelineno-0-5"><span class="linenos" data-linenos="5 "></span></a>make<span class="w"> </span>-C<span class="w"> </span>../../third_party/linux_mainline<span class="w"> </span><span class="nv">M</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="w"> </span>modules
+</span></code></pre></div>
+<h3 id="3-加载和测试">3. 加载和测试<a class="headerlink" href="#3-加载和测试" title="链接到此章节">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1"></a><a href="#__codelineno-1-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="c1"># 加载驱动</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2"></a><a href="#__codelineno-1-2"><span class="linenos" data-linenos=" 2 "></span></a>insmod<span class="w"> </span>chrdevbase.ko
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3"></a><a href="#__codelineno-1-3"><span class="linenos" data-linenos=" 3 "></span></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4"></a><a href="#__codelineno-1-4"><span class="linenos" data-linenos=" 4 "></span></a><span class="c1"># 检查设备</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5"></a><a href="#__codelineno-1-5"><span class="linenos" data-linenos=" 5 "></span></a>ls<span class="w"> </span>-l<span class="w"> </span>/dev/chrdevbase
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6"></a><a href="#__codelineno-1-6"><span class="linenos" data-linenos=" 6 "></span></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7"></a><a href="#__codelineno-1-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="c1"># 运行测试</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8"></a><a href="#__codelineno-1-8"><span class="linenos" data-linenos=" 8 "></span></a>./chrdevbaseApp<span class="w"> </span>/dev/chrdevbase
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9"></a><a href="#__codelineno-1-9"><span class="linenos" data-linenos=" 9 "></span></a>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10"></a><a href="#__codelineno-1-10"><span class="linenos" data-linenos="10 "></span></a><span class="c1"># 卸载驱动</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11"></a><a href="#__codelineno-1-11"><span class="linenos" data-linenos="11 "></span></a>rmmod<span class="w"> </span>chrdevbase
+</span></code></pre></div>
+<hr />
+<h2 id="内核选择建议">内核选择建议<a class="headerlink" href="#内核选择建议" title="链接到此章节">&para;</a></h2>
+<h3 id="开发阶段">开发阶段<a class="headerlink" href="#开发阶段" title="链接到此章节">&para;</a></h3>
+<p><strong>推荐使用 linux-imx（6.12.49）</strong>
+- 针对 i.MX 处理器优化
+- 稳定性更高，文档更齐全</p>
+<h3 id="学习最新特性">学习最新特性<a class="headerlink" href="#学习最新特性" title="链接到此章节">&para;</a></h3>
+<p><strong>推荐使用 mainline（7.0.0-rc4）</strong>
+- 包含最新的内核特性
+- io_uring 等新特性支持更完善</p>
+<h3 id="生产环境">生产环境<a class="headerlink" href="#生产环境" title="链接到此章节">&para;</a></h3>
+<p><strong>根据具体硬件平台选择</strong>
+- i.MX 系列：推荐 linux-imx
+- 其他平台：可能 mainline 支持更好</p>
+<hr />
+<h2 id="常见问题">常见问题<a class="headerlink" href="#常见问题" title="链接到此章节">&para;</a></h2>
+<h3 id="q-新老内核的-api-兼容吗">Q: 新老内核的 API 兼容吗？<a class="headerlink" href="#q-新老内核的-api-兼容吗" title="链接到此章节">&para;</a></h3>
+<p>A: 核心字符设备 API 保持兼容，老代码在新内核上也能运行，但不推荐新驱动使用老 API。</p>
+<h3 id="q-如何选择动态分配还是静态分配设备号">Q: 如何选择动态分配还是静态分配设备号？<a class="headerlink" href="#q-如何选择动态分配还是静态分配设备号" title="链接到此章节">&para;</a></h3>
+<p>A: 推荐使用动态分配（<code>alloc_chrdev_region</code>），避免设备号冲突。</p>
+<h3 id="q-必须使用-class_create-和-device_create-吗">Q: 必须使用 <code>class_create</code> 和 <code>device_create</code> 吗？<a class="headerlink" href="#q-必须使用-class_create-和-device_create-吗" title="链接到此章节">&para;</a></h3>
+<p>A: 不是强制的，但强烈推荐，可以自动创建设备节点。</p>
+<h3 id="q-为什么要学习-02-05-基础教程">Q: 为什么要学习 02-05 基础教程？<a class="headerlink" href="#q-为什么要学习-02-05-基础教程" title="链接到此章节">&para;</a></h3>
+<p>A: 这些教程建立了必要的内核基础概念，理解这些内容会让后续的驱动开发事半功倍。如果你已经有内核开发经验，可以跳过。</p>
+<h3 id="q-06_development_stepsmd-去哪了">Q: 06_development_steps.md 去哪了？<a class="headerlink" href="#q-06_development_stepsmd-去哪了" title="链接到此章节">&para;</a></h3>
+<p>A: 该文档已删除，其内容已整合到 <a href="12_new_chardev_api_overview/">12_new_chardev_api_overview.md</a> 中，避免重复内容。</p>
+<hr />
+<h2 id="重构说明">重构说明<a class="headerlink" href="#重构说明" title="链接到此章节">&para;</a></h2>
+<p>本次教程重构主要改进：</p>
+<ol>
+<li><strong>删除重复内容</strong>：删除了 06_development_steps.md，其内容已整合到 12_new_chardev_api_overview.md</li>
+<li><strong>优化学习路径</strong>：按学习难度重新组织文档顺序</li>
+<li>阶段一：基础理论（01-05）</li>
+<li>阶段二：API 演进与实战（06-11）</li>
+<li>阶段三：新 API 专题（12-18）</li>
+<li><strong>调整文档定位</strong>：</li>
+<li>12_new_chardev_api_overview.md 作为新API的核心技术文档</li>
+<li><strong>改进文档导航</strong>：每篇文档都包含前置知识要求、学习目标、下一步指引</li>
+</ol>
+<hr />
+<h2 id="贡献和反馈">贡献和反馈<a class="headerlink" href="#贡献和反馈" title="链接到此章节">&para;</a></h2>
+<p>如果发现教程中的错误或有改进建议，欢迎提交 Issue 或 Pull Request。</p>
+<hr />
+<h2 id="许可证">许可证<a class="headerlink" href="#许可证" title="链接到此章节">&para;</a></h2>
+<p>本教程遵循项目的开源许可证。</p>
+<hr />
+<p><strong>下一步</strong>：
+- 新手：开始学习 <a href="01_introduction/">01_introduction.md</a>
+- 有经验者：直接进入 <a href="12_new_chardev_api_overview/">12_new_chardev_api_overview.md</a></p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月18日 15:02:12 CST">2026年4月18日 15:02:12</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月17日 12:25:20 CST">2026年4月17日 12:25:20</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+        
+          
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="上一页: 驱动开发">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              <div class="md-ellipsis">
+                驱动开发
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="01_introduction/" class="md-footer__link md-footer__link--next" aria-label="下一页: 字符设备驱动简介 - 从零开始理解内核驱动">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                下一页
+              </span>
+              <div class="md-ellipsis">
+                字符设备驱动简介 - 从零开始理解内核驱动
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 Charliechen - 保留所有权利
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/Awesome-Embedded-Learning-Studio" target="_blank" rel="noopener" title="GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="mailto:725610365@qq.com" target="_blank" rel="noopener" title="发送邮件" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M536.4-26.3c9.8-3.5 20.6-1 28 6.3s9.8 18.2 6.3 28l-178 496.9c-5 13.9-18.1 23.1-32.8 23.1-14.2 0-27-8.6-32.3-21.7l-64.2-158c-4.5-11-2.5-23.6 5.2-32.6l94.5-112.4c5.1-6.1 4.7-15-.9-20.6s-14.6-6-20.6-.9l-112.4 94.3c-9.1 7.6-21.6 9.6-32.6 5.2L38.1 216.8c-13.1-5.3-21.7-18.1-21.7-32.3 0-14.7 9.2-27.8 23.1-32.8z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.path", "navigation.indexes", "navigation.tabs", "navigation.tabs.sticky", "navigation.prune", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.select", "content.code.annotate", "content.tabs.link", "content.tooltips", "content.action.edit", "content.action.view"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

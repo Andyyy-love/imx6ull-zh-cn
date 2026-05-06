@@ -1,0 +1,5540 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="IMX-Forge，专注于IMX6ULL的教程文档网站">
+      
+      
+        <meta name="author" content="Charliechen114514">
+      
+      
+        <link rel="canonical" href="https://awesome-embedded-learning-studio.github.io/imx-forge/scripts/third_party_install/install_qt_with_compile.sh/">
+      
+      
+        <link rel="prev" href="../install_libc.sh/">
+      
+      
+        <link rel="next" href="../config/qt/qt_fonts_env.sh/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../Awesome-Embedded.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>install_qt_with_compile.sh - Qt6 编译安装脚本详解 - IMX-Forge的教程文档</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#install_qt_with_compilesh---qt6-编译安装脚本详解" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../.." title="IMX-Forge的教程文档" class="md-header__button md-logo" aria-label="IMX-Forge的教程文档" data-md-component="logo">
+      
+  <img src="../../../Awesome-Embedded.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            IMX-Forge的教程文档
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              install_qt_with_compile.sh - Qt6 编译安装脚本详解
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换至暗色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换至暗色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="切换至亮色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换至亮色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  欢迎来到 IMX-Forge 教程文档
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../QUICK_START/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  IMX-Forge 快速入门指南
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../architecture/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Architecture
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ci/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Ci
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../development/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../logo/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Logo
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../modules/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Modules
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Scripts
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../todo/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Todo
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../tutorial/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tutorial
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="IMX-Forge的教程文档" class="md-nav__button md-logo" aria-label="IMX-Forge的教程文档" data-md-component="logo">
+      
+  <img src="../../../Awesome-Embedded.png" alt="logo">
+
+    </a>
+    IMX-Forge的教程文档
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    欢迎来到 IMX-Forge 教程文档
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../QUICK_START/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IMX-Forge 快速入门指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../architecture/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../ci/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ci
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../development/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../logo/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logo
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../modules/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scripts
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Scripts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apply_patches.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    apply_patches.sh 说明文档
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../manual_mount_nfs.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    manual_mount_nfs.sh - 手动 NFS 挂载辅助脚本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../merge_overlay_rootfs.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    merge_overlay_rootfs.sh - RootFS叠加层合并脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patch_maker.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    patch_maker.sh - 补丁生成工具详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-all.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    release-all.sh - 迷你 Linux 发行版统一构建脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../varified_rootfs_ok.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    varified_rootfs_ok.sh - RootFS 验证和补全脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_8" id="__nav_8_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build helper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Build helper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../build_helper/build-busybox.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    build-busybox.sh - BusyBox构建脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../build_helper/build-linux.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    build-linux.sh - Linux内核构建脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../build_helper/build-mainline-linux.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    build-mainline-linux.sh - 主线Linux内核构建脚本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../build_helper/build-uboot.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    build-uboot.sh - U-Boot构建脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_9" id="__nav_8_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Document
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Document
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../document/mkdocs_dev.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    mkdocs_dev.sh - MkDocs 文档开发环境管理器
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../driver_helper/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Driver helper
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8_10" id="__nav_8_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Driver helper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    驱动开发基建系统 - 架构设计
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/best_practices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    最佳实践指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/build_driver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    build_driver.sh - 驱动构建脚本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/build_driver.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    build_driver.sh - 驱动构建统一入口脚本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    driver_helper.conf - 配置文件说明
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/deploy_driver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    deploy_driver.sh - 驱动部署脚本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/deploy_driver.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    deploy_driver.sh - 驱动部署脚本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    驱动开发基建系统 - 系统总览
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/review_driver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    review_driver.sh - 驱动审查脚本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/review_driver.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    review_driver.sh - 驱动构建产物审查脚本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/show_device_tree/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    show_device_tree.sh - 设备树查看脚本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/show_device_tree.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    show_device_tree.sh - 设备树节点美化打印脚本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/template_creator.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    template_creator.sh - 交互式驱动创建脚本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    错误排查指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    驱动开发工作流程指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_11" id="__nav_8_11_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/example_driver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Example Driver 验证指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_12" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_12" id="__nav_8_12_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Init
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Init
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../init/env-init.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    env-init.sh - 主机依赖检查脚本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_13" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_13" id="__nav_8_13_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lib
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lib
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lib/driver_buildlib/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    driver_buildlib.sh - 核心构建库
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lib/driver_buildlib.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    driver_buildlib.sh - 驱动构建核心库
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lib/logging.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    logging.sh - 日志工具库详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../lib/bash/lib_common.sh/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bash
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_14" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_14" id="__nav_8_14_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logo helper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_14">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Logo helper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../logo_helper/logo_helper.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    logo_helper.sh - Logo转换工具详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_15" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_15" id="__nav_8_15_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release builder
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_15_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_15">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Release builder
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release_builder/build_release_busybox.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    build_release_busybox.sh - BusyBox发布构建脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release_builder/build_release_linux.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    build_release_linux.sh - Linux内核发布构建脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release_builder/build_release_uboot.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    build_release_uboot.sh - U-Boot发布构建脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_16" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_16" id="__nav_8_16_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Server helper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_16_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_16">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Server helper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../server_helper/copy_to_tftp.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    copy_to_tftp.sh - TFTP文件复制脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_17" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_8_17" id="__nav_8_17_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Third party install
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_17_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8_17">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Third party install
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install_firmwares.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    install_firmwares.sh - i.MX 固件安装脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install_fonts.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    install_fonts.sh - 字体下载和安装脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install_libc.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    install_libc.sh - libc 库安装脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    install_qt_with_compile.sh - Qt6 编译安装脚本详解
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    install_qt_with_compile.sh - Qt6 编译安装脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#脚本概述" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        脚本概述
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="脚本概述">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#核心功能" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        核心功能
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#为什么需要这个脚本" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么需要这个脚本
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#设计理念" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        设计理念
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#依赖关系" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        依赖关系
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#编译阶段说明" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        编译阶段说明
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="编译阶段说明">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#阶段详细说明" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段详细说明
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="阶段详细说明">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#阶段-1-下载-qt-源码" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段 1: 下载 Qt 源码
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#阶段-2-获取交叉编译工具链" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段 2: 获取交叉编译工具链
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#阶段-3-编译-host-qt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段 3: 编译 Host Qt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#阶段-4-安装-target-依赖" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段 4: 安装 Target 依赖
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#阶段-5-编译-target-qt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段 5: 编译 Target Qt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#阶段-6-打包" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段 6: 打包
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#使用方法" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        使用方法
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="使用方法">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#基本用法" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        基本用法
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#命令行参数" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        命令行参数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#环境变量" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        环境变量
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#输出格式" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        输出格式
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#配置文件说明" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        配置文件说明
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="配置文件说明">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#qtconf---qt-版本与源码配置" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        qt.conf - Qt 版本与源码配置
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hostconf---host-qt-编译配置" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        host.conf - Host Qt 编译配置
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#targetconf---target-qt-交叉编译配置" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        target.conf - Target Qt 交叉编译配置
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#third_partyconf---第三方库配置" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        third_party.conf - 第三方库配置
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rootfs-安装过程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ROOTFS 安装过程
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ROOTFS 安装过程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#第-1-步-安装-target-qt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第 1 步: 安装 Target Qt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#第-2-步-安装第三方库" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第 2 步: 安装第三方库
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#第-3-步-安装字体" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第 3 步: 安装字体
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#安装完成摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        安装完成摘要
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#输出目录" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        输出目录
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#使用示例" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        使用示例
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="使用示例">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#场景-1-首次完整编译" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        场景 1: 首次完整编译
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#场景-2-从指定阶段继续" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        场景 2: 从指定阶段继续
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#场景-3-使用自定义分支名" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        场景 3: 使用自定义分支名
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#场景-4-跳过字体安装" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        场景 4: 跳过字体安装
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#场景-5-指定不同的-rootfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        场景 5: 指定不同的 ROOTFS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#故障排除" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        故障排除
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="故障排除">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#常见错误" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        常见错误
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="常见错误">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#错误-1-qt-compile-pipeline-子模块未初始化" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        错误 1: qt-compile-pipeline 子模块未初始化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#错误-2-rootfs-目录不存在" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        错误 2: ROOTFS 目录不存在
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#错误-3-交叉编译工具链未找到" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        错误 3: 交叉编译工具链未找到
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#错误-4-源码下载失败" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        错误 4: 源码下载失败
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#错误-5-host-qt-编译失败" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        错误 5: Host Qt 编译失败
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#错误-6-target-qt-编译失败" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        错误 6: Target Qt 编译失败
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#调试技巧" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        调试技巧
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="调试技巧">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#查看详细日志" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        查看详细日志
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#检查编译产物" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        检查编译产物
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#验证交叉编译" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        验证交叉编译
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#设计决策说明" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        设计决策说明
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="设计决策说明">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#为什么需要创建独立分支" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么需要创建独立分支
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#为什么先编译-host-qt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么先编译 Host Qt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#为什么使用-cp--d-复制库文件" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么使用 cp -d 复制库文件
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#为什么-qt-安装到-usr-而不是-usrlocal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么 Qt 安装到 /usr 而不是 /usr/local
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#扩展和定制" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        扩展和定制
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="扩展和定制">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#添加-qt-模块" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        添加 Qt 模块
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#修改目标架构" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        修改目标架构
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#禁用某些第三方库" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        禁用某些第三方库
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#添加编译优化" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        添加编译优化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#自定义字体" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        自定义字体
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#相关文档" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        相关文档
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#更新日志" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        更新日志
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../config/qt/qt_fonts_env.sh/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Config
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../todo/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Todo
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../tutorial/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#脚本概述" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        脚本概述
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="脚本概述">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#核心功能" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        核心功能
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#为什么需要这个脚本" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么需要这个脚本
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#设计理念" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        设计理念
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#依赖关系" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        依赖关系
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#编译阶段说明" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        编译阶段说明
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="编译阶段说明">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#阶段详细说明" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段详细说明
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="阶段详细说明">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#阶段-1-下载-qt-源码" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段 1: 下载 Qt 源码
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#阶段-2-获取交叉编译工具链" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段 2: 获取交叉编译工具链
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#阶段-3-编译-host-qt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段 3: 编译 Host Qt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#阶段-4-安装-target-依赖" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段 4: 安装 Target 依赖
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#阶段-5-编译-target-qt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段 5: 编译 Target Qt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#阶段-6-打包" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段 6: 打包
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#使用方法" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        使用方法
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="使用方法">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#基本用法" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        基本用法
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#命令行参数" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        命令行参数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#环境变量" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        环境变量
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#输出格式" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        输出格式
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#配置文件说明" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        配置文件说明
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="配置文件说明">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#qtconf---qt-版本与源码配置" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        qt.conf - Qt 版本与源码配置
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hostconf---host-qt-编译配置" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        host.conf - Host Qt 编译配置
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#targetconf---target-qt-交叉编译配置" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        target.conf - Target Qt 交叉编译配置
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#third_partyconf---第三方库配置" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        third_party.conf - 第三方库配置
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rootfs-安装过程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ROOTFS 安装过程
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ROOTFS 安装过程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#第-1-步-安装-target-qt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第 1 步: 安装 Target Qt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#第-2-步-安装第三方库" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第 2 步: 安装第三方库
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#第-3-步-安装字体" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第 3 步: 安装字体
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#安装完成摘要" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        安装完成摘要
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#输出目录" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        输出目录
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#使用示例" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        使用示例
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="使用示例">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#场景-1-首次完整编译" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        场景 1: 首次完整编译
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#场景-2-从指定阶段继续" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        场景 2: 从指定阶段继续
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#场景-3-使用自定义分支名" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        场景 3: 使用自定义分支名
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#场景-4-跳过字体安装" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        场景 4: 跳过字体安装
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#场景-5-指定不同的-rootfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        场景 5: 指定不同的 ROOTFS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#故障排除" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        故障排除
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="故障排除">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#常见错误" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        常见错误
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="常见错误">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#错误-1-qt-compile-pipeline-子模块未初始化" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        错误 1: qt-compile-pipeline 子模块未初始化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#错误-2-rootfs-目录不存在" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        错误 2: ROOTFS 目录不存在
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#错误-3-交叉编译工具链未找到" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        错误 3: 交叉编译工具链未找到
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#错误-4-源码下载失败" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        错误 4: 源码下载失败
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#错误-5-host-qt-编译失败" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        错误 5: Host Qt 编译失败
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#错误-6-target-qt-编译失败" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        错误 6: Target Qt 编译失败
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#调试技巧" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        调试技巧
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="调试技巧">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#查看详细日志" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        查看详细日志
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#检查编译产物" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        检查编译产物
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#验证交叉编译" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        验证交叉编译
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#设计决策说明" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        设计决策说明
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="设计决策说明">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#为什么需要创建独立分支" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么需要创建独立分支
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#为什么先编译-host-qt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么先编译 Host Qt
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#为什么使用-cp--d-复制库文件" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么使用 cp -d 复制库文件
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#为什么-qt-安装到-usr-而不是-usrlocal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么 Qt 安装到 /usr 而不是 /usr/local
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#扩展和定制" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        扩展和定制
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="扩展和定制">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#添加-qt-模块" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        添加 Qt 模块
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#修改目标架构" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        修改目标架构
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#禁用某些第三方库" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        禁用某些第三方库
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#添加编译优化" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        添加编译优化
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#自定义字体" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        自定义字体
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#相关文档" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        相关文档
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#更新日志" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        更新日志
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="导航栏" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    欢迎来到 IMX-Forge 教程文档
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Scripts
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../install_firmwares.sh/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Third party install
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="install_qt_with_compilesh---qt6-编译安装脚本详解">install_qt_with_compile.sh - Qt6 编译安装脚本详解<a class="headerlink" href="#install_qt_with_compilesh---qt6-编译安装脚本详解" title="链接到此章节">&para;</a></h1>
+<h2 id="脚本概述">脚本概述<a class="headerlink" href="#脚本概述" title="链接到此章节">&para;</a></h2>
+<p><code>install_qt_with_compile.sh</code> 是 IMX-Forge 项目中用于编译和安装 Qt6 框架到目标板的核心脚本。它通过调用 <code>qt-compile-pipeline</code> 子模块中的编译管道，自动完成从源码下载、交叉编译到 ROOTFS 部署的完整流程。</p>
+<h3 id="核心功能">核心功能<a class="headerlink" href="#核心功能" title="链接到此章节">&para;</a></h3>
+<ul>
+<li><strong>自动分支管理</strong>：将 qt-compile-pipeline 子模块切换到独立的编译分支</li>
+<li><strong>配置覆盖</strong>：将自定义配置文件拷贝到编译管道</li>
+<li><strong>六阶段编译</strong>：执行完整的 Qt6 编译流程（源码获取、工具链、Host Qt、依赖、Target Qt、打包）</li>
+<li><strong>ROOTFS 部署</strong>：自动将编译产物安装到根文件系统</li>
+<li><strong>第三方库集成</strong>：安装 PulseAudio、FFmpeg、OpenSSL 等依赖库</li>
+<li><strong>字体安装</strong>：可选的中文字体支持</li>
+</ul>
+<h3 id="为什么需要这个脚本">为什么需要这个脚本<a class="headerlink" href="#为什么需要这个脚本" title="链接到此章节">&para;</a></h3>
+<p>Qt6 是一个复杂的跨平台应用程序开发框架，在嵌入式 Linux 上交叉编译 Qt6 涉及多个步骤：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1"></a><a href="#__codelineno-0-1"><span class="linenos" data-linenos=" 1 "></span></a>┌─────────────────────────────────────────────────────────────────┐
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2"></a><a href="#__codelineno-0-2"><span class="linenos" data-linenos=" 2 "></span></a>│  Qt6 交叉编译复杂度                                               │
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3"></a><a href="#__codelineno-0-3"><span class="linenos" data-linenos=" 3 "></span></a>├─────────────────────────────────────────────────────────────────┤
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4"></a><a href="#__codelineno-0-4"><span class="linenos" data-linenos=" 4 "></span></a>│  1. 首先编译 Host Qt（x86_64），用于编译 Target Qt 时的工具     │
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5"></a><a href="#__codelineno-0-5"><span class="linenos" data-linenos=" 5 "></span></a>│  2. 获取交叉编译工具链并验证                                     │
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6"></a><a href="#__codelineno-0-6"><span class="linenos" data-linenos=" 6 "></span></a>│  3. 安装目标平台的依赖库（ALSA、PulseAudio、FFmpeg 等）          │
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7"></a><a href="#__codelineno-0-7"><span class="linenos" data-linenos=" 7 "></span></a>│  4. 交叉编译 Target Qt（ARM）                                    │
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8"></a><a href="#__codelineno-0-8"><span class="linenos" data-linenos=" 8 "></span></a>│  5. 将编译产物部署到 ROOTFS                                      │
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9"></a><a href="#__codelineno-0-9"><span class="linenos" data-linenos=" 9 "></span></a>│  6. 配置运行时环境（字体、库路径等）                              │
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10"></a><a href="#__codelineno-0-10"><span class="linenos" data-linenos="10 "></span></a>└─────────────────────────────────────────────────────────────────┘
+</span></code></pre></div>
+<p>这个脚本自动化了上述所有步骤，让开发者只需运行一个命令就能完成 Qt6 的编译和部署。</p>
+<h3 id="设计理念">设计理念<a class="headerlink" href="#设计理念" title="链接到此章节">&para;</a></h3>
+<p>脚本遵循"配置与代码分离"的原则：</p>
+<ol>
+<li><strong>配置外部化</strong>：所有编译参数都在 <code>config/qt/</code> 目录下的配置文件中</li>
+<li><strong>分支隔离</strong>：每次编译创建独立的 <code>compile-YYYYMMDD</code> 分支</li>
+<li><strong>主项目保护</strong>：子模块分支切换不影响主项目 Git 状态</li>
+<li><strong>增量构建</strong>：支持 <code>--stage</code> 参数从指定阶段继续</li>
+</ol>
+<h3 id="依赖关系">依赖关系<a class="headerlink" href="#依赖关系" title="链接到此章节">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1"></a><a href="#__codelineno-1-1"><span class="linenos" data-linenos=" 1 "></span></a>install_qt_with_compile.sh
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2"></a><a href="#__codelineno-1-2"><span class="linenos" data-linenos=" 2 "></span></a>    ├─ scripts/lib/logging.sh (日志工具库)
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3"></a><a href="#__codelineno-1-3"><span class="linenos" data-linenos=" 3 "></span></a>    ├─ third_party/qt-compile-pipeline (Qt 编译管道子模块)
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4"></a><a href="#__codelineno-1-4"><span class="linenos" data-linenos=" 4 "></span></a>    │   ├─ scripts/00-fetch-qt-src.sh (阶段 1)
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5"></a><a href="#__codelineno-1-5"><span class="linenos" data-linenos=" 5 "></span></a>    │   ├─ scripts/01-fetch-toolchain.sh (阶段 2)
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6"></a><a href="#__codelineno-1-6"><span class="linenos" data-linenos=" 6 "></span></a>    │   ├─ scripts/02-build-host-qt.sh (阶段 3)
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7"></a><a href="#__codelineno-1-7"><span class="linenos" data-linenos=" 7 "></span></a>    │   ├─ scripts/install_target_deps.sh (阶段 4)
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8"></a><a href="#__codelineno-1-8"><span class="linenos" data-linenos=" 8 "></span></a>    │   ├─ scripts/03-build-target-qt.sh (阶段 5)
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9"></a><a href="#__codelineno-1-9"><span class="linenos" data-linenos=" 9 "></span></a>    │   └─ scripts/04-package.sh (阶段 6)
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10"></a><a href="#__codelineno-1-10"><span class="linenos" data-linenos="10 "></span></a>    ├─ config/qt/*.conf (配置文件)
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11"></a><a href="#__codelineno-1-11"><span class="linenos" data-linenos="11 "></span></a>    ├─ scripts/third_party_install/install_fonts.sh (字体安装)
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12"></a><a href="#__codelineno-1-12"><span class="linenos" data-linenos="12 "></span></a>    └─ ROOTFS_DIR (根文件系统目录)
+</span></code></pre></div>
+<h2 id="编译阶段说明">编译阶段说明<a class="headerlink" href="#编译阶段说明" title="链接到此章节">&para;</a></h2>
+<p>Qt 编译流程分为 6 个阶段，每个阶段负责特定的任务：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1"></a><a href="#__codelineno-2-1"><span class="linenos" data-linenos=" 1 "></span></a>┌─────────────────────────────────────────────────────────────┐
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2"></a><a href="#__codelineno-2-2"><span class="linenos" data-linenos=" 2 "></span></a>│  阶段 1: 下载 Qt 源码                                         │
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3"></a><a href="#__codelineno-2-3"><span class="linenos" data-linenos=" 3 "></span></a>│  ├─ 脚本: 00-fetch-qt-src.sh                                 │
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4"></a><a href="#__codelineno-2-4"><span class="linenos" data-linenos=" 4 "></span></a>│  ├─ 功能: 从官方服务器下载 Qt 源码包                         │
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5"></a><a href="#__codelineno-2-5"><span class="linenos" data-linenos=" 5 "></span></a>│  └─ 输出: ${WORK_DIR}/qt-everywhere-src-${QT_VERSION}/      │
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6"></a><a href="#__codelineno-2-6"><span class="linenos" data-linenos=" 6 "></span></a>├─────────────────────────────────────────────────────────────┤
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7"></a><a href="#__codelineno-2-7"><span class="linenos" data-linenos=" 7 "></span></a>│  阶段 2: 获取交叉编译工具链                                   │
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8"></a><a href="#__codelineno-2-8"><span class="linenos" data-linenos=" 8 "></span></a>│  ├─ 脚本: 01-fetch-toolchain.sh                              │
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9"></a><a href="#__codelineno-2-9"><span class="linenos" data-linenos=" 9 "></span></a>│  ├─ 功能: 下载并验证 ARM 交叉编译工具链                      │
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10"></a><a href="#__codelineno-2-10"><span class="linenos" data-linenos="10 "></span></a>│  └─ 输出: ${WORK_DIR}/toolchain/                            │
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11"></a><a href="#__codelineno-2-11"><span class="linenos" data-linenos="11 "></span></a>├─────────────────────────────────────────────────────────────┤
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12"></a><a href="#__codelineno-2-12"><span class="linenos" data-linenos="12 "></span></a>│  阶段 3: 编译 Host Qt                                         │
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13"></a><a href="#__codelineno-2-13"><span class="linenos" data-linenos="13 "></span></a>│  ├─ 脚本: 02-build-host-qt.sh                                │
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14"></a><a href="#__codelineno-2-14"><span class="linenos" data-linenos="14 "></span></a>│  ├─ 功能: 编译 x86_64 版本的 Qt6                              │
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15"></a><a href="#__codelineno-2-15"><span class="linenos" data-linenos="15 "></span></a>│  ├─ 用途: 为 Target Qt 编译提供工具（如 qmake、moc、rcc）    │
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16"></a><a href="#__codelineno-2-16"><span class="linenos" data-linenos="16 "></span></a>│  └─ 输出: ${PROJECT_ROOT}/host/qt6-host/                    │
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17"></a><a href="#__codelineno-2-17"><span class="linenos" data-linenos="17 "></span></a>├─────────────────────────────────────────────────────────────┤
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18"></a><a href="#__codelineno-2-18"><span class="linenos" data-linenos="18 "></span></a>│  阶段 4: 安装 Target 依赖                                     │
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19"></a><a href="#__codelineno-2-19"><span class="linenos" data-linenos="19 "></span></a>│  ├─ 脚本: install_target_deps.sh                             │
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20"></a><a href="#__codelineno-2-20"><span class="linenos" data-linenos="20 "></span></a>│  ├─ 功能: 下载并编译目标平台的依赖库                         │
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21"></a><a href="#__codelineno-2-21"><span class="linenos" data-linenos="21 "></span></a>│  ├─ 依赖: ALSA、PulseAudio、FFmpeg、OpenSSL、tslib          │
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22"></a><a href="#__codelineno-2-22"><span class="linenos" data-linenos="22 "></span></a>│  └─ 输出: ${WORK_DIR}/third-party-sysroot/                  │
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23"></a><a href="#__codelineno-2-23"><span class="linenos" data-linenos="23 "></span></a>├─────────────────────────────────────────────────────────────┤
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24"></a><a href="#__codelineno-2-24"><span class="linenos" data-linenos="24 "></span></a>│  阶段 5: 编译 Target Qt                                       │
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25"></a><a href="#__codelineno-2-25"><span class="linenos" data-linenos="25 "></span></a>│  ├─ 脚本: 03-build-target-qt.sh                              │
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26"></a><a href="#__codelineno-2-26"><span class="linenos" data-linenos="26 "></span></a>│  ├─ 功能: 交叉编译 ARM 版本的 Qt6                             │
+</span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27"></a><a href="#__codelineno-2-27"><span class="linenos" data-linenos="27 "></span></a>│  ├─ 使用: Host Qt 的工具 + 交叉编译工具链                    │
+</span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28"></a><a href="#__codelineno-2-28"><span class="linenos" data-linenos="28 "></span></a>│  └─ 输出: ${PROJECT_ROOT}/out/qt6-imx6ull/                  │
+</span><span id="__span-2-29"><a id="__codelineno-2-29" name="__codelineno-2-29"></a><a href="#__codelineno-2-29"><span class="linenos" data-linenos="29 "></span></a>├─────────────────────────────────────────────────────────────┤
+</span><span id="__span-2-30"><a id="__codelineno-2-30" name="__codelineno-2-30"></a><a href="#__codelineno-2-30"><span class="linenos" data-linenos="30 "></span></a>│  阶段 6: 打包                                                 │
+</span><span id="__span-2-31"><a id="__codelineno-2-31" name="__codelineno-2-31"></a><a href="#__codelineno-2-31"><span class="linenos" data-linenos="31 "></span></a>│  ├─ 脚本: 04-package.sh                                      │
+</span><span id="__span-2-32"><a id="__codelineno-2-32" name="__codelineno-2-32"></a><a href="#__codelineno-2-32"><span class="linenos" data-linenos="32 "></span></a>│  ├─ 功能: 整理和验证编译产物                                  │
+</span><span id="__span-2-33"><a id="__codelineno-2-33" name="__codelineno-2-33"></a><a href="#__codelineno-2-33"><span class="linenos" data-linenos="33 "></span></a>│  └─ 输出: 最终的 Qt6 安装包                                  │
+</span><span id="__span-2-34"><a id="__codelineno-2-34" name="__codelineno-2-34"></a><a href="#__codelineno-2-34"><span class="linenos" data-linenos="34 "></span></a>└─────────────────────────────────────────────────────────────┘
+</span></code></pre></div>
+<h3 id="阶段详细说明">阶段详细说明<a class="headerlink" href="#阶段详细说明" title="链接到此章节">&para;</a></h3>
+<h4 id="阶段-1-下载-qt-源码">阶段 1: 下载 Qt 源码<a class="headerlink" href="#阶段-1-下载-qt-源码" title="链接到此章节">&para;</a></h4>
+<p>从 Qt 官方服务器下载完整的 Qt6 源码包（qt-everywhere-src-6.9.1.tar.xz），解压到工作目录。</p>
+<h4 id="阶段-2-获取交叉编译工具链">阶段 2: 获取交叉编译工具链<a class="headerlink" href="#阶段-2-获取交叉编译工具链" title="链接到此章节">&para;</a></h4>
+<p>下载 ARM 交叉编译工具链（如果本地不存在），验证工具链版本和完整性。</p>
+<h4 id="阶段-3-编译-host-qt">阶段 3: 编译 Host Qt<a class="headerlink" href="#阶段-3-编译-host-qt" title="链接到此章节">&para;</a></h4>
+<p>编译运行在主机（x86_64）上的 Qt6，这一步是必须的，因为：
+- Qt 的元对象编译器（moc）需要先编译
+- 资源编译器（rcc）需要先编译
+- qmake 工具需要先编译</p>
+<p>这些工具在编译 Target Qt 时会被调用。</p>
+<h4 id="阶段-4-安装-target-依赖">阶段 4: 安装 Target 依赖<a class="headerlink" href="#阶段-4-安装-target-依赖" title="链接到此章节">&para;</a></h4>
+<p>下载并编译目标平台需要的第三方库：</p>
+<table>
+<thead>
+<tr>
+<th>库</th>
+<th>用途</th>
+<th>Qt 模块</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tslib</td>
+<td>触摸屏校准</td>
+<td>Qt Gui</td>
+</tr>
+<tr>
+<td>libsndfile</td>
+<td>音频文件格式支持</td>
+<td>PulseAudio</td>
+</tr>
+<tr>
+<td>PulseAudio</td>
+<td>音频服务</td>
+<td>Qt Multimedia</td>
+</tr>
+<tr>
+<td>FFmpeg</td>
+<td>多媒体编解码</td>
+<td>Qt Multimedia</td>
+</tr>
+<tr>
+<td>OpenSSL</td>
+<td>SSL/TLS 支持</td>
+<td>Qt Network</td>
+</tr>
+</tbody>
+</table>
+<h4 id="阶段-5-编译-target-qt">阶段 5: 编译 Target Qt<a class="headerlink" href="#阶段-5-编译-target-qt" title="链接到此章节">&para;</a></h4>
+<p>使用 Host Qt 的工具和交叉编译工具链，编译 ARM 版本的 Qt6。</p>
+<h4 id="阶段-6-打包">阶段 6: 打包<a class="headerlink" href="#阶段-6-打包" title="链接到此章节">&para;</a></h4>
+<p>整理编译产物，生成最终的安装包。</p>
+<h2 id="使用方法">使用方法<a class="headerlink" href="#使用方法" title="链接到此章节">&para;</a></h2>
+<h3 id="基本用法">基本用法<a class="headerlink" href="#基本用法" title="链接到此章节">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1"></a><a href="#__codelineno-3-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="c1"># 完整编译（执行所有 6 个阶段）</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2"></a><a href="#__codelineno-3-2"><span class="linenos" data-linenos=" 2 "></span></a>./scripts/third_party_install/install_qt_with_compile.sh
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3"></a><a href="#__codelineno-3-3"><span class="linenos" data-linenos=" 3 "></span></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4"></a><a href="#__codelineno-3-4"><span class="linenos" data-linenos=" 4 "></span></a><span class="c1"># 从指定阶段开始（用于中断后继续）</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5"></a><a href="#__codelineno-3-5"><span class="linenos" data-linenos=" 5 "></span></a>./scripts/third_party_install/install_qt_with_compile.sh<span class="w"> </span>--stage<span class="w"> </span><span class="m">3</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6"></a><a href="#__codelineno-3-6"><span class="linenos" data-linenos=" 6 "></span></a>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7"></a><a href="#__codelineno-3-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="c1"># 使用自定义分支名</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8"></a><a href="#__codelineno-3-8"><span class="linenos" data-linenos=" 8 "></span></a>./scripts/third_party_install/install_qt_with_compile.sh<span class="w"> </span>--branch<span class="w"> </span>my-qt-build
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9"></a><a href="#__codelineno-3-9"><span class="linenos" data-linenos=" 9 "></span></a>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10"></a><a href="#__codelineno-3-10"><span class="linenos" data-linenos="10 "></span></a><span class="c1"># 跳过字体安装</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11"></a><a href="#__codelineno-3-11"><span class="linenos" data-linenos="11 "></span></a>./scripts/third_party_install/install_qt_with_compile.sh<span class="w"> </span>--no-fonts
+</span></code></pre></div>
+<h3 id="命令行参数">命令行参数<a class="headerlink" href="#命令行参数" title="链接到此章节">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--stage &lt;n&gt;</code></td>
+<td>只执行指定阶段（1-6）</td>
+<td>执行所有阶段</td>
+</tr>
+<tr>
+<td><code>--branch &lt;name&gt;</code></td>
+<td>使用自定义分支名</td>
+<td><code>compile-YYYYMMDD</code></td>
+</tr>
+<tr>
+<td><code>--no-fonts</code></td>
+<td>跳过字体安装步骤</td>
+<td>安装字体</td>
+</tr>
+<tr>
+<td><code>-h, --help</code></td>
+<td>显示帮助信息</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h3 id="环境变量">环境变量<a class="headerlink" href="#环境变量" title="链接到此章节">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>变量</th>
+<th>说明</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PROJECT_ROOT</code></td>
+<td>项目根目录</td>
+<td>自动检测</td>
+</tr>
+<tr>
+<td><code>CONFIG_SOURCE_DIR</code></td>
+<td>Qt 配置文件源目录</td>
+<td><code>scripts/third_party_install/config/qt</code></td>
+</tr>
+<tr>
+<td><code>ROOTFS_DIR</code></td>
+<td>根文件系统目录</td>
+<td><code>rootfs/nfs</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="输出格式">输出格式<a class="headerlink" href="#输出格式" title="链接到此章节">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1"></a><a href="#__codelineno-4-1"><span class="linenos" data-linenos=" 1 "></span></a>[INFO] === Qt 编译安装脚本 ===
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2"></a><a href="#__codelineno-4-2"><span class="linenos" data-linenos=" 2 "></span></a>[INFO] 项目根目录: /home/charliechen/imx-forge
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3"></a><a href="#__codelineno-4-3"><span class="linenos" data-linenos=" 3 "></span></a>[INFO] qt-compile-pipeline: /home/charliechen/imx-forge/third_party/qt-compile-pipeline
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4"></a><a href="#__codelineno-4-4"><span class="linenos" data-linenos=" 4 "></span></a>[INFO] 配置源目录: /home/charliechen/imx-forge/scripts/third_party_install/config/qt
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5"></a><a href="#__codelineno-4-5"><span class="linenos" data-linenos=" 5 "></span></a>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6"></a><a href="#__codelineno-4-6"><span class="linenos" data-linenos=" 6 "></span></a>[INFO] 准备覆盖的配置文件:
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7"></a><a href="#__codelineno-4-7"><span class="linenos" data-linenos=" 7 "></span></a>[INFO]   - qt.conf
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8"></a><a href="#__codelineno-4-8"><span class="linenos" data-linenos=" 8 "></span></a>[INFO]   - host.conf
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9"></a><a href="#__codelineno-4-9"><span class="linenos" data-linenos=" 9 "></span></a>[INFO]   - target.conf
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10"></a><a href="#__codelineno-4-10"><span class="linenos" data-linenos="10 "></span></a>[INFO]   - third_party.conf
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11"></a><a href="#__codelineno-4-11"><span class="linenos" data-linenos="11 "></span></a>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12"></a><a href="#__codelineno-4-12"><span class="linenos" data-linenos="12 "></span></a>[INFO] 在子模块 qt-compile-pipeline 中切换分支
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13"></a><a href="#__codelineno-4-13"><span class="linenos" data-linenos="13 "></span></a>[INFO] 子模块回到默认分支: main
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14"></a><a href="#__codelineno-4-14"><span class="linenos" data-linenos="14 "></span></a>[INFO] 子模块创建新分支: compile-20260319
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15"></a><a href="#__codelineno-4-15"><span class="linenos" data-linenos="15 "></span></a>[INFO] 主项目分支保持不变: main
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16"></a><a href="#__codelineno-4-16"><span class="linenos" data-linenos="16 "></span></a>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17"></a><a href="#__codelineno-4-17"><span class="linenos" data-linenos="17 "></span></a>[INFO] === 覆盖配置文件 ===
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18"></a><a href="#__codelineno-4-18"><span class="linenos" data-linenos="18 "></span></a>[INFO] 拷贝 qt.conf...
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19"></a><a href="#__codelineno-4-19"><span class="linenos" data-linenos="19 "></span></a>[INFO]   → /home/charliechen/imx-forge/third_party/qt-compile-pipeline/config/qt.conf
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20"></a><a href="#__codelineno-4-20"><span class="linenos" data-linenos="20 "></span></a>
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21"></a><a href="#__codelineno-4-21"><span class="linenos" data-linenos="21 "></span></a>[INFO] === 配置摘要 ===
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22"></a><a href="#__codelineno-4-22"><span class="linenos" data-linenos="22 "></span></a>[INFO] Qt 版本: 6.9.1
+</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23"></a><a href="#__codelineno-4-23"><span class="linenos" data-linenos="23 "></span></a>[INFO] 模块: qtbase qtdeclarative qtmultimedia qtcharts qtshadertools qtserialport qtvirtualkeyboard qt5compat
+</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24"></a><a href="#__codelineno-4-24"><span class="linenos" data-linenos="24 "></span></a>[INFO] 输出路径:
+</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25"></a><a href="#__codelineno-4-25"><span class="linenos" data-linenos="25 "></span></a>[INFO]   Host Qt:   /home/charliechen/imx-forge/host/qt6-host
+</span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26"></a><a href="#__codelineno-4-26"><span class="linenos" data-linenos="26 "></span></a>[INFO]   Target Qt: /home/charliechen/imx-forge/out/qt6-imx6ull
+</span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27"></a><a href="#__codelineno-4-27"><span class="linenos" data-linenos="27 "></span></a>[INFO]   工作目录:  /home/charliechen/imx-forge/out/third_party/.qt-workdir
+</span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28"></a><a href="#__codelineno-4-28"><span class="linenos" data-linenos="28 "></span></a>
+</span><span id="__span-4-29"><a id="__codelineno-4-29" name="__codelineno-4-29"></a><a href="#__codelineno-4-29"><span class="linenos" data-linenos="29 "></span></a>[INFO] === 开始编译 ===
+</span><span id="__span-4-30"><a id="__codelineno-4-30" name="__codelineno-4-30"></a><a href="#__codelineno-4-30"><span class="linenos" data-linenos="30 "></span></a>[INFO] 阶段 1: 下载 Qt 源码
+</span><span id="__span-4-31"><a id="__codelineno-4-31" name="__codelineno-4-31"></a><a href="#__codelineno-4-31"><span class="linenos" data-linenos="31 "></span></a>...
+</span></code></pre></div>
+<h2 id="配置文件说明">配置文件说明<a class="headerlink" href="#配置文件说明" title="链接到此章节">&para;</a></h2>
+<p>Qt 编译配置由四个配置文件控制，位于 <code>scripts/third_party_install/config/qt/</code>：</p>
+<h3 id="qtconf---qt-版本与源码配置">qt.conf - Qt 版本与源码配置<a class="headerlink" href="#qtconf---qt-版本与源码配置" title="链接到此章节">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1"></a><a href="#__codelineno-5-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="c1"># Qt 版本</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2"></a><a href="#__codelineno-5-2"><span class="linenos" data-linenos=" 2 "></span></a><span class="nv">QT_VERSION</span><span class="o">=</span><span class="s2">&quot;6.9.1&quot;</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3"></a><a href="#__codelineno-5-3"><span class="linenos" data-linenos=" 3 "></span></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4"></a><a href="#__codelineno-5-4"><span class="linenos" data-linenos=" 4 "></span></a><span class="c1"># 源码下载地址</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5"></a><a href="#__codelineno-5-5"><span class="linenos" data-linenos=" 5 "></span></a><span class="nv">QT_SRC_URL</span><span class="o">=</span><span class="s2">&quot;https://download.qt.io/official_releases/qt/6.9/6.9.1/single/qt-everywhere-src-</span><span class="si">${</span><span class="nv">QT_VERSION</span><span class="si">}</span><span class="s2">.tar.xz&quot;</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6"></a><a href="#__codelineno-5-6"><span class="linenos" data-linenos=" 6 "></span></a>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7"></a><a href="#__codelineno-5-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="c1"># 工作目录（中间产物）</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8"></a><a href="#__codelineno-5-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="nv">WORK_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/out/third_party/.qt-workdir&quot;</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9"></a><a href="#__codelineno-5-9"><span class="linenos" data-linenos=" 9 "></span></a>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10"></a><a href="#__codelineno-5-10"><span class="linenos" data-linenos="10 "></span></a><span class="c1"># Qt 模块列表</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11"></a><a href="#__codelineno-5-11"><span class="linenos" data-linenos="11 "></span></a><span class="nv">QT_MODULES</span><span class="o">=</span><span class="s2">&quot;qtbase qtdeclarative qtmultimedia qtcharts qtshadertools qtserialport qtvirtualkeyboard qt5compat&quot;</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12"></a><a href="#__codelineno-5-12"><span class="linenos" data-linenos="12 "></span></a>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13"></a><a href="#__codelineno-5-13"><span class="linenos" data-linenos="13 "></span></a><span class="c1"># 编译开关</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14"></a><a href="#__codelineno-5-14"><span class="linenos" data-linenos="14 "></span></a><span class="nv">BUILD_HOST_QT</span><span class="o">=</span><span class="nb">true</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15"></a><a href="#__codelineno-5-15"><span class="linenos" data-linenos="15 "></span></a><span class="nv">BUILD_TARGET_QT</span><span class="o">=</span><span class="nb">true</span>
+</span></code></pre></div>
+<h3 id="hostconf---host-qt-编译配置">host.conf - Host Qt 编译配置<a class="headerlink" href="#hostconf---host-qt-编译配置" title="链接到此章节">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1"></a><a href="#__codelineno-6-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="c1"># Host Qt 安装路径</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2"></a><a href="#__codelineno-6-2"><span class="linenos" data-linenos=" 2 "></span></a><span class="nv">HOST_INSTALL_PREFIX</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/host/qt6-host&quot;</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3"></a><a href="#__codelineno-6-3"><span class="linenos" data-linenos=" 3 "></span></a>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4"></a><a href="#__codelineno-6-4"><span class="linenos" data-linenos=" 4 "></span></a><span class="c1"># 是否构建 Debug 版本</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5"></a><a href="#__codelineno-6-5"><span class="linenos" data-linenos=" 5 "></span></a><span class="nv">HOST_BUILD_DEBUG</span><span class="o">=</span><span class="nb">false</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6"></a><a href="#__codelineno-6-6"><span class="linenos" data-linenos=" 6 "></span></a>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7"></a><a href="#__codelineno-6-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="c1"># 额外 configure 参数</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8"></a><a href="#__codelineno-6-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="nv">HOST_CONFIGURE_EXTRA</span><span class="o">=</span><span class="s2">&quot;\</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9"></a><a href="#__codelineno-6-9"><span class="linenos" data-linenos=" 9 "></span></a><span class="s2">  -ltcg \</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10"></a><a href="#__codelineno-6-10"><span class="linenos" data-linenos="10 "></span></a><span class="s2">  -DFEATURE_sql=OFF \</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11"></a><a href="#__codelineno-6-11"><span class="linenos" data-linenos="11 "></span></a><span class="s2">  -DFEATURE_openssl=ON \</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12"></a><a href="#__codelineno-6-12"><span class="linenos" data-linenos="12 "></span></a><span class="s2">  -DFEATURE_ssl=ON \</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13"></a><a href="#__codelineno-6-13"><span class="linenos" data-linenos="13 "></span></a><span class="s2">&quot;</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14"></a><a href="#__codelineno-6-14"><span class="linenos" data-linenos="14 "></span></a>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15"></a><a href="#__codelineno-6-15"><span class="linenos" data-linenos="15 "></span></a><span class="c1"># 额外 CMake 参数</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16"></a><a href="#__codelineno-6-16"><span class="linenos" data-linenos="16 "></span></a><span class="nv">HOST_CMAKE_EXTRA</span><span class="o">=</span><span class="s2">&quot;\</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17"></a><a href="#__codelineno-6-17"><span class="linenos" data-linenos="17 "></span></a><span class="s2">  -DFEATURE_optimize_full=ON \</span>
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18"></a><a href="#__codelineno-6-18"><span class="linenos" data-linenos="18 "></span></a><span class="s2">&quot;</span>
+</span></code></pre></div>
+<h3 id="targetconf---target-qt-交叉编译配置">target.conf - Target Qt 交叉编译配置<a class="headerlink" href="#targetconf---target-qt-交叉编译配置" title="链接到此章节">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1"></a><a href="#__codelineno-7-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="c1"># Target Qt 安装路径</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2"></a><a href="#__codelineno-7-2"><span class="linenos" data-linenos=" 2 "></span></a><span class="nv">TARGET_INSTALL_PREFIX</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/out/qt6-imx6ull&quot;</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3"></a><a href="#__codelineno-7-3"><span class="linenos" data-linenos=" 3 "></span></a>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4"></a><a href="#__codelineno-7-4"><span class="linenos" data-linenos=" 4 "></span></a><span class="c1"># 目标设备上的路径</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5"></a><a href="#__codelineno-7-5"><span class="linenos" data-linenos=" 5 "></span></a><span class="nv">TARGET_DEVICE_PREFIX</span><span class="o">=</span><span class="s2">&quot;/usr/local/qt6&quot;</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6"></a><a href="#__codelineno-7-6"><span class="linenos" data-linenos=" 6 "></span></a>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7"></a><a href="#__codelineno-7-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="c1"># OpenGL 配置</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8"></a><a href="#__codelineno-7-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="nv">TARGET_USE_OPENGL</span><span class="o">=</span><span class="nb">false</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9"></a><a href="#__codelineno-7-9"><span class="linenos" data-linenos=" 9 "></span></a>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10"></a><a href="#__codelineno-7-10"><span class="linenos" data-linenos="10 "></span></a><span class="c1"># ALSA 音频支持</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11"></a><a href="#__codelineno-7-11"><span class="linenos" data-linenos="11 "></span></a><span class="nv">TARGET_USE_ALSA</span><span class="o">=</span><span class="nb">true</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12"></a><a href="#__codelineno-7-12"><span class="linenos" data-linenos="12 "></span></a>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13"></a><a href="#__codelineno-7-13"><span class="linenos" data-linenos="13 "></span></a><span class="c1"># FFmpeg 多媒体支持</span>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14"></a><a href="#__codelineno-7-14"><span class="linenos" data-linenos="14 "></span></a><span class="nv">TARGET_USE_FFMPEG</span><span class="o">=</span><span class="nb">true</span>
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15"></a><a href="#__codelineno-7-15"><span class="linenos" data-linenos="15 "></span></a>
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16"></a><a href="#__codelineno-7-16"><span class="linenos" data-linenos="16 "></span></a><span class="c1"># 目标架构</span>
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17"></a><a href="#__codelineno-7-17"><span class="linenos" data-linenos="17 "></span></a><span class="nv">TARGET_ARCH</span><span class="o">=</span><span class="s2">&quot;armhf&quot;</span>
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18"></a><a href="#__codelineno-7-18"><span class="linenos" data-linenos="18 "></span></a>
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19"></a><a href="#__codelineno-7-19"><span class="linenos" data-linenos="19 "></span></a><span class="c1"># Qt 平台插件</span>
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20"></a><a href="#__codelineno-7-20"><span class="linenos" data-linenos="20 "></span></a><span class="nv">QT_TARGET_PLATFORM</span><span class="o">=</span><span class="s2">&quot;linux-arm-gnueabihf-g++&quot;</span>
+</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21"></a><a href="#__codelineno-7-21"><span class="linenos" data-linenos="21 "></span></a>
+</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22"></a><a href="#__codelineno-7-22"><span class="linenos" data-linenos="22 "></span></a><span class="c1"># 渲染后端配置</span>
+</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23"></a><a href="#__codelineno-7-23"><span class="linenos" data-linenos="23 "></span></a><span class="nv">TARGET_RENDER_BACKENDS</span><span class="o">=</span><span class="s2">&quot;\</span>
+</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24"></a><a href="#__codelineno-7-24"><span class="linenos" data-linenos="24 "></span></a><span class="s2">  -DFEATURE_xcb=OFF \</span>
+</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25"></a><a href="#__codelineno-7-25"><span class="linenos" data-linenos="25 "></span></a><span class="s2">  -DFEATURE_eglfs=OFF \</span>
+</span><span id="__span-7-26"><a id="__codelineno-7-26" name="__codelineno-7-26"></a><a href="#__codelineno-7-26"><span class="linenos" data-linenos="26 "></span></a><span class="s2">  -DFEATURE_linuxfb=ON \</span>
+</span><span id="__span-7-27"><a id="__codelineno-7-27" name="__codelineno-7-27"></a><a href="#__codelineno-7-27"><span class="linenos" data-linenos="27 "></span></a><span class="s2">  -DFEATURE_evdev=ON \</span>
+</span><span id="__span-7-28"><a id="__codelineno-7-28" name="__codelineno-7-28"></a><a href="#__codelineno-7-28"><span class="linenos" data-linenos="28 "></span></a><span class="s2">  -DFEATURE_tslib=ON \</span>
+</span><span id="__span-7-29"><a id="__codelineno-7-29" name="__codelineno-7-29"></a><a href="#__codelineno-7-29"><span class="linenos" data-linenos="29 "></span></a><span class="s2">  -DFEATURE_libinput=OFF \</span>
+</span><span id="__span-7-30"><a id="__codelineno-7-30" name="__codelineno-7-30"></a><a href="#__codelineno-7-30"><span class="linenos" data-linenos="30 "></span></a><span class="s2">  -DINPUT_opengl=no \</span>
+</span><span id="__span-7-31"><a id="__codelineno-7-31" name="__codelineno-7-31"></a><a href="#__codelineno-7-31"><span class="linenos" data-linenos="31 "></span></a><span class="s2">  -DFEATURE_glib=OFF \</span>
+</span><span id="__span-7-32"><a id="__codelineno-7-32" name="__codelineno-7-32"></a><a href="#__codelineno-7-32"><span class="linenos" data-linenos="32 "></span></a><span class="s2">  -DFEATURE_system_sqlite=OFF</span>
+</span><span id="__span-7-33"><a id="__codelineno-7-33" name="__codelineno-7-33"></a><a href="#__codelineno-7-33"><span class="linenos" data-linenos="33 "></span></a><span class="s2">&quot;</span>
+</span><span id="__span-7-34"><a id="__codelineno-7-34" name="__codelineno-7-34"></a><a href="#__codelineno-7-34"><span class="linenos" data-linenos="34 "></span></a>
+</span><span id="__span-7-35"><a id="__codelineno-7-35" name="__codelineno-7-35"></a><a href="#__codelineno-7-35"><span class="linenos" data-linenos="35 "></span></a><span class="c1"># 额外 configure 参数</span>
+</span><span id="__span-7-36"><a id="__codelineno-7-36" name="__codelineno-7-36"></a><a href="#__codelineno-7-36"><span class="linenos" data-linenos="36 "></span></a><span class="nv">TARGET_CONFIGURE_EXTRA</span><span class="o">=</span><span class="s2">&quot;\</span>
+</span><span id="__span-7-37"><a id="__codelineno-7-37" name="__codelineno-7-37"></a><a href="#__codelineno-7-37"><span class="linenos" data-linenos="37 "></span></a><span class="s2">  -DFEATURE_printsupport=OFF \</span>
+</span><span id="__span-7-38"><a id="__codelineno-7-38" name="__codelineno-7-38"></a><a href="#__codelineno-7-38"><span class="linenos" data-linenos="38 "></span></a><span class="s2">  -no-feature-opengl \</span>
+</span><span id="__span-7-39"><a id="__codelineno-7-39" name="__codelineno-7-39"></a><a href="#__codelineno-7-39"><span class="linenos" data-linenos="39 "></span></a><span class="s2">  -DFEATURE_openssl=ON \</span>
+</span><span id="__span-7-40"><a id="__codelineno-7-40" name="__codelineno-7-40"></a><a href="#__codelineno-7-40"><span class="linenos" data-linenos="40 "></span></a><span class="s2">  -DFEATURE_ssl=ON \</span>
+</span><span id="__span-7-41"><a id="__codelineno-7-41" name="__codelineno-7-41"></a><a href="#__codelineno-7-41"><span class="linenos" data-linenos="41 "></span></a><span class="s2">  -ltcg \</span>
+</span><span id="__span-7-42"><a id="__codelineno-7-42" name="__codelineno-7-42"></a><a href="#__codelineno-7-42"><span class="linenos" data-linenos="42 "></span></a><span class="s2">&quot;</span>
+</span></code></pre></div>
+<h3 id="third_partyconf---第三方库配置">third_party.conf - 第三方库配置<a class="headerlink" href="#third_partyconf---第三方库配置" title="链接到此章节">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1"></a><a href="#__codelineno-8-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="c1"># 第三方库 sysroot 目录</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2"></a><a href="#__codelineno-8-2"><span class="linenos" data-linenos=" 2 "></span></a><span class="nv">THIRD_PARTY_SYSROOT</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">WORK_DIR</span><span class="si">}</span><span class="s2">/third-party-sysroot&quot;</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3"></a><a href="#__codelineno-8-3"><span class="linenos" data-linenos=" 3 "></span></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4"></a><a href="#__codelineno-8-4"><span class="linenos" data-linenos=" 4 "></span></a><span class="c1"># tslib 配置（触摸屏校准）</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5"></a><a href="#__codelineno-8-5"><span class="linenos" data-linenos=" 5 "></span></a><span class="nv">TSLIB_ENABLED</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">TSLIB_ENABLED</span><span class="k">:-</span><span class="nv">true</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6"></a><a href="#__codelineno-8-6"><span class="linenos" data-linenos=" 6 "></span></a><span class="nv">TSLIB_BUILTIN_VERSION</span><span class="o">=</span><span class="s2">&quot;1.22&quot;</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7"></a><a href="#__codelineno-8-7"><span class="linenos" data-linenos=" 7 "></span></a>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8"></a><a href="#__codelineno-8-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="c1"># PulseAudio 配置</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9"></a><a href="#__codelineno-8-9"><span class="linenos" data-linenos=" 9 "></span></a><span class="nv">PULSEAUDIO_ENABLED</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PULSEAUDIO_ENABLED</span><span class="k">:-</span><span class="nv">true</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10"></a><a href="#__codelineno-8-10"><span class="linenos" data-linenos="10 "></span></a><span class="nv">PULSEAUDIO_BUILTIN_VERSION</span><span class="o">=</span><span class="s2">&quot;17.0&quot;</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11"></a><a href="#__codelineno-8-11"><span class="linenos" data-linenos="11 "></span></a>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12"></a><a href="#__codelineno-8-12"><span class="linenos" data-linenos="12 "></span></a><span class="c1"># FFmpeg 配置</span>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13"></a><a href="#__codelineno-8-13"><span class="linenos" data-linenos="13 "></span></a><span class="nv">FFMPEG_ENABLED</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">FFMPEG_ENABLED</span><span class="k">:-</span><span class="nv">true</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14"></a><a href="#__codelineno-8-14"><span class="linenos" data-linenos="14 "></span></a><span class="nv">FFMPEG_BUILTIN_VERSION</span><span class="o">=</span><span class="s2">&quot;7.1&quot;</span>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15"></a><a href="#__codelineno-8-15"><span class="linenos" data-linenos="15 "></span></a>
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16"></a><a href="#__codelineno-8-16"><span class="linenos" data-linenos="16 "></span></a><span class="c1"># OpenSSL 配置</span>
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17"></a><a href="#__codelineno-8-17"><span class="linenos" data-linenos="17 "></span></a><span class="nv">OPENSSL_ENABLED</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">OPENSSL_ENABLED</span><span class="k">:-</span><span class="nv">true</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18"></a><a href="#__codelineno-8-18"><span class="linenos" data-linenos="18 "></span></a><span class="nv">OPENSSL_BUILTIN_VERSION</span><span class="o">=</span><span class="s2">&quot;3.4.0&quot;</span>
+</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19"></a><a href="#__codelineno-8-19"><span class="linenos" data-linenos="19 "></span></a>
+</span><span id="__span-8-20"><a id="__codelineno-8-20" name="__codelineno-8-20"></a><a href="#__codelineno-8-20"><span class="linenos" data-linenos="20 "></span></a><span class="c1"># 启用的库列表</span>
+</span><span id="__span-8-21"><a id="__codelineno-8-21" name="__codelineno-8-21"></a><a href="#__codelineno-8-21"><span class="linenos" data-linenos="21 "></span></a><span class="nv">THIRD_PARTY_LIBS</span><span class="o">=</span><span class="s2">&quot;tslib libsndfile pulseaudio ffmpeg openssl&quot;</span>
+</span></code></pre></div>
+<h2 id="rootfs-安装过程">ROOTFS 安装过程<a class="headerlink" href="#rootfs-安装过程" title="链接到此章节">&para;</a></h2>
+<p>编译完成后，脚本自动将产物部署到 ROOTFS：</p>
+<h3 id="第-1-步-安装-target-qt">第 1 步: 安装 Target Qt<a class="headerlink" href="#第-1-步-安装-target-qt" title="链接到此章节">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1"></a><a href="#__codelineno-9-1"><span class="linenos" data-linenos=" 1 "></span></a>源目录: ${TARGET_INSTALL_PREFIX}
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2"></a><a href="#__codelineno-9-2"><span class="linenos" data-linenos=" 2 "></span></a>目标目录: ${ROOTFS_DIR}/usr
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3"></a><a href="#__codelineno-9-3"><span class="linenos" data-linenos=" 3 "></span></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4"></a><a href="#__codelineno-9-4"><span class="linenos" data-linenos=" 4 "></span></a>拷贝内容:
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5"></a><a href="#__codelineno-9-5"><span class="linenos" data-linenos=" 5 "></span></a>  lib/*       → ${ROOTFS_DIR}/usr/lib/       (Qt 库文件)
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6"></a><a href="#__codelineno-9-6"><span class="linenos" data-linenos=" 6 "></span></a>  bin/*       → ${ROOTFS_DIR}/usr/bin/       (Qt 可执行文件)
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7"></a><a href="#__codelineno-9-7"><span class="linenos" data-linenos=" 7 "></span></a>  plugins/*   → ${ROOTFS_DIR}/usr/lib/qt6/plugins/  (Qt 插件)
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8"></a><a href="#__codelineno-9-8"><span class="linenos" data-linenos=" 8 "></span></a>  qml/*       → ${ROOTFS_DIR}/usr/lib/qt6/qml/      (QML 模块)
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9"></a><a href="#__codelineno-9-9"><span class="linenos" data-linenos=" 9 "></span></a>  mkspecs/*   → ${ROOTFS_DIR}/usr/lib/qt6/mkspecs/  (编译规范)
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10"></a><a href="#__codelineno-9-10"><span class="linenos" data-linenos="10 "></span></a>  ...         → ${ROOTFS_DIR}/usr/lib/qt6/  (其他目录)
+</span></code></pre></div>
+<h3 id="第-2-步-安装第三方库">第 2 步: 安装第三方库<a class="headerlink" href="#第-2-步-安装第三方库" title="链接到此章节">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1"></a><a href="#__codelineno-10-1"><span class="linenos" data-linenos="1 "></span></a>源目录: ${THIRD_PARTY_SYSROOT}
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2"></a><a href="#__codelineno-10-2"><span class="linenos" data-linenos="2 "></span></a>目标目录: ${ROOTFS_DIR}
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3"></a><a href="#__codelineno-10-3"><span class="linenos" data-linenos="3 "></span></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4"></a><a href="#__codelineno-10-4"><span class="linenos" data-linenos="4 "></span></a>拷贝内容:
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5"></a><a href="#__codelineno-10-5"><span class="linenos" data-linenos="5 "></span></a>  *.so, *.a  → ${ROOTFS_DIR}/usr/lib/  (库文件)
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6"></a><a href="#__codelineno-10-6"><span class="linenos" data-linenos="6 "></span></a>  可执行文件  → ${ROOTFS_DIR}/usr/bin/ (工具程序)
+</span></code></pre></div>
+<h3 id="第-3-步-安装字体">第 3 步: 安装字体<a class="headerlink" href="#第-3-步-安装字体" title="链接到此章节">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1"></a><a href="#__codelineno-11-1"><span class="linenos" data-linenos="1 "></span></a>内容:
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2"></a><a href="#__codelineno-11-2"><span class="linenos" data-linenos="2 "></span></a>  - DejaVu Fonts (拉丁字符 + 等宽字体)
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3"></a><a href="#__codelineno-11-3"><span class="linenos" data-linenos="3 "></span></a>  - Noto Sans CJK (中日韩字符)
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4"></a><a href="#__codelineno-11-4"><span class="linenos" data-linenos="4 "></span></a>  - Noto Color Emoji (Emoji 支持)
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5"></a><a href="#__codelineno-11-5"><span class="linenos" data-linenos="5 "></span></a>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6"></a><a href="#__codelineno-11-6"><span class="linenos" data-linenos="6 "></span></a>目标目录: ${ROOTFS_DIR}/usr/share/fonts/
+</span></code></pre></div>
+<h3 id="安装完成摘要">安装完成摘要<a class="headerlink" href="#安装完成摘要" title="链接到此章节">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1"></a><a href="#__codelineno-12-1"><span class="linenos" data-linenos=" 1 "></span></a>[INFO] === ROOTFS 安装完成 ===
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2"></a><a href="#__codelineno-12-2"><span class="linenos" data-linenos=" 2 "></span></a>[INFO] 安装内容:
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3"></a><a href="#__codelineno-12-3"><span class="linenos" data-linenos=" 3 "></span></a>[INFO]   Qt 库:      ${ROOTFS_DIR}/usr/lib/
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4"></a><a href="#__codelineno-12-4"><span class="linenos" data-linenos=" 4 "></span></a>[INFO]   Qt 可执行:  ${ROOTFS_DIR}/usr/bin/
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5"></a><a href="#__codelineno-12-5"><span class="linenos" data-linenos=" 5 "></span></a>[INFO]   Qt 插件:    ${ROOTFS_DIR}/usr/lib/qt6/plugins/
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6"></a><a href="#__codelineno-12-6"><span class="linenos" data-linenos=" 6 "></span></a>[INFO]   Qt QML:     ${ROOTFS_DIR}/usr/lib/qt6/qml/
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7"></a><a href="#__codelineno-12-7"><span class="linenos" data-linenos=" 7 "></span></a>[INFO]   第三方库:   ${ROOTFS_DIR}/usr/lib/
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8"></a><a href="#__codelineno-12-8"><span class="linenos" data-linenos=" 8 "></span></a>[INFO]   字体:       ${ROOTFS_DIR}/usr/share/fonts/
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9"></a><a href="#__codelineno-12-9"><span class="linenos" data-linenos=" 9 "></span></a>[INFO]
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10"></a><a href="#__codelineno-12-10"><span class="linenos" data-linenos="10 "></span></a>[INFO] Qt 字体环境变量:
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11"></a><a href="#__codelineno-12-11"><span class="linenos" data-linenos="11 "></span></a>[INFO]   export QT_QPA_FONTDIR=/usr/share/fonts
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12"></a><a href="#__codelineno-12-12"><span class="linenos" data-linenos="12 "></span></a>[INFO]   export LANG=C.UTF-8
+</span></code></pre></div>
+<h2 id="输出目录">输出目录<a class="headerlink" href="#输出目录" title="链接到此章节">&para;</a></h2>
+<p>脚本创建以下目录结构：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1"></a><a href="#__codelineno-13-1"><span class="linenos" data-linenos=" 1 "></span></a>PROJECT_ROOT/
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2"></a><a href="#__codelineno-13-2"><span class="linenos" data-linenos=" 2 "></span></a>├── host/
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3"></a><a href="#__codelineno-13-3"><span class="linenos" data-linenos=" 3 "></span></a>│   └── qt6-host/              # Host Qt (x86_64)
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4"></a><a href="#__codelineno-13-4"><span class="linenos" data-linenos=" 4 "></span></a>│       ├── bin/               # qmake, moc, rcc, uic 等
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5"></a><a href="#__codelineno-13-5"><span class="linenos" data-linenos=" 5 "></span></a>│       ├── lib/               # Qt 库文件
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6"></a><a href="#__codelineno-13-6"><span class="linenos" data-linenos=" 6 "></span></a>│       ├── plugins/           # Qt 插件
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7"></a><a href="#__codelineno-13-7"><span class="linenos" data-linenos=" 7 "></span></a>│       └── mkspecs/           # 编译规范
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8"></a><a href="#__codelineno-13-8"><span class="linenos" data-linenos=" 8 "></span></a>├── out/
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9"></a><a href="#__codelineno-13-9"><span class="linenos" data-linenos=" 9 "></span></a>│   ├── qt6-imx6ull/           # Target Qt (ARM) - staging 目录
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10"></a><a href="#__codelineno-13-10"><span class="linenos" data-linenos="10 "></span></a>│   │   ├── bin/               # ARM 版本的工具
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11"></a><a href="#__codelineno-13-11"><span class="linenos" data-linenos="11 "></span></a>│   │   ├── lib/               # ARM 版本的库
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12"></a><a href="#__codelineno-13-12"><span class="linenos" data-linenos="12 "></span></a>│   │   ├── plugins/           # ARM 版本的插件
+</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13"></a><a href="#__codelineno-13-13"><span class="linenos" data-linenos="13 "></span></a>│   │   ├── qml/               # QML 模块
+</span><span id="__span-13-14"><a id="__codelineno-13-14" name="__codelineno-13-14"></a><a href="#__codelineno-13-14"><span class="linenos" data-linenos="14 "></span></a>│   │   └── mkspecs/           # 编译规范
+</span><span id="__span-13-15"><a id="__codelineno-13-15" name="__codelineno-13-15"></a><a href="#__codelineno-13-15"><span class="linenos" data-linenos="15 "></span></a>│   └── .qt-workdir/           # 工作目录（中间产物）
+</span><span id="__span-13-16"><a id="__codelineno-13-16" name="__codelineno-13-16"></a><a href="#__codelineno-13-16"><span class="linenos" data-linenos="16 "></span></a>│       ├── qt-everywhere-src-6.9.1/  # Qt 源码
+</span><span id="__span-13-17"><a id="__codelineno-13-17" name="__codelineno-13-17"></a><a href="#__codelineno-13-17"><span class="linenos" data-linenos="17 "></span></a>│       ├── build-host/        # Host Qt 构建目录
+</span><span id="__span-13-18"><a id="__codelineno-13-18" name="__codelineno-13-18"></a><a href="#__codelineno-13-18"><span class="linenos" data-linenos="18 "></span></a>│       ├── build-target/      # Target Qt 构建目录
+</span><span id="__span-13-19"><a id="__codelineno-13-19" name="__codelineno-13-19"></a><a href="#__codelineno-13-19"><span class="linenos" data-linenos="19 "></span></a>│       ├── toolchain/         # 工具链
+</span><span id="__span-13-20"><a id="__codelineno-13-20" name="__codelineno-13-20"></a><a href="#__codelineno-13-20"><span class="linenos" data-linenos="20 "></span></a>│       └── third-party-sysroot/  # 第三方库
+</span><span id="__span-13-21"><a id="__codelineno-13-21" name="__codelineno-13-21"></a><a href="#__codelineno-13-21"><span class="linenos" data-linenos="21 "></span></a>└── rootfs/
+</span><span id="__span-13-22"><a id="__codelineno-13-22" name="__codelineno-13-22"></a><a href="#__codelineno-13-22"><span class="linenos" data-linenos="22 "></span></a>    └── nfs/                   # ROOTFS (最终部署位置)
+</span><span id="__span-13-23"><a id="__codelineno-13-23" name="__codelineno-13-23"></a><a href="#__codelineno-13-23"><span class="linenos" data-linenos="23 "></span></a>        ├── usr/
+</span><span id="__span-13-24"><a id="__codelineno-13-24" name="__codelineno-13-24"></a><a href="#__codelineno-13-24"><span class="linenos" data-linenos="24 "></span></a>        │   ├── lib/           # Qt 库 + 第三方库
+</span><span id="__span-13-25"><a id="__codelineno-13-25" name="__codelineno-13-25"></a><a href="#__codelineno-13-25"><span class="linenos" data-linenos="25 "></span></a>        │   ├── bin/           # Qt 工具
+</span><span id="__span-13-26"><a id="__codelineno-13-26" name="__codelineno-13-26"></a><a href="#__codelineno-13-26"><span class="linenos" data-linenos="26 "></span></a>        │   └── share/
+</span><span id="__span-13-27"><a id="__codelineno-13-27" name="__codelineno-13-27"></a><a href="#__codelineno-13-27"><span class="linenos" data-linenos="27 "></span></a>        │       └── fonts/     # 字体文件
+</span><span id="__span-13-28"><a id="__codelineno-13-28" name="__codelineno-13-28"></a><a href="#__codelineno-13-28"><span class="linenos" data-linenos="28 "></span></a>        └── lib/
+</span><span id="__span-13-29"><a id="__codelineno-13-29" name="__codelineno-13-29"></a><a href="#__codelineno-13-29"><span class="linenos" data-linenos="29 "></span></a>            └── firmware/      # 固件
+</span></code></pre></div>
+<h2 id="使用示例">使用示例<a class="headerlink" href="#使用示例" title="链接到此章节">&para;</a></h2>
+<h3 id="场景-1-首次完整编译">场景 1: 首次完整编译<a class="headerlink" href="#场景-1-首次完整编译" title="链接到此章节">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1"></a><a href="#__codelineno-14-1"><span class="linenos" data-linenos=" 1 "></span></a>$<span class="w"> </span>./scripts/third_party_install/install_qt_with_compile.sh
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2"></a><a href="#__codelineno-14-2"><span class="linenos" data-linenos=" 2 "></span></a><span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="o">===</span><span class="w"> </span>Qt<span class="w"> </span><span class="nv">编译安装脚本</span><span class="w"> </span><span class="o">===</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3"></a><a href="#__codelineno-14-3"><span class="linenos" data-linenos=" 3 "></span></a><span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span>项目根目录:<span class="w"> </span>/home/charliechen/imx-forge
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4"></a><a href="#__codelineno-14-4"><span class="linenos" data-linenos=" 4 "></span></a><span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span>qt-compile-pipeline:<span class="w"> </span>/home/charliechen/imx-forge/third_party/qt-compile-pipeline
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5"></a><a href="#__codelineno-14-5"><span class="linenos" data-linenos=" 5 "></span></a>...
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6"></a><a href="#__codelineno-14-6"><span class="linenos" data-linenos=" 6 "></span></a><span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span>阶段<span class="w"> </span><span class="m">1</span>:<span class="w"> </span>下载<span class="w"> </span>Qt<span class="w"> </span>源码
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7"></a><a href="#__codelineno-14-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span>阶段<span class="w"> </span><span class="m">1</span><span class="w"> </span>完成
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8"></a><a href="#__codelineno-14-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span>阶段<span class="w"> </span><span class="m">2</span>:<span class="w"> </span>下载交叉编译工具链
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9"></a><a href="#__codelineno-14-9"><span class="linenos" data-linenos=" 9 "></span></a><span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span>阶段<span class="w"> </span><span class="m">2</span><span class="w"> </span>完成
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10"></a><a href="#__codelineno-14-10"><span class="linenos" data-linenos="10 "></span></a><span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span>阶段<span class="w"> </span><span class="m">3</span>:<span class="w"> </span>编译<span class="w"> </span>Host<span class="w"> </span>Qt
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11"></a><a href="#__codelineno-14-11"><span class="linenos" data-linenos="11 "></span></a><span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span>阶段<span class="w"> </span><span class="m">3</span><span class="w"> </span>完成
+</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12"></a><a href="#__codelineno-14-12"><span class="linenos" data-linenos="12 "></span></a><span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span>阶段<span class="w"> </span><span class="m">4</span>:<span class="w"> </span>安装<span class="w"> </span>Target<span class="w"> </span>依赖
+</span><span id="__span-14-13"><a id="__codelineno-14-13" name="__codelineno-14-13"></a><a href="#__codelineno-14-13"><span class="linenos" data-linenos="13 "></span></a><span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span>阶段<span class="w"> </span><span class="m">4</span><span class="w"> </span>完成
+</span><span id="__span-14-14"><a id="__codelineno-14-14" name="__codelineno-14-14"></a><a href="#__codelineno-14-14"><span class="linenos" data-linenos="14 "></span></a><span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span>阶段<span class="w"> </span><span class="m">5</span>:<span class="w"> </span>编译<span class="w"> </span>Target<span class="w"> </span>Qt
+</span><span id="__span-14-15"><a id="__codelineno-14-15" name="__codelineno-14-15"></a><a href="#__codelineno-14-15"><span class="linenos" data-linenos="15 "></span></a><span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span>阶段<span class="w"> </span><span class="m">5</span><span class="w"> </span>完成
+</span><span id="__span-14-16"><a id="__codelineno-14-16" name="__codelineno-14-16"></a><a href="#__codelineno-14-16"><span class="linenos" data-linenos="16 "></span></a><span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span>阶段<span class="w"> </span><span class="m">6</span>:<span class="w"> </span>打包
+</span><span id="__span-14-17"><a id="__codelineno-14-17" name="__codelineno-14-17"></a><a href="#__codelineno-14-17"><span class="linenos" data-linenos="17 "></span></a><span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span>阶段<span class="w"> </span><span class="m">6</span><span class="w"> </span>完成
+</span><span id="__span-14-18"><a id="__codelineno-14-18" name="__codelineno-14-18"></a><a href="#__codelineno-14-18"><span class="linenos" data-linenos="18 "></span></a>...
+</span><span id="__span-14-19"><a id="__codelineno-14-19" name="__codelineno-14-19"></a><a href="#__codelineno-14-19"><span class="linenos" data-linenos="19 "></span></a><span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="o">===</span><span class="w"> </span>ROOTFS<span class="w"> </span><span class="nv">安装完成</span><span class="w"> </span><span class="o">===</span>
+</span><span id="__span-14-20"><a id="__codelineno-14-20" name="__codelineno-14-20"></a><a href="#__codelineno-14-20"><span class="linenos" data-linenos="20 "></span></a><span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nv">编译完成</span><span class="w"> </span><span class="o">===</span>
+</span></code></pre></div>
+<h3 id="场景-2-从指定阶段继续">场景 2: 从指定阶段继续<a class="headerlink" href="#场景-2-从指定阶段继续" title="链接到此章节">&para;</a></h3>
+<p>如果编译在第 3 阶段后中断，可以从第 4 阶段继续：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1"></a><a href="#__codelineno-15-1"><span class="linenos" data-linenos="1 "></span></a>$<span class="w"> </span>./scripts/third_party_install/install_qt_with_compile.sh<span class="w"> </span>--stage<span class="w"> </span><span class="m">4</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2"></a><a href="#__codelineno-15-2"><span class="linenos" data-linenos="2 "></span></a><span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="o">===</span><span class="w"> </span>Qt<span class="w"> </span><span class="nv">编译安装脚本</span><span class="w"> </span><span class="o">===</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3"></a><a href="#__codelineno-15-3"><span class="linenos" data-linenos="3 "></span></a>...
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4"></a><a href="#__codelineno-15-4"><span class="linenos" data-linenos="4 "></span></a><span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nv">开始编译</span><span class="w"> </span><span class="o">===</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5"></a><a href="#__codelineno-15-5"><span class="linenos" data-linenos="5 "></span></a><span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span>阶段<span class="w"> </span><span class="m">4</span>:<span class="w"> </span>安装<span class="w"> </span>Target<span class="w"> </span>依赖
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6"></a><a href="#__codelineno-15-6"><span class="linenos" data-linenos="6 "></span></a>...
+</span></code></pre></div>
+<h3 id="场景-3-使用自定义分支名">场景 3: 使用自定义分支名<a class="headerlink" href="#场景-3-使用自定义分支名" title="链接到此章节">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1"></a><a href="#__codelineno-16-1"><span class="linenos" data-linenos="1 "></span></a>$<span class="w"> </span>./scripts/third_party_install/install_qt_with_compile.sh<span class="w"> </span>--branch<span class="w"> </span>feature-qt6-network
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2"></a><a href="#__codelineno-16-2"><span class="linenos" data-linenos="2 "></span></a><span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span>子模块创建新分支:<span class="w"> </span>feature-qt6-network
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3"></a><a href="#__codelineno-16-3"><span class="linenos" data-linenos="3 "></span></a>...
+</span></code></pre></div>
+<h3 id="场景-4-跳过字体安装">场景 4: 跳过字体安装<a class="headerlink" href="#场景-4-跳过字体安装" title="链接到此章节">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1"></a><a href="#__codelineno-17-1"><span class="linenos" data-linenos="1 "></span></a>$<span class="w"> </span>./scripts/third_party_install/install_qt_with_compile.sh<span class="w"> </span>--no-fonts
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2"></a><a href="#__codelineno-17-2"><span class="linenos" data-linenos="2 "></span></a>...
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3"></a><a href="#__codelineno-17-3"><span class="linenos" data-linenos="3 "></span></a><span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span>步骤<span class="w"> </span><span class="m">3</span>/3:<span class="w"> </span>安装字体
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4"></a><a href="#__codelineno-17-4"><span class="linenos" data-linenos="4 "></span></a><span class="o">[</span>INFO<span class="o">]</span><span class="w"> </span>已跳过<span class="w"> </span><span class="o">(</span>--no-fonts<span class="o">)</span>
+</span></code></pre></div>
+<h3 id="场景-5-指定不同的-rootfs">场景 5: 指定不同的 ROOTFS<a class="headerlink" href="#场景-5-指定不同的-rootfs" title="链接到此章节">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1"></a><a href="#__codelineno-18-1"><span class="linenos" data-linenos="1 "></span></a>$<span class="w"> </span><span class="nv">ROOTFS_DIR</span><span class="o">=</span>out/rootfs<span class="w"> </span>./scripts/third_party_install/install_qt_with_compile.sh
+</span></code></pre></div>
+<h2 id="故障排除">故障排除<a class="headerlink" href="#故障排除" title="链接到此章节">&para;</a></h2>
+<h3 id="常见错误">常见错误<a class="headerlink" href="#常见错误" title="链接到此章节">&para;</a></h3>
+<h4 id="错误-1-qt-compile-pipeline-子模块未初始化">错误 1: qt-compile-pipeline 子模块未初始化<a class="headerlink" href="#错误-1-qt-compile-pipeline-子模块未初始化" title="链接到此章节">&para;</a></h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1"></a><a href="#__codelineno-19-1"><span class="linenos" data-linenos="1 "></span></a>[ERROR] qt-compile-pipeline 目录不存在
+</span></code></pre></div>
+<p><strong>解决方法</strong>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1"></a><a href="#__codelineno-20-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 初始化子模块</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2"></a><a href="#__codelineno-20-2"><span class="linenos" data-linenos="2 "></span></a>git<span class="w"> </span>submodule<span class="w"> </span>update<span class="w"> </span>--init<span class="w"> </span>--recursive<span class="w"> </span>third_party/qt-compile-pipeline
+</span></code></pre></div>
+<h4 id="错误-2-rootfs-目录不存在">错误 2: ROOTFS 目录不存在<a class="headerlink" href="#错误-2-rootfs-目录不存在" title="链接到此章节">&para;</a></h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1"></a><a href="#__codelineno-21-1"><span class="linenos" data-linenos="1 "></span></a>[ERROR] ROOTFS 目录不存在: /path/to/rootfs
+</span></code></pre></div>
+<p><strong>解决方法</strong>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1"></a><a href="#__codelineno-22-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 创建 ROOTFS 目录</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2"></a><a href="#__codelineno-22-2"><span class="linenos" data-linenos="2 "></span></a>mkdir<span class="w"> </span>-p<span class="w"> </span>rootfs/nfs
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3"></a><a href="#__codelineno-22-3"><span class="linenos" data-linenos="3 "></span></a>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4"></a><a href="#__codelineno-22-4"><span class="linenos" data-linenos="4 "></span></a><span class="c1"># 或指定其他路径</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5"></a><a href="#__codelineno-22-5"><span class="linenos" data-linenos="5 "></span></a><span class="nv">ROOTFS_DIR</span><span class="o">=</span>out/rootfs<span class="w"> </span>./scripts/third_party_install/install_qt_with_compile.sh
+</span></code></pre></div>
+<h4 id="错误-3-交叉编译工具链未找到">错误 3: 交叉编译工具链未找到<a class="headerlink" href="#错误-3-交叉编译工具链未找到" title="链接到此章节">&para;</a></h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1"></a><a href="#__codelineno-23-1"><span class="linenos" data-linenos="1 "></span></a>[ERROR] 交叉编译器 arm-none-linux-gnueabihf-gcc 未找到
+</span></code></pre></div>
+<p><strong>解决方法</strong>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1"></a><a href="#__codelineno-24-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 安装工具链</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2"></a><a href="#__codelineno-24-2"><span class="linenos" data-linenos="2 "></span></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>gcc-arm-linux-gnueabihf<span class="w"> </span>g++-arm-linux-gnueabihf
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3"></a><a href="#__codelineno-24-3"><span class="linenos" data-linenos="3 "></span></a>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4"></a><a href="#__codelineno-24-4"><span class="linenos" data-linenos="4 "></span></a><span class="c1"># 验证安装</span>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5"></a><a href="#__codelineno-24-5"><span class="linenos" data-linenos="5 "></span></a>arm-linux-gnueabihf-gcc<span class="w"> </span>--version
+</span></code></pre></div>
+<h4 id="错误-4-源码下载失败">错误 4: 源码下载失败<a class="headerlink" href="#错误-4-源码下载失败" title="链接到此章节">&para;</a></h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1"></a><a href="#__codelineno-25-1"><span class="linenos" data-linenos="1 "></span></a>[ERROR] 下载 Qt 源码失败
+</span></code></pre></div>
+<p><strong>解决方法</strong>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1"></a><a href="#__codelineno-26-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 检查网络连接</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2"></a><a href="#__codelineno-26-2"><span class="linenos" data-linenos="2 "></span></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span><span class="w"> </span>download.qt.io
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3"></a><a href="#__codelineno-26-3"><span class="linenos" data-linenos="3 "></span></a>
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4"></a><a href="#__codelineno-26-4"><span class="linenos" data-linenos="4 "></span></a><span class="c1"># 使用国内镜像（修改 qt.conf）</span>
+</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5"></a><a href="#__codelineno-26-5"><span class="linenos" data-linenos="5 "></span></a><span class="c1"># QT_SRC_URL=&quot;https://mirrors.ustc.edu.cn/qtproject/archive/qt/6.9/6.9.1/single/qt-everywhere-src-6.9.1.tar.xz&quot;</span>
+</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6"></a><a href="#__codelineno-26-6"><span class="linenos" data-linenos="6 "></span></a>
+</span><span id="__span-26-7"><a id="__codelineno-26-7" name="__codelineno-26-7"></a><a href="#__codelineno-26-7"><span class="linenos" data-linenos="7 "></span></a><span class="c1"># 或手动下载后放到工作目录</span>
+</span><span id="__span-26-8"><a id="__codelineno-26-8" name="__codelineno-26-8"></a><a href="#__codelineno-26-8"><span class="linenos" data-linenos="8 "></span></a>wget<span class="w"> </span>https://download.qt.io/official_releases/qt/6.9/6.9.1/single/qt-everywhere-src-6.9.1.tar.xz
+</span><span id="__span-26-9"><a id="__codelineno-26-9" name="__codelineno-26-9"></a><a href="#__codelineno-26-9"><span class="linenos" data-linenos="9 "></span></a>mv<span class="w"> </span>qt-everywhere-src-6.9.1.tar.xz<span class="w"> </span>out/third_party/.qt-workdir/downloads/
+</span></code></pre></div>
+<h4 id="错误-5-host-qt-编译失败">错误 5: Host Qt 编译失败<a class="headerlink" href="#错误-5-host-qt-编译失败" title="链接到此章节">&para;</a></h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1"></a><a href="#__codelineno-27-1"><span class="linenos" data-linenos="1 "></span></a>[ERROR] 阶段 3 失败: 编译 Host Qt
+</span></code></pre></div>
+<p><strong>解决方法</strong>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1"></a><a href="#__codelineno-28-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 检查主机依赖</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2"></a><a href="#__codelineno-28-2"><span class="linenos" data-linenos="2 "></span></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>build-essential<span class="w"> </span>cmake<span class="w"> </span>perl<span class="w"> </span>python3<span class="w"> </span>ninja-build<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3"></a><a href="#__codelineno-28-3"><span class="linenos" data-linenos="3 "></span></a><span class="w">                 </span>libgl1-mesa-dev<span class="w"> </span>libglib2.0-dev<span class="w"> </span>libxkbcommon-dev<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4"></a><a href="#__codelineno-28-4"><span class="linenos" data-linenos="4 "></span></a><span class="w">                 </span>libfontconfig1-dev<span class="w"> </span>libfreetype6-dev<span class="w"> </span>libssl-dev
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5"></a><a href="#__codelineno-28-5"><span class="linenos" data-linenos="5 "></span></a>
+</span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6"></a><a href="#__codelineno-28-6"><span class="linenos" data-linenos="6 "></span></a><span class="c1"># 清理后重新编译</span>
+</span><span id="__span-28-7"><a id="__codelineno-28-7" name="__codelineno-28-7"></a><a href="#__codelineno-28-7"><span class="linenos" data-linenos="7 "></span></a>rm<span class="w"> </span>-rf<span class="w"> </span>out/third_party/.qt-workdir/build-host
+</span><span id="__span-28-8"><a id="__codelineno-28-8" name="__codelineno-28-8"></a><a href="#__codelineno-28-8"><span class="linenos" data-linenos="8 "></span></a>./scripts/third_party_install/install_qt_with_compile.sh<span class="w"> </span>--stage<span class="w"> </span><span class="m">3</span>
+</span></code></pre></div>
+<h4 id="错误-6-target-qt-编译失败">错误 6: Target Qt 编译失败<a class="headerlink" href="#错误-6-target-qt-编译失败" title="链接到此章节">&para;</a></h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1"></a><a href="#__codelineno-29-1"><span class="linenos" data-linenos="1 "></span></a>[ERROR] 阶段 5 失败: 编译 Target Qt
+</span></code></pre></div>
+<p><strong>解决方法</strong>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1"></a><a href="#__codelineno-30-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="c1"># 检查交叉编译环境</span>
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2"></a><a href="#__codelineno-30-2"><span class="linenos" data-linenos=" 2 "></span></a>arm-linux-gnueabihf-gcc<span class="w"> </span>--version
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3"></a><a href="#__codelineno-30-3"><span class="linenos" data-linenos=" 3 "></span></a>arm-linux-gnueabihf-g++<span class="w"> </span>--version
+</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4"></a><a href="#__codelineno-30-4"><span class="linenos" data-linenos=" 4 "></span></a>
+</span><span id="__span-30-5"><a id="__codelineno-30-5" name="__codelineno-30-5"></a><a href="#__codelineno-30-5"><span class="linenos" data-linenos=" 5 "></span></a><span class="c1"># 检查 Host Qt 是否正确编译</span>
+</span><span id="__span-30-6"><a id="__codelineno-30-6" name="__codelineno-30-6"></a><a href="#__codelineno-30-6"><span class="linenos" data-linenos=" 6 "></span></a>ls<span class="w"> </span>host/qt6-host/bin/qmake
+</span><span id="__span-30-7"><a id="__codelineno-30-7" name="__codelineno-30-7"></a><a href="#__codelineno-30-7"><span class="linenos" data-linenos=" 7 "></span></a>
+</span><span id="__span-30-8"><a id="__codelineno-30-8" name="__codelineno-30-8"></a><a href="#__codelineno-30-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="c1"># 清理后重新编译</span>
+</span><span id="__span-30-9"><a id="__codelineno-30-9" name="__codelineno-30-9"></a><a href="#__codelineno-30-9"><span class="linenos" data-linenos=" 9 "></span></a>rm<span class="w"> </span>-rf<span class="w"> </span>out/third_party/.qt-workdir/build-target
+</span><span id="__span-30-10"><a id="__codelineno-30-10" name="__codelineno-30-10"></a><a href="#__codelineno-30-10"><span class="linenos" data-linenos="10 "></span></a>./scripts/third_party_install/install_qt_with_compile.sh<span class="w"> </span>--stage<span class="w"> </span><span class="m">5</span>
+</span></code></pre></div>
+<h3 id="调试技巧">调试技巧<a class="headerlink" href="#调试技巧" title="链接到此章节">&para;</a></h3>
+<h4 id="查看详细日志">查看详细日志<a class="headerlink" href="#查看详细日志" title="链接到此章节">&para;</a></h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1"></a><a href="#__codelineno-31-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 启用 bash 调试模式</span>
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2"></a><a href="#__codelineno-31-2"><span class="linenos" data-linenos="2 "></span></a>bash<span class="w"> </span>-x<span class="w"> </span>scripts/third_party_install/install_qt_with_compile.sh
+</span></code></pre></div>
+<h4 id="检查编译产物">检查编译产物<a class="headerlink" href="#检查编译产物" title="链接到此章节">&para;</a></h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1"></a><a href="#__codelineno-32-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 检查 Host Qt</span>
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2"></a><a href="#__codelineno-32-2"><span class="linenos" data-linenos="2 "></span></a>host/qt6-host/bin/qmake<span class="w"> </span>-v
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3"></a><a href="#__codelineno-32-3"><span class="linenos" data-linenos="3 "></span></a>
+</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4"></a><a href="#__codelineno-32-4"><span class="linenos" data-linenos="4 "></span></a><span class="c1"># 检查 Target Qt 架构</span>
+</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5"></a><a href="#__codelineno-32-5"><span class="linenos" data-linenos="5 "></span></a>readelf<span class="w"> </span>-h<span class="w"> </span>out/qt6-imx6ull/lib/libQt6Core.so.6<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Machine
+</span><span id="__span-32-6"><a id="__codelineno-32-6" name="__codelineno-32-6"></a><a href="#__codelineno-32-6"><span class="linenos" data-linenos="6 "></span></a><span class="c1"># 应显示: ARM</span>
+</span><span id="__span-32-7"><a id="__codelineno-32-7" name="__codelineno-32-7"></a><a href="#__codelineno-32-7"><span class="linenos" data-linenos="7 "></span></a>
+</span><span id="__span-32-8"><a id="__codelineno-32-8" name="__codelineno-32-8"></a><a href="#__codelineno-32-8"><span class="linenos" data-linenos="8 "></span></a><span class="c1"># 检查 ROOTFS 中的 Qt</span>
+</span><span id="__span-32-9"><a id="__codelineno-32-9" name="__codelineno-32-9"></a><a href="#__codelineno-32-9"><span class="linenos" data-linenos="9 "></span></a>ls<span class="w"> </span>-l<span class="w"> </span>rootfs/nfs/usr/lib/libQt6*
+</span></code></pre></div>
+<h4 id="验证交叉编译">验证交叉编译<a class="headerlink" href="#验证交叉编译" title="链接到此章节">&para;</a></h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1"></a><a href="#__codelineno-33-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 检查动态链接</span>
+</span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2"></a><a href="#__codelineno-33-2"><span class="linenos" data-linenos="2 "></span></a>arm-linux-gnueabihf-readelf<span class="w"> </span>-d<span class="w"> </span>out/qt6-imx6ull/lib/libQt6Core.so.6
+</span><span id="__span-33-3"><a id="__codelineno-33-3" name="__codelineno-33-3"></a><a href="#__codelineno-33-3"><span class="linenos" data-linenos="3 "></span></a>
+</span><span id="__span-33-4"><a id="__codelineno-33-4" name="__codelineno-33-4"></a><a href="#__codelineno-33-4"><span class="linenos" data-linenos="4 "></span></a><span class="c1"># 检查依赖</span>
+</span><span id="__span-33-5"><a id="__codelineno-33-5" name="__codelineno-33-5"></a><a href="#__codelineno-33-5"><span class="linenos" data-linenos="5 "></span></a>arm-linux-gnueabihf-ldd<span class="w"> </span>out/qt6-imx6ull/bin/qmake<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;跨平台 ldd 不可用&quot;</span>
+</span></code></pre></div>
+<h2 id="设计决策说明">设计决策说明<a class="headerlink" href="#设计决策说明" title="链接到此章节">&para;</a></h2>
+<h3 id="为什么需要创建独立分支">为什么需要创建独立分支<a class="headerlink" href="#为什么需要创建独立分支" title="链接到此章节">&para;</a></h3>
+<p>每次编译创建 <code>compile-YYYYMMDD</code> 分支的原因：</p>
+<ol>
+<li><strong>配置隔离</strong>：不同编译任务使用不同配置，互不干扰</li>
+<li><strong>可追溯性</strong>：可以回退到任意历史编译配置</li>
+<li><strong>主项目保护</strong>：子模块分支切换不影响主项目</li>
+</ol>
+<h3 id="为什么先编译-host-qt">为什么先编译 Host Qt<a class="headerlink" href="#为什么先编译-host-qt" title="链接到此章节">&para;</a></h3>
+<p>Qt6 的交叉编译需要 Host Qt 的工具：</p>
+<ul>
+<li><code>qmake</code>：项目生成工具</li>
+<li><code>moc</code>：元对象编译器</li>
+<li><code>rcc</code>：资源编译器</li>
+<li><code>uic</code>：UI 编译器</li>
+</ul>
+<p>这些工具在编译 Target Qt 时会被调用。</p>
+<h3 id="为什么使用-cp--d-复制库文件">为什么使用 <code>cp -d</code> 复制库文件<a class="headerlink" href="#为什么使用-cp--d-复制库文件" title="链接到此章节">&para;</a></h3>
+<p>脚本中 <code>cp -rf</code> 用于拷贝大多数文件，但第三方库拷贝使用 <code>cp -d</code>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1"></a><a href="#__codelineno-34-1"><span class="linenos" data-linenos="1 "></span></a>cp<span class="w"> </span>-d<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ROOTFS_DIR</span><span class="si">}</span><span class="s2">/usr/lib/&quot;</span>
+</span></code></pre></div>
+<p><code>-d</code> 参数保留符号链接，不解引用，这对于动态链接很重要。</p>
+<h3 id="为什么-qt-安装到-usr-而不是-usrlocal">为什么 Qt 安装到 /usr 而不是 /usr/local<a class="headerlink" href="#为什么-qt-安装到-usr-而不是-usrlocal" title="链接到此章节">&para;</a></h3>
+<p>Qt 库被安装到 <code>/usr/lib</code> 而不是 <code>/usr/local/lib</code>，因为：</p>
+<ol>
+<li><strong>系统兼容性</strong>：大多数程序查找库的路径包含 <code>/usr/lib</code></li>
+<li><strong>简洁性</strong>：避免设置额外的 <code>LD_LIBRARY_PATH</code></li>
+<li><strong>FHS 规范</strong>：用户安装的库可以放在 <code>/usr/lib</code></li>
+</ol>
+<h2 id="扩展和定制">扩展和定制<a class="headerlink" href="#扩展和定制" title="链接到此章节">&para;</a></h2>
+<h3 id="添加-qt-模块">添加 Qt 模块<a class="headerlink" href="#添加-qt-模块" title="链接到此章节">&para;</a></h3>
+<p>修改 <code>config/qt/qt.conf</code>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1"></a><a href="#__codelineno-35-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 添加新模块</span>
+</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2"></a><a href="#__codelineno-35-2"><span class="linenos" data-linenos="2 "></span></a><span class="nv">QT_MODULES</span><span class="o">=</span><span class="s2">&quot;qtbase qtdeclarative qtmultimedia qtcharts qtshadertools qtserialport qtvirtualkeyboard qt5compat qt3d qtscxml&quot;</span>
+</span></code></pre></div>
+<h3 id="修改目标架构">修改目标架构<a class="headerlink" href="#修改目标架构" title="链接到此章节">&para;</a></h3>
+<p>修改 <code>config/qt/target.conf</code>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1"></a><a href="#__codelineno-36-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 使用 ARMv8-A 64位</span>
+</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2"></a><a href="#__codelineno-36-2"><span class="linenos" data-linenos="2 "></span></a><span class="nv">TARGET_ARCH</span><span class="o">=</span><span class="s2">&quot;arm64&quot;</span>
+</span><span id="__span-36-3"><a id="__codelineno-36-3" name="__codelineno-36-3"></a><a href="#__codelineno-36-3"><span class="linenos" data-linenos="3 "></span></a><span class="nv">QT_TARGET_PLATFORM</span><span class="o">=</span><span class="s2">&quot;linux-aarch64-gnu-g++&quot;</span>
+</span><span id="__span-36-4"><a id="__codelineno-36-4" name="__codelineno-36-4"></a><a href="#__codelineno-36-4"><span class="linenos" data-linenos="4 "></span></a>
+</span><span id="__span-36-5"><a id="__codelineno-36-5" name="__codelineno-36-5"></a><a href="#__codelineno-36-5"><span class="linenos" data-linenos="5 "></span></a><span class="c1"># 更新工具链</span>
+</span><span id="__span-36-6"><a id="__codelineno-36-6" name="__codelineno-36-6"></a><a href="#__codelineno-36-6"><span class="linenos" data-linenos="6 "></span></a><span class="c1"># 在环境变量中设置</span>
+</span><span id="__span-36-7"><a id="__codelineno-36-7" name="__codelineno-36-7"></a><a href="#__codelineno-36-7"><span class="linenos" data-linenos="7 "></span></a><span class="nv">CROSS_COMPILE</span><span class="o">=</span>aarch64-linux-gnu-
+</span></code></pre></div>
+<h3 id="禁用某些第三方库">禁用某些第三方库<a class="headerlink" href="#禁用某些第三方库" title="链接到此章节">&para;</a></h3>
+<p>修改 <code>config/qt/third_party.conf</code>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1"></a><a href="#__codelineno-37-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 禁用 FFmpeg</span>
+</span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2"></a><a href="#__codelineno-37-2"><span class="linenos" data-linenos="2 "></span></a><span class="nv">FFMPEG_ENABLED</span><span class="o">=</span><span class="nb">false</span>
+</span><span id="__span-37-3"><a id="__codelineno-37-3" name="__codelineno-37-3"></a><a href="#__codelineno-37-3"><span class="linenos" data-linenos="3 "></span></a>
+</span><span id="__span-37-4"><a id="__codelineno-37-4" name="__codelineno-37-4"></a><a href="#__codelineno-37-4"><span class="linenos" data-linenos="4 "></span></a><span class="c1"># 禁用 PulseAudio</span>
+</span><span id="__span-37-5"><a id="__codelineno-37-5" name="__codelineno-37-5"></a><a href="#__codelineno-37-5"><span class="linenos" data-linenos="5 "></span></a><span class="nv">PULSEAUDIO_ENABLED</span><span class="o">=</span><span class="nb">false</span>
+</span><span id="__span-37-6"><a id="__codelineno-37-6" name="__codelineno-37-6"></a><a href="#__codelineno-37-6"><span class="linenos" data-linenos="6 "></span></a>
+</span><span id="__span-37-7"><a id="__codelineno-37-7" name="__codelineno-37-7"></a><a href="#__codelineno-37-7"><span class="linenos" data-linenos="7 "></span></a><span class="c1"># 修改库列表</span>
+</span><span id="__span-37-8"><a id="__codelineno-37-8" name="__codelineno-37-8"></a><a href="#__codelineno-37-8"><span class="linenos" data-linenos="8 "></span></a><span class="nv">THIRD_PARTY_LIBS</span><span class="o">=</span><span class="s2">&quot;tslib openssl&quot;</span>
+</span></code></pre></div>
+<h3 id="添加编译优化">添加编译优化<a class="headerlink" href="#添加编译优化" title="链接到此章节">&para;</a></h3>
+<p>修改 <code>config/qt/target.conf</code>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1"></a><a href="#__codelineno-38-1"><span class="linenos" data-linenos="1 "></span></a><span class="nv">TARGET_CMAKE_EXTRA</span><span class="o">=</span><span class="s2">&quot;\</span>
+</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2"></a><a href="#__codelineno-38-2"><span class="linenos" data-linenos="2 "></span></a><span class="s2">  -DCMAKE_CXX_FLAGS=-O3 -march=armv7-a -mtune=cortex-a9 \</span>
+</span><span id="__span-38-3"><a id="__codelineno-38-3" name="__codelineno-38-3"></a><a href="#__codelineno-38-3"><span class="linenos" data-linenos="3 "></span></a><span class="s2">  -DFEATURE_optimize_size=ON \</span>
+</span><span id="__span-38-4"><a id="__codelineno-38-4" name="__codelineno-38-4"></a><a href="#__codelineno-38-4"><span class="linenos" data-linenos="4 "></span></a><span class="s2">&quot;</span>
+</span></code></pre></div>
+<h3 id="自定义字体">自定义字体<a class="headerlink" href="#自定义字体" title="链接到此章节">&para;</a></h3>
+<p>修改 <code>config/qt/fonts.conf</code>（如果存在）或直接调用字体安装脚本：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1"></a><a href="#__codelineno-39-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 编辑字体配置</span>
+</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2"></a><a href="#__codelineno-39-2"><span class="linenos" data-linenos="2 "></span></a>vim<span class="w"> </span>scripts/third_party_install/config/qt/fonts.conf
+</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3"></a><a href="#__codelineno-39-3"><span class="linenos" data-linenos="3 "></span></a>
+</span><span id="__span-39-4"><a id="__codelineno-39-4" name="__codelineno-39-4"></a><a href="#__codelineno-39-4"><span class="linenos" data-linenos="4 "></span></a><span class="c1"># 手动安装字体</span>
+</span><span id="__span-39-5"><a id="__codelineno-39-5" name="__codelineno-39-5"></a><a href="#__codelineno-39-5"><span class="linenos" data-linenos="5 "></span></a><span class="nv">ROOTFS_DIR</span><span class="o">=</span>rootfs/nfs<span class="w"> </span>./scripts/third_party_install/install_fonts.sh
+</span></code></pre></div>
+<h2 id="相关文档">相关文档<a class="headerlink" href="#相关文档" title="链接到此章节">&para;</a></h2>
+<ul>
+<li>Qt6 编译教程 - Qt 交叉编译原理</li>
+<li>Rootfs 概述 - 根文件系统介绍</li>
+<li>install_fonts.sh - 字体安装脚本</li>
+<li><a href="https://doc.qt.io/qt-6/embedded-linux.html">Qt6 官方文档</a> - Qt 嵌入式 Linux 指南</li>
+<li><a href="https://github.com/your-org/qt-compile-pipeline">qt-compile-pipeline</a> - 编译管道项目</li>
+</ul>
+<h2 id="更新日志">更新日志<a class="headerlink" href="#更新日志" title="链接到此章节">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>日期</th>
+<th>版本</th>
+<th>更新内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-03-19</td>
+<td>1.0</td>
+<td>初始完整版本</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月8日 12:05:52 CST">2026年4月8日 12:05:52</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年3月19日 18:06:50 CST">2026年3月19日 18:06:50</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+        
+          
+          <a href="../install_libc.sh/" class="md-footer__link md-footer__link--prev" aria-label="上一页: install_libc.sh - libc 库安装脚本详解">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              <div class="md-ellipsis">
+                install_libc.sh - libc 库安装脚本详解
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../config/qt/qt_fonts_env.sh/" class="md-footer__link md-footer__link--next" aria-label="下一页: qt_fonts_env.sh - Qt 字体环境变量配置详解">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                下一页
+              </span>
+              <div class="md-ellipsis">
+                qt_fonts_env.sh - Qt 字体环境变量配置详解
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 Charliechen - 保留所有权利
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/Awesome-Embedded-Learning-Studio" target="_blank" rel="noopener" title="GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="mailto:725610365@qq.com" target="_blank" rel="noopener" title="发送邮件" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M536.4-26.3c9.8-3.5 20.6-1 28 6.3s9.8 18.2 6.3 28l-178 496.9c-5 13.9-18.1 23.1-32.8 23.1-14.2 0-27-8.6-32.3-21.7l-64.2-158c-4.5-11-2.5-23.6 5.2-32.6l94.5-112.4c5.1-6.1 4.7-15-.9-20.6s-14.6-6-20.6-.9l-112.4 94.3c-9.1 7.6-21.6 9.6-32.6 5.2L38.1 216.8c-13.1-5.3-21.7-18.1-21.7-32.3 0-14.7 9.2-27.8 23.1-32.8z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.path", "navigation.indexes", "navigation.tabs", "navigation.tabs.sticky", "navigation.prune", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.select", "content.code.annotate", "content.tabs.link", "content.tooltips", "content.action.edit", "content.action.view"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

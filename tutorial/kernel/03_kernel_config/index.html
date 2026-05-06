@@ -1,0 +1,5181 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="IMX-Forge，专注于IMX6ULL的教程文档网站">
+      
+      
+        <meta name="author" content="Charliechen114514">
+      
+      
+        <link rel="canonical" href="https://awesome-embedded-learning-studio.github.io/imx-forge/tutorial/kernel/03_kernel_config/">
+      
+      
+        <link rel="prev" href="../02_kernel_compile/">
+      
+      
+        <link rel="next" href="../04_kernel_modules/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../Awesome-Embedded.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>从0开始配置Linux内核：menuconfig不是黑魔法，只是有点绕 - IMX-Forge的教程文档</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#从0开始配置linux内核menuconfig不是黑魔法只是有点绕" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../.." title="IMX-Forge的教程文档" class="md-header__button md-logo" aria-label="IMX-Forge的教程文档" data-md-component="logo">
+      
+  <img src="../../../Awesome-Embedded.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            IMX-Forge的教程文档
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              从0开始配置Linux内核：menuconfig不是黑魔法，只是有点绕
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换至暗色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换至暗色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="切换至亮色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换至亮色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  欢迎来到 IMX-Forge 教程文档
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../QUICK_START/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  IMX-Forge 快速入门指南
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../architecture/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Architecture
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ci/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Ci
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../development/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../logo/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Logo
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../modules/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Modules
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../scripts/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Scripts
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../todo/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Todo
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tutorial
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="IMX-Forge的教程文档" class="md-nav__button md-logo" aria-label="IMX-Forge的教程文档" data-md-component="logo">
+      
+  <img src="../../../Awesome-Embedded.png" alt="logo">
+
+    </a>
+    IMX-Forge的教程文档
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    欢迎来到 IMX-Forge 教程文档
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../QUICK_START/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IMX-Forge 快速入门指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../architecture/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../ci/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ci
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../development/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../logo/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logo
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../modules/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../scripts/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scripts
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../todo/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Todo
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorial
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../docker/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_2" id="__nav_10_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Docker
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../docker/01_docker_basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker 基础知识
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../docker/02_imx_forge_docker_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IMX-Forge Docker 开发指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../driver/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Driver
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_3" id="__nav_10_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Driver
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../driver/00_chardev_base/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    00 chardev base
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../driver/01_device_tree_base/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 device tree base
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../driver/02_pinctrl_gpio/01_introduction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 pinctrl gpio
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../driver/device_tree/01-Introduction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Device tree
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../driver/firmware_apply/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Firmware apply
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../driver/modules/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kernel
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_4" id="__nav_10_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_10_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Kernel
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_kernel_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从0开始认识Linux内核：那个让无数嵌入式工程师又爱又恨的庞然大物
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_kernel_compile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从0开始编译Linux内核：当你发现make时少了一个包，第17次
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从0开始配置Linux内核：menuconfig不是黑魔法，只是有点绕
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从0开始配置Linux内核：menuconfig不是黑魔法，只是有点绕
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#为什么要写这篇配置教程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么要写这篇配置教程
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kconfig系统配置的底层逻辑" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kconfig系统：配置的底层逻辑
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#defconfig到底是什么默认配置的艺术" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        defconfig到底是什么：默认配置的艺术
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#menuconfig实战图形化配置教程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        menuconfig实战：图形化配置教程
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="menuconfig实战：图形化配置教程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#启动menuconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        启动menuconfig
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#导航操作" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        导航操作
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#搜索功能" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        搜索功能
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#常用菜单解析" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        常用菜单解析
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="常用菜单解析">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#system-type系统类型" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Type：系统类型
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernel-features内核特性" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kernel Features：内核特性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#device-drivers设备驱动" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Device Drivers：设备驱动
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-systems文件系统" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File systems：文件系统
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#保存和加载配置" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        保存和加载配置
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#保存为defconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        保存为defconfig
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#常用内核配置项说明" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        常用内核配置项说明
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="常用内核配置项说明">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#系统基本信息" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        系统基本信息
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#内存和进程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        内存和进程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#网络相关" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        网络相关
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#驱动相关" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        驱动相关
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#文件系统" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        文件系统
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#调试相关" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        调试相关
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#踩坑笔记配置中的常见问题" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        踩坑笔记：配置中的常见问题
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="踩坑笔记：配置中的常见问题">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#问题1模块加载失败" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        问题1：模块加载失败
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#问题2内核太大" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        问题2：内核太大
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#问题3配置冲突" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        问题3：配置冲突
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#问题4config被覆盖" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        问题4：.config被覆盖
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#实战创建自己的defconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实战：创建自己的defconfig
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="实战：创建自己的defconfig">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#方法0从官方配置创建项目配置推荐新手" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        方法0：从官方配置创建项目配置（推荐新手）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="方法0：从官方配置创建项目配置（推荐新手）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#基础配置适用于大多数情况" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        基础配置（适用于大多数情况）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#可选添加-wifi-固件支持消除启动警告" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        可选：添加 WiFi 固件支持（消除启动警告）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#配置对比" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        配置对比
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#方法1基于现有defconfig修改" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        方法1：基于现有defconfig修改
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#方法2从头创建" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        方法2：从头创建
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#方法3脚本化配置" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        方法3：脚本化配置
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#配置优化建议" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        配置优化建议
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="配置优化建议">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#最小化配置体积优先" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        最小化配置（体积优先）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#低延迟配置实时性优先" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        低延迟配置（实时性优先）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#调试配置开发阶段" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        调试配置（开发阶段）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#写在最后" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        写在最后
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_kernel_modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    内核模块详解：从 Hello World 到设备驱动
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_kernel_device_tree/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    设备树在内核中的使用：从硬件描述到驱动匹配
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_wsl_network_boot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WSL2 + TFTP + 网络启动：那些年我们一起踩过的防火墙坑
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_driver_basic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linux驱动开发入门：从Hello World到第一个字符驱动
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_kernel_boot_debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linux内核启动与调试：从bootargs到init进程的那几百万行代码
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../mainline/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mainline
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../practical/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Practical
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_5" id="__nav_10_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Practical
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../practical/01_practical_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    实战项目概述：我们要一起构建一个可用的 i.MX6ULL 系统
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../practical/02_build_system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从零构建完整系统：U-Boot、Linux 内核与 BusyBox Rootfs 的整合艺术
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../practical/03_boot_and_debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    系统启动与调试：见证系统启动的那一刻，并学会如何挽救它
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../practical/04-nfs-experience/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NFS rootfs 多版本切换：用 bind mount 解决嵌入式开发痛点
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../rootfs/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rootfs
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_6" id="__nav_10_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Rootfs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rootfs/01_rootfs_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rootfs 概述：Linux 系统的"最后一公里"，以及为什么内核启动后还需要它
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rootfs/02_busybox_compile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BusyBox 编译安装：一把瑞士军刀的自制指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rootfs/03_inittab_init/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    inittab 与 init 系统：Linux 启动的"第一号进程"全解析
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rootfs/04_rootfs_structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rootfs 目录结构创建：Linux 文件系统的"骨架"
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rootfs/05_nfs_wsl_troubleshoot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WSL + NFS 网络启动踩坑记：从挂载失败到成功启动的完整历程
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rootfs/06_apps_integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    应用集成：从最小化 Rootfs 到可用系统
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../start/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Start
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_7" id="__nav_10_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Start
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../start/01_start_from_toolchain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从 0 开始构建嵌入式 Linux 开发环境（Part 1）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../start/02_env_init_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    环境初始化指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../third_party/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Third party
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Third party
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../uboot/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uboot
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_9" id="__nav_10_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Uboot
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/01_what_is_uboot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从0开始理解 U-Boot：嵌入式系统的"第一道门"，以及我们为什么终于告别了硬编码时代
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/02_uboot_compile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从0开始编译 U-Boot：那些教程没告诉你的交叉编译原理和踩坑记录
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/03_uboot_porting_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    U-Boot完全移植概览：从官方源码到你的自制板，这条路有多远
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/04_board_config_basic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    板级配置基础：Kconfig系统的那些坑和我们的第一次移植
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/05_device_tree_basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    设备树基础：从硬编码噩梦到硬件描述分离
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/06_lcd_porting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第06章 LCD驱动移植
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/07_network_porting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第07章 网络驱动移植：从ping不通到tftp成功，那些让你抓狂的PHY时序问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/08_logo_splash/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第08章 Logo和启动画面
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/09_debugging_commands/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2026正点原子开发板移植（UBoot篇完结）：U-Boot调试命令：命令行是嵌入式开发的神器
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/bonus_qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    附录：常见问题解答（Q&amp;A）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#为什么要写这篇配置教程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么要写这篇配置教程
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kconfig系统配置的底层逻辑" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kconfig系统：配置的底层逻辑
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#defconfig到底是什么默认配置的艺术" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        defconfig到底是什么：默认配置的艺术
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#menuconfig实战图形化配置教程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        menuconfig实战：图形化配置教程
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="menuconfig实战：图形化配置教程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#启动menuconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        启动menuconfig
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#导航操作" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        导航操作
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#搜索功能" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        搜索功能
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#常用菜单解析" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        常用菜单解析
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="常用菜单解析">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#system-type系统类型" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Type：系统类型
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernel-features内核特性" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kernel Features：内核特性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#device-drivers设备驱动" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Device Drivers：设备驱动
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-systems文件系统" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File systems：文件系统
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#保存和加载配置" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        保存和加载配置
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#保存为defconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        保存为defconfig
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#常用内核配置项说明" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        常用内核配置项说明
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="常用内核配置项说明">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#系统基本信息" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        系统基本信息
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#内存和进程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        内存和进程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#网络相关" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        网络相关
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#驱动相关" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        驱动相关
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#文件系统" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        文件系统
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#调试相关" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        调试相关
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#踩坑笔记配置中的常见问题" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        踩坑笔记：配置中的常见问题
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="踩坑笔记：配置中的常见问题">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#问题1模块加载失败" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        问题1：模块加载失败
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#问题2内核太大" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        问题2：内核太大
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#问题3配置冲突" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        问题3：配置冲突
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#问题4config被覆盖" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        问题4：.config被覆盖
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#实战创建自己的defconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实战：创建自己的defconfig
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="实战：创建自己的defconfig">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#方法0从官方配置创建项目配置推荐新手" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        方法0：从官方配置创建项目配置（推荐新手）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="方法0：从官方配置创建项目配置（推荐新手）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#基础配置适用于大多数情况" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        基础配置（适用于大多数情况）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#可选添加-wifi-固件支持消除启动警告" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        可选：添加 WiFi 固件支持（消除启动警告）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#配置对比" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        配置对比
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#方法1基于现有defconfig修改" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        方法1：基于现有defconfig修改
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#方法2从头创建" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        方法2：从头创建
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#方法3脚本化配置" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        方法3：脚本化配置
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#配置优化建议" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        配置优化建议
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="配置优化建议">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#最小化配置体积优先" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        最小化配置（体积优先）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#低延迟配置实时性优先" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        低延迟配置（实时性优先）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#调试配置开发阶段" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        调试配置（开发阶段）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#写在最后" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        写在最后
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="导航栏" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    欢迎来到 IMX-Forge 教程文档
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Tutorial
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Kernel
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="从0开始配置linux内核menuconfig不是黑魔法只是有点绕">从0开始配置Linux内核：menuconfig不是黑魔法，只是有点绕<a class="headerlink" href="#从0开始配置linux内核menuconfig不是黑魔法只是有点绕" title="链接到此章节">&para;</a></h1>
+<h2 id="为什么要写这篇配置教程">为什么要写这篇配置教程<a class="headerlink" href="#为什么要写这篇配置教程" title="链接到此章节">&para;</a></h2>
+<p>如果说编译内核是照着菜谱做菜，那配置内核就是自己设计菜谱。你选择哪些功能、不选哪些，直接决定了内核的大小、性能、功能。</p>
+<p>但我第一次用menuconfig的时候，完全是懵的状态。几百个菜单项，每个还有子菜单，看得我头晕眼花。网上的教程要么太简单，只告诉你"选这个选那个"；要么太复杂，上来就讲Kconfig的语法规则。</p>
+<p>我想做的是介于这两者之间：让你理解配置系统是怎么工作的，知道常用配置项的作用，并且能够创建自己的defconfig。到了最后，配置不再是"照抄别人"的机械过程，而是"知道自己在做什么"的理性选择。</p>
+<h2 id="kconfig系统配置的底层逻辑">Kconfig系统：配置的底层逻辑<a class="headerlink" href="#kconfig系统配置的底层逻辑" title="链接到此章节">&para;</a></h2>
+<p>在进入menuconfig之前，先理解一下Kconfig系统的工作原理。Linux内核的配置系统叫Kconfig，它的核心思想是：</p>
+<ol>
+<li>用一种专门的语法（Kconfig语言）描述配置选项</li>
+<li>配置选项之间可以有依赖关系</li>
+<li>用户通过图形界面（menuconfig等）选择配置</li>
+<li>生成.config文件，供编译使用</li>
+</ol>
+<p>Kconfig文件的格式是这样的：</p>
+<div class="language-makefile highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1"></a><a href="#__codelineno-0-1"><span class="linenos" data-linenos="1 "></span></a><span class="err">config</span><span class="w"> </span><span class="err">DM9000</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2"></a><a href="#__codelineno-0-2"><span class="linenos" data-linenos="2 "></span></a><span class="w">    </span><span class="err">tristate</span><span class="w"> </span><span class="s2">&quot;DM9000 support&quot;</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3"></a><a href="#__codelineno-0-3"><span class="linenos" data-linenos="3 "></span></a><span class="w">    </span><span class="err">depends</span><span class="w"> </span><span class="err">on</span><span class="w"> </span><span class="err">NET_ETHERNET</span><span class="w"> </span><span class="err">&amp;&amp;</span><span class="w"> </span><span class="err">ARM</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4"></a><a href="#__codelineno-0-4"><span class="linenos" data-linenos="4 "></span></a><span class="w">    </span><span class="err">select</span><span class="w"> </span><span class="err">CRC32</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5"></a><a href="#__codelineno-0-5"><span class="linenos" data-linenos="5 "></span></a><span class="w">    </span><span class="err">help</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6"></a><a href="#__codelineno-0-6"><span class="linenos" data-linenos="6 "></span></a><span class="w">      </span><span class="err">DM9000</span><span class="w"> </span><span class="err">ethernet</span><span class="w"> </span><span class="err">driver</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7"></a><a href="#__codelineno-0-7"><span class="linenos" data-linenos="7 "></span></a>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8"></a><a href="#__codelineno-0-8"><span class="linenos" data-linenos="8 "></span></a><span class="w">      </span><span class="err">To</span><span class="w"> </span><span class="err">compile</span><span class="w"> </span><span class="err">this</span><span class="w"> </span><span class="err">driver</span><span class="w"> </span><span class="err">as</span><span class="w"> </span><span class="err">a</span><span class="w"> </span><span class="err">module,</span><span class="w"> </span><span class="err">choose</span><span class="w"> </span><span class="err">M</span><span class="w"> </span><span class="err">here.</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9"></a><a href="#__codelineno-0-9"><span class="linenos" data-linenos="9 "></span></a><span class="w">      </span><span class="err">The</span><span class="w"> </span><span class="err">module</span><span class="w"> </span><span class="err">will</span><span class="w"> </span><span class="err">be</span><span class="w"> </span><span class="err">called</span><span class="w"> </span><span class="err">dm9000.</span>
+</span></code></pre></div>
+<p>这里解释一下各个字段的意思：</p>
+<ul>
+<li><code>config DM9000</code>：定义一个配置选项，名字是CONFIG_DM9000</li>
+<li><code>tristate</code>：三种状态（y/m/n），表示可以编译进内核(y)、编译成模块(m)、不编译(n)</li>
+<li><code>depends on</code>：依赖关系，只有NET_ETHERNET和ARM都选了，这个选项才可选</li>
+<li><code>select</code>：反向依赖，选中DM9000时自动选中CRC32</li>
+<li><code>help</code>：帮助文本，在menuconfig里按?可以看到</li>
+</ul>
+<p>tristate和bool的区别：tristate是三种状态（y/m/n），用于驱动（可以编译成模块）；bool是两种状态（y/n），用于核心功能（不能编译成模块）。</p>
+<p>当你运行<code>make menuconfig</code>时，内核会扫描所有Kconfig文件，构建出一颗配置树，然后用ncurses库画出菜单界面。你选择配置项时，Kconfig系统会自动处理依赖关系——比如你选了某个功能，它依赖的其他选项会自动选中；你取消了某个功能，依赖它的选项会变灰或取消。</p>
+<h2 id="defconfig到底是什么默认配置的艺术">defconfig到底是什么：默认配置的艺术<a class="headerlink" href="#defconfig到底是什么默认配置的艺术" title="链接到此章节">&para;</a></h2>
+<p>在02章我们提到了defconfig，现在来深入理解一下。</p>
+<p>defconfig是"default configuration"的缩写，字面意思是"默认配置"。但这个"默认"不是内核默认，而是某个平台或板型的默认配置。对于i.MX6ULL，defconfig就是"适合i.MX6ULL的默认配置选择"。</p>
+<p>defconfig文件位于<code>arch/arm/configs/</code>目录：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1"></a><a href="#__codelineno-1-1"><span class="linenos" data-linenos="1 "></span></a>arch/arm/configs/
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2"></a><a href="#__codelineno-1-2"><span class="linenos" data-linenos="2 "></span></a>├──<span class="w"> </span>imx_aes_defconfig<span class="w">           </span><span class="c1"># IMX-Forge 自定义配置（应用补丁后）</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3"></a><a href="#__codelineno-1-3"><span class="linenos" data-linenos="3 "></span></a>├──<span class="w"> </span>imx_v6_v7_defconfig<span class="w">         </span><span class="c1"># NXP 官方：i.MX 6/7系列通用配置</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4"></a><a href="#__codelineno-1-4"><span class="linenos" data-linenos="4 "></span></a>├──<span class="w"> </span>imx_v7_defconfig<span class="w">            </span><span class="c1"># NXP 官方：i.MX 7系列配置</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5"></a><a href="#__codelineno-1-5"><span class="linenos" data-linenos="5 "></span></a>├──<span class="w"> </span>multi_v7_defconfig<span class="w">          </span><span class="c1"># NXP 官方：多平台v7配置</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6"></a><a href="#__codelineno-1-6"><span class="linenos" data-linenos="6 "></span></a>└──<span class="w"> </span>...
+</span></code></pre></div>
+<blockquote>
+<p><strong>注意：</strong> <code>imx_aes_defconfig</code> 是 IMX-Forge 项目自定义的配置文件，需要先应用补丁才能使用。如果你直接使用 NXP 官方的 linux-imx 仓库，请使用 <code>imx_v7_defconfig</code> 或 <code>imx_v6_v7_defconfig</code>。</p>
+</blockquote>
+<p>打开一个defconfig看看内容：</p>
+<div class="language-makefile highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1"></a><a href="#__codelineno-2-1"><span class="linenos" data-linenos="1 "></span></a><span class="nv">CONFIG_SYSVIPC</span><span class="o">=</span>y
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2"></a><a href="#__codelineno-2-2"><span class="linenos" data-linenos="2 "></span></a><span class="nv">CONFIG_POSIX_MQUEUE</span><span class="o">=</span>y
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3"></a><a href="#__codelineno-2-3"><span class="linenos" data-linenos="3 "></span></a><span class="nv">CONFIG_NO_HZ</span><span class="o">=</span>y
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4"></a><a href="#__codelineno-2-4"><span class="linenos" data-linenos="4 "></span></a><span class="nv">CONFIG_HIGH_RES_TIMERS</span><span class="o">=</span>y
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5"></a><a href="#__codelineno-2-5"><span class="linenos" data-linenos="5 "></span></a><span class="nv">CONFIG_PREEMPT</span><span class="o">=</span>y
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6"></a><a href="#__codelineno-2-6"><span class="linenos" data-linenos="6 "></span></a><span class="nv">CONFIG_ARM</span><span class="o">=</span>y
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7"></a><a href="#__codelineno-2-7"><span class="linenos" data-linenos="7 "></span></a><span class="nv">CONFIG_ARCH_MXC</span><span class="o">=</span>y
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8"></a><a href="#__codelineno-2-8"><span class="linenos" data-linenos="8 "></span></a><span class="err">...</span>
+</span></code></pre></div>
+<p>defconfig只记录与默认值不同的配置项。如果某个选项在Kconfig里默认是n，defconfig里设为y，那defconfig里会记录<code>CONFIG_XXX=y</code>；如果默认就是y，defconfig里就不会出现。</p>
+<p>这样的设计有几个好处：</p>
+<ol>
+<li>defconfig文件很小，只包含特定平台的特殊配置</li>
+<li>Kconfig升级时（新增选项、改变默认值），defconfig仍然有效</li>
+<li>不同平台的defconfig可以共享，差异最小化</li>
+</ol>
+<p>当你运行<code>make xxx_defconfig</code>时，内核做的事情是：</p>
+<ol>
+<li>读取Kconfig文件，建立完整的配置选项树</li>
+<li>应用指定的defconfig，覆盖部分默认值</li>
+<li>评估所有依赖关系，自动选中/取消相关选项</li>
+<li>生成完整的.config文件</li>
+</ol>
+<p>所以.config是Kconfig默认值 + defconfig覆盖 + 依赖关系计算的结果，不是简单的复制。</p>
+<h2 id="menuconfig实战图形化配置教程">menuconfig实战：图形化配置教程<a class="headerlink" href="#menuconfig实战图形化配置教程" title="链接到此章节">&para;</a></h2>
+<p>现在我们进入实战环节，打开menuconfig看看。</p>
+<h3 id="启动menuconfig">启动menuconfig<a class="headerlink" href="#启动menuconfig" title="链接到此章节">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1"></a><a href="#__codelineno-3-1"><span class="linenos" data-linenos="1 "></span></a>make<span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span>arm<span class="w"> </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span>arm-none-linux-gnueabihf-<span class="w"> </span><span class="nv">O</span><span class="o">=</span>out/linux<span class="w"> </span>menuconfig
+</span></code></pre></div>
+<p>你应该看到类似这样的界面：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1"></a><a href="#__codelineno-4-1"><span class="linenos" data-linenos=" 1 "></span></a>    *** User Mode Linux port ***
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2"></a><a href="#__codelineno-4-2"><span class="linenos" data-linenos=" 2 "></span></a>    General setup  ---&gt;
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3"></a><a href="#__codelineno-4-3"><span class="linenos" data-linenos=" 3 "></span></a>    [*] Enable loadable module support  ---&gt;
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4"></a><a href="#__codelineno-4-4"><span class="linenos" data-linenos=" 4 "></span></a>    *** Enable the block layer  ---&gt;
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5"></a><a href="#__codelineno-4-5"><span class="linenos" data-linenos=" 5 "></span></a>    System Type  ---&gt;
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6"></a><a href="#__codelineno-4-6"><span class="linenos" data-linenos=" 6 "></span></a>    Bus support  ---&gt;
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7"></a><a href="#__codelineno-4-7"><span class="linenos" data-linenos=" 7 "></span></a>    Kernel Features  ---&gt;
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8"></a><a href="#__codelineno-4-8"><span class="linenos" data-linenos=" 8 "></span></a>    Boot options  ---&gt;
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9"></a><a href="#__codelineno-4-9"><span class="linenos" data-linenos=" 9 "></span></a>    CPU Power Management  ---&gt;
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10"></a><a href="#__codelineno-4-10"><span class="linenos" data-linenos="10 "></span></a>    Floating point emulation  ---&gt;
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11"></a><a href="#__codelineno-4-11"><span class="linenos" data-linenos="11 "></span></a>    Userspace binary formats  ---&gt;
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12"></a><a href="#__codelineno-4-12"><span class="linenos" data-linenos="12 "></span></a>    Power management options  ---&gt;
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13"></a><a href="#__codelineno-4-13"><span class="linenos" data-linenos="13 "></span></a>    Networking support  ---&gt;
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14"></a><a href="#__codelineno-4-14"><span class="linenos" data-linenos="14 "></span></a>    Device Drivers  ---&gt;
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15"></a><a href="#__codelineno-4-15"><span class="linenos" data-linenos="15 "></span></a>    File systems  ---&gt;
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16"></a><a href="#__codelineno-4-16"><span class="linenos" data-linenos="16 "></span></a>    Kernel hacking  ---&gt;
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17"></a><a href="#__codelineno-4-17"><span class="linenos" data-linenos="17 "></span></a>    Security options  ---&gt;
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18"></a><a href="#__codelineno-4-18"><span class="linenos" data-linenos="18 "></span></a>    Cryptographic API  ---&gt;
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19"></a><a href="#__codelineno-4-19"><span class="linenos" data-linenos="19 "></span></a>    Library routines  ---&gt;
+</span></code></pre></div>
+<h3 id="导航操作">导航操作<a class="headerlink" href="#导航操作" title="链接到此章节">&para;</a></h3>
+<p>menuconfig的操作按键如下：</p>
+<ul>
+<li>方向键：移动光标</li>
+<li>Enter：进入子菜单或选中选项</li>
+<li>Esc Esc：返回上一级菜单</li>
+<li>Space：切换选项状态（y/n/m）</li>
+<li>/：搜索功能</li>
+<li>?：查看帮助</li>
+<li>:q: 退出（会提示是否保存）</li>
+</ul>
+<h3 id="搜索功能">搜索功能<a class="headerlink" href="#搜索功能" title="链接到此章节">&para;</a></h3>
+<p>搜索功能非常实用，尤其当你不知道某个选项在哪的时候。按<code>/</code>，输入关键词：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1"></a><a href="#__codelineno-5-1"><span class="linenos" data-linenos=" 1 "></span></a>  Search: DM9000
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2"></a><a href="#__codelineno-5-2"><span class="linenos" data-linenos=" 2 "></span></a>    Symbol: DM9000 [=n]
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3"></a><a href="#__codelineno-5-3"><span class="linenos" data-linenos=" 3 "></span></a>    Type  : tristate
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4"></a><a href="#__codelineno-5-4"><span class="linenos" data-linenos=" 4 "></span></a>    Prompt: DM9000 support
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5"></a><a href="#__codelineno-5-5"><span class="linenos" data-linenos=" 5 "></span></a>      Location:
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6"></a><a href="#__codelineno-5-6"><span class="linenos" data-linenos=" 6 "></span></a>        (1) -&gt; Device Drivers
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7"></a><a href="#__codelineno-5-7"><span class="linenos" data-linenos=" 7 "></span></a>            -&gt; Network device support (NETDEVICES [=y])
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8"></a><a href="#__codelineno-5-8"><span class="linenos" data-linenos=" 8 "></span></a>                -&gt; Ethernet driver support (ETHERNET [=y])
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9"></a><a href="#__codelineno-5-9"><span class="linenos" data-linenos=" 9 "></span></a>    Defined at drivers/net/ethernet/davicom/Kconfig:6
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10"></a><a href="#__codelineno-5-10"><span class="linenos" data-linenos="10 "></span></a>      Depends on: NETDEVICES [=y] &amp;&amp; ETHERNET [=y] &amp;&amp; (ARM || MIPS)
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11"></a><a href="#__codelineno-5-11"><span class="linenos" data-linenos="11 "></span></a>      Selects: CRC32
+</span></code></pre></div>
+<p>搜索结果告诉你选项的位置、类型、依赖关系。你还可以按数字键跳转到该选项（需要支持跳转）。</p>
+<h3 id="常用菜单解析">常用菜单解析<a class="headerlink" href="#常用菜单解析" title="链接到此章节">&para;</a></h3>
+<p>我们来看看几个常用的菜单。</p>
+<h4 id="system-type系统类型">System Type：系统类型<a class="headerlink" href="#system-type系统类型" title="链接到此章节">&para;</a></h4>
+<p>这个菜单选择CPU和SoC类型：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1"></a><a href="#__codelineno-6-1"><span class="linenos" data-linenos="1 "></span></a>System Type  ---&gt;
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2"></a><a href="#__codelineno-6-2"><span class="linenos" data-linenos="2 "></span></a>    [*] Support for ARM processor type
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3"></a><a href="#__codelineno-6-3"><span class="linenos" data-linenos="3 "></span></a>    ARM system type (NXP i.MX based)  ---&gt;
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4"></a><a href="#__codelineno-6-4"><span class="linenos" data-linenos="4 "></span></a>        ( ) Allwinner sunxi SoC
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5"></a><a href="#__codelineno-6-5"><span class="linenos" data-linenos="5 "></span></a>        ( ) Broadcom BCM2835
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6"></a><a href="#__codelineno-6-6"><span class="linenos" data-linenos="6 "></span></a>        (X) NXP i.MX based
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7"></a><a href="#__codelineno-6-7"><span class="linenos" data-linenos="7 "></span></a>        ...
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8"></a><a href="#__codelineno-6-8"><span class="linenos" data-linenos="8 "></span></a>    [*] MXC support
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9"></a><a href="#__codelineno-6-9"><span class="linenos" data-linenos="9 "></span></a>    [*] Support for i.MX6ULL
+</span></code></pre></div>
+<p>对于i.MX6ULL，确保选中"NXP i.MX based"和"Support for i.MX6ULL"。</p>
+<h4 id="kernel-features内核特性">Kernel Features：内核特性<a class="headerlink" href="#kernel-features内核特性" title="链接到此章节">&para;</a></h4>
+<p>这里配置内核的基本特性：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1"></a><a href="#__codelineno-7-1"><span class="linenos" data-linenos=" 1 "></span></a>Kernel Features  ---&gt;
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2"></a><a href="#__codelineno-7-2"><span class="linenos" data-linenos=" 2 "></span></a>    Memory split (3G/1G user/kernel split)  ---&gt;
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3"></a><a href="#__codelineno-7-3"><span class="linenos" data-linenos=" 3 "></span></a>    (1) VMSPLIT_3G
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4"></a><a href="#__codelineno-7-4"><span class="linenos" data-linenos=" 4 "></span></a>    (2) VMSPLIT_2G
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5"></a><a href="#__codelineno-7-5"><span class="linenos" data-linenos=" 5 "></span></a>    (3) VMSPLIT_1G
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6"></a><a href="#__codelineno-7-6"><span class="linenos" data-linenos=" 6 "></span></a>    [*] High Memory Support
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7"></a><a href="#__codelineno-7-7"><span class="linenos" data-linenos=" 7 "></span></a>    [*] Tickless System (Dynamic Ticks)
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8"></a><a href="#__codelineno-7-8"><span class="linenos" data-linenos=" 8 "></span></a>    [*] High Resolution Timer Support
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9"></a><a href="#__codelineno-7-9"><span class="linenos" data-linenos=" 9 "></span></a>    Preemption Model (No Forced Preemption (Server))  ---&gt;
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10"></a><a href="#__codelineno-7-10"><span class="linenos" data-linenos="10 "></span></a>        (1) No Forced Preemption (Server)
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11"></a><a href="#__codelineno-7-11"><span class="linenos" data-linenos="11 "></span></a>        (2) Voluntary Kernel Preemption (Desktop)
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12"></a><a href="#__codelineno-7-12"><span class="linenos" data-linenos="12 "></span></a>        (3) Preemptible Kernel (Low-Latency Desktop)
+</span></code></pre></div>
+<ul>
+<li>Memory split：用户空间和内核空间的虚拟内存划分。对于512MB内存的i.MX6ULL，3G/1G足够了</li>
+<li>Tickless System：动态时钟，省电</li>
+<li>Preemption Model：抢占模式。嵌入式系统选"Preemptible Kernel"可以获得更低延迟</li>
+</ul>
+<h4 id="device-drivers设备驱动">Device Drivers：设备驱动<a class="headerlink" href="#device-drivers设备驱动" title="链接到此章节">&para;</a></h4>
+<p>这是最大的菜单，包含了所有驱动：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1"></a><a href="#__codelineno-8-1"><span class="linenos" data-linenos=" 1 "></span></a>Device Drivers  ---&gt;
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2"></a><a href="#__codelineno-8-2"><span class="linenos" data-linenos=" 2 "></span></a>    [*] Network device support  ---&gt;
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3"></a><a href="#__codelineno-8-3"><span class="linenos" data-linenos=" 3 "></span></a>        [*]   Ethernet driver support  ---&gt;
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4"></a><a href="#__codelineno-8-4"><span class="linenos" data-linenos=" 4 "></span></a>            [*]   DM9000 support
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5"></a><a href="#__codelineno-8-5"><span class="linenos" data-linenos=" 5 "></span></a>    [*] Character devices  ---&gt;
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6"></a><a href="#__codelineno-8-6"><span class="linenos" data-linenos=" 6 "></span></a>        [*]   Enable TTY
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7"></a><a href="#__codelineno-8-7"><span class="linenos" data-linenos=" 7 "></span></a>    [*] Serial drivers  ---&gt;
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8"></a><a href="#__codelineno-8-8"><span class="linenos" data-linenos=" 8 "></span></a>        [*]   IMX serial port support
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9"></a><a href="#__codelineno-8-9"><span class="linenos" data-linenos=" 9 "></span></a>    [*] I2C support  ---&gt;
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10"></a><a href="#__codelineno-8-10"><span class="linenos" data-linenos="10 "></span></a>        [*]   I2C device interface
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11"></a><a href="#__codelineno-8-11"><span class="linenos" data-linenos="11 "></span></a>    [*] SPI support  ---&gt;
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12"></a><a href="#__codelineno-8-12"><span class="linenos" data-linenos="12 "></span></a>    [*] MMC/SD/SDIO card support  ---&gt;
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13"></a><a href="#__codelineno-8-13"><span class="linenos" data-linenos="13 "></span></a>        [*]   MMC block device driver
+</span></code></pre></div>
+<p>这里根据你的硬件需求选择。i.MX6ULL开发板常用的驱动：
+- 以太网：FEC或DM9000
+- 串口：IMX serial port
+- I2C：I2C device interface
+- SPI：SPI support
+- 存储：MMC/SD/SDIO card support</p>
+<h4 id="file-systems文件系统">File systems：文件系统<a class="headerlink" href="#file-systems文件系统" title="链接到此章节">&para;</a></h4>
+<p>选择要支持的文件系统：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1"></a><a href="#__codelineno-9-1"><span class="linenos" data-linenos=" 1 "></span></a>File systems  ---&gt;
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2"></a><a href="#__codelineno-9-2"><span class="linenos" data-linenos=" 2 "></span></a>    [*] Second extended fs support (EXT2)
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3"></a><a href="#__codelineno-9-3"><span class="linenos" data-linenos=" 3 "></span></a>    [*] Ext3 journalling file system support
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4"></a><a href="#__codelineno-9-4"><span class="linenos" data-linenos=" 4 "></span></a>    [*] The Extended 4 (ext4) filesystem
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5"></a><a href="#__codelineno-9-5"><span class="linenos" data-linenos=" 5 "></span></a>    [*] Reiserfs support
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6"></a><a href="#__codelineno-9-6"><span class="linenos" data-linenos=" 6 "></span></a>    [*] Journalling Flash File System v2 (JFFS2) support
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7"></a><a href="#__codelineno-9-7"><span class="linenos" data-linenos=" 7 "></span></a>    [*] UBIFS file system support
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8"></a><a href="#__codelineno-9-8"><span class="linenos" data-linenos=" 8 "></span></a>    DOS/FAT/EXFAT/NT Filesystems  ---&gt;
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9"></a><a href="#__codelineno-9-9"><span class="linenos" data-linenos=" 9 "></span></a>        [*]   MSDOS fs support
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10"></a><a href="#__codelineno-9-10"><span class="linenos" data-linenos="10 "></span></a>        [*]   VFAT fs support
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11"></a><a href="#__codelineno-9-11"><span class="linenos" data-linenos="11 "></span></a>        [*]   exFAT fs support
+</span></code></pre></div>
+<p>对于嵌入式系统：
+- EXT4用于SD卡或eMMC的普通分区
+- UBIFS用于NAND Flash
+- VFAT用于与Windows兼容的SD卡分区</p>
+<h3 id="保存和加载配置">保存和加载配置<a class="headerlink" href="#保存和加载配置" title="链接到此章节">&para;</a></h3>
+<p>修改完配置后，按Esc退到主菜单，选择"Save"保存：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1"></a><a href="#__codelineno-10-1"><span class="linenos" data-linenos="1 "></span></a>    Do you wish to save your new configuration?
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2"></a><a href="#__codelineno-10-2"><span class="linenos" data-linenos="2 "></span></a>    &lt;Save&gt;
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3"></a><a href="#__codelineno-10-3"><span class="linenos" data-linenos="3 "></span></a>    &lt;Exit&gt;
+</span></code></pre></div>
+<p>选择<Save>，输入保存路径（默认是.output/linux/.config）。</p>
+<p>你也可以把配置保存为另一个文件，以便后续使用。选择"Save configuration to an alternate file"，输入文件名。</p>
+<p>下次要加载这个配置时，可以：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1"></a><a href="#__codelineno-11-1"><span class="linenos" data-linenos="1 "></span></a>make<span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span>arm<span class="w"> </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span>arm-none-linux-gnueabihf-<span class="w"> </span><span class="nv">O</span><span class="o">=</span>out/linux<span class="w"> </span>loadcfg
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2"></a><a href="#__codelineno-11-2"><span class="linenos" data-linenos="2 "></span></a><span class="c1"># 或者在menuconfig里选择&quot;Load configuration from an alternate file&quot;</span>
+</span></code></pre></div>
+<h3 id="保存为defconfig">保存为defconfig<a class="headerlink" href="#保存为defconfig" title="链接到此章节">&para;</a></h3>
+<p>如果你想创建自己的defconfig，可以：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1"></a><a href="#__codelineno-12-1"><span class="linenos" data-linenos="1 "></span></a>make<span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span>arm<span class="w"> </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span>arm-none-linux-gnueabihf-<span class="w"> </span><span class="nv">O</span><span class="o">=</span>out/linux<span class="w"> </span>savedefconfig
+</span></code></pre></div>
+<p>这会在输出目录生成<code>defconfig</code>文件，是当前配置的精简版本。你可以把它复制到<code>arch/arm/configs/</code>目录，作为新的defconfig：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1"></a><a href="#__codelineno-13-1"><span class="linenos" data-linenos="1 "></span></a>cp<span class="w"> </span>out/linux/defconfig<span class="w"> </span>arch/arm/configs/my_imx6ull_defconfig
+</span></code></pre></div>
+<p>下次使用时：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1"></a><a href="#__codelineno-14-1"><span class="linenos" data-linenos="1 "></span></a>make<span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span>arm<span class="w"> </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span>arm-none-linux-gnueabihf-<span class="w"> </span><span class="nv">O</span><span class="o">=</span>out/linux<span class="w"> </span>my_imx6ull_defconfig
+</span></code></pre></div>
+<h2 id="常用内核配置项说明">常用内核配置项说明<a class="headerlink" href="#常用内核配置项说明" title="链接到此章节">&para;</a></h2>
+<p>下面列出一些常用且重要的配置项，帮助你理解它们的含义。</p>
+<h3 id="系统基本信息">系统基本信息<a class="headerlink" href="#系统基本信息" title="链接到此章节">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>说明</th>
+<th>推荐值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CONFIG_LOCALVERSION_AUTO</td>
+<td>自动添加版本信息（git commit hash）</td>
+<td>y（调试）</td>
+</tr>
+<tr>
+<td>CONFIG_LOCALVERSION=""</td>
+<td>自定义版本后缀</td>
+<td>留空</td>
+</tr>
+<tr>
+<td>CONFIG_KERNEL_GZIP</td>
+<td>内核压缩方式（gzip）</td>
+<td>y</td>
+</tr>
+<tr>
+<td>CONFIG_KERNEL_XZ</td>
+<td>内核压缩方式（xz，更小但慢）</td>
+<td>可选</td>
+</tr>
+</tbody>
+</table>
+<h3 id="内存和进程">内存和进程<a class="headerlink" href="#内存和进程" title="链接到此章节">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>说明</th>
+<th>推荐值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CONFIG_SMP</td>
+<td>对称多处理器支持</td>
+<td>y（多核）</td>
+</tr>
+<tr>
+<td>CONFIG_NR_CPUS=2</td>
+<td>最大CPU核心数</td>
+<td>实际核心数</td>
+</tr>
+<tr>
+<td>CONFIG_VMSPLIT_3G</td>
+<td>3G用户/1G内核</td>
+<td>y（内存&lt;1GB）</td>
+</tr>
+<tr>
+<td>CONFIG_PREEMPT</td>
+<td>抢占式内核</td>
+<td>y（低延迟）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="网络相关">网络相关<a class="headerlink" href="#网络相关" title="链接到此章节">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>说明</th>
+<th>推荐值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CONFIG_NET</td>
+<td>网络支持</td>
+<td>y</td>
+</tr>
+<tr>
+<td>CONFIG_INET</td>
+<td>TCP/IP协议栈</td>
+<td>y</td>
+</tr>
+<tr>
+<td>CONFIG_NETFILTER</td>
+<td>防火墙/Netfilter</td>
+<td>y（需要时）</td>
+</tr>
+<tr>
+<td>CONFIG_VLAN_8021Q</td>
+<td>VLAN支持</td>
+<td>需要时</td>
+</tr>
+<tr>
+<td>CONFIG_BRIDGE</td>
+<td>网桥支持</td>
+<td>需要时</td>
+</tr>
+</tbody>
+</table>
+<h3 id="驱动相关">驱动相关<a class="headerlink" href="#驱动相关" title="链接到此章节">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>说明</th>
+<th>推荐值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CONFIG_SERIAL_IMX</td>
+<td>i.MX串口驱动</td>
+<td>y</td>
+</tr>
+<tr>
+<td>CONFIG_SERIAL_IMX_CONSOLE</td>
+<td>串口控制台</td>
+<td>y</td>
+</tr>
+<tr>
+<td>CONFIG_FEC</td>
+<td>i.MX以太网驱动</td>
+<td>y</td>
+</tr>
+<tr>
+<td>CONFIG_DM9000</td>
+<td>DM9000以太网驱动</td>
+<td>需要时</td>
+</tr>
+<tr>
+<td>CONFIG_I2C</td>
+<td>I2C核心</td>
+<td>y</td>
+</tr>
+<tr>
+<td>CONFIG_I2C_IMX</td>
+<td>i.MX I2C驱动</td>
+<td>y</td>
+</tr>
+<tr>
+<td>CONFIG_SPI</td>
+<td>SPI核心</td>
+<td>y</td>
+</tr>
+<tr>
+<td>CONFIG_SPI_IMX</td>
+<td>i.MX SPI驱动</td>
+<td>y</td>
+</tr>
+<tr>
+<td>CONFIG_MMC</td>
+<td>MMC/SD核心</td>
+<td>y</td>
+</tr>
+<tr>
+<td>CONFIG_MMC_SDHCI</td>
+<td>SDHCI控制器</td>
+<td>需要时</td>
+</tr>
+<tr>
+<td>CONFIG_MMC_SDHCI_ESDHC_IMX</td>
+<td>i.MX ESDHC驱动</td>
+<td>y</td>
+</tr>
+</tbody>
+</table>
+<h3 id="文件系统">文件系统<a class="headerlink" href="#文件系统" title="链接到此章节">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>说明</th>
+<th>推荐值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CONFIG_EXT4_FS</td>
+<td>EXT4文件系统</td>
+<td>y</td>
+</tr>
+<tr>
+<td>CONFIG_VFAT_FS</td>
+<td>VFAT文件系统</td>
+<td>y</td>
+</tr>
+<tr>
+<td>CONFIG_FAT_FS</td>
+<td>FAT文件系统</td>
+<td>y</td>
+</tr>
+<tr>
+<td>CONFIG_NTFS_FS</td>
+<td>NTFS文件系统（只读）</td>
+<td>需要时</td>
+</tr>
+<tr>
+<td>CONFIG_JFFS2_FS</td>
+<td>JFFS2（NOR Flash）</td>
+<td>需要时</td>
+</tr>
+<tr>
+<td>CONFIG_UBIFS_FS</td>
+<td>UBIFS（NAND Flash）</td>
+<td>需要时</td>
+</tr>
+<tr>
+<td>CONFIG_PROC_FS</td>
+<td>proc伪文件系统</td>
+<td>y</td>
+</tr>
+<tr>
+<td>CONFIG_SYSFS</td>
+<td>sysfs伪文件系统</td>
+<td>y</td>
+</tr>
+</tbody>
+</table>
+<h3 id="调试相关">调试相关<a class="headerlink" href="#调试相关" title="链接到此章节">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>说明</th>
+<th>推荐值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CONFIG_DEBUG_KERNEL</td>
+<td>调试支持</td>
+<td>n（发布版）</td>
+</tr>
+<tr>
+<td>CONFIG_DEBUG_INFO</td>
+<td>调试信息（-g）</td>
+<td>y（调试）</td>
+</tr>
+<tr>
+<td>CONFIG_MAGIC_SYSRQ</td>
+<td>SysRq键</td>
+<td>y（调试）</td>
+</tr>
+<tr>
+<td>CONFIG_KALLSYMS</td>
+<td>符号表</td>
+<td>y</td>
+</tr>
+<tr>
+<td>CONFIG_PRINTK</td>
+<td>printk输出</td>
+<td>y</td>
+</tr>
+</tbody>
+</table>
+<h2 id="踩坑笔记配置中的常见问题">踩坑笔记：配置中的常见问题<a class="headerlink" href="#踩坑笔记配置中的常见问题" title="链接到此章节">&para;</a></h2>
+<p>在配置内核时，我踩过不少坑，这里分享几个最常见的。</p>
+<h3 id="问题1模块加载失败">问题1：模块加载失败<a class="headerlink" href="#问题1模块加载失败" title="链接到此章节">&para;</a></h3>
+<p>你编译了一个驱动为模块(m)，但加载时失败：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1"></a><a href="#__codelineno-15-1"><span class="linenos" data-linenos="1 "></span></a>insmod:<span class="w"> </span>ERROR:<span class="w"> </span>could<span class="w"> </span>not<span class="w"> </span>insert<span class="w"> </span>module<span class="w"> </span>dm9000.ko:<span class="w"> </span>Unknown<span class="w"> </span>symbol
+</span></code></pre></div>
+<p>这通常是因为缺少依赖的模块或符号。检查一下：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1"></a><a href="#__codelineno-16-1"><span class="linenos" data-linenos="1 "></span></a>modprobe<span class="w"> </span>--show-depends<span class="w"> </span>dm9000.ko
+</span></code></pre></div>
+<p>它会显示依赖关系，确保依赖的模块都加载了。</p>
+<h3 id="问题2内核太大">问题2：内核太大<a class="headerlink" href="#问题2内核太大" title="链接到此章节">&para;</a></h3>
+<p>你发现编译出来的zImage有10MB+，太大了。可能原因：</p>
+<ul>
+<li>编译了太多驱动为y（应该编译为m，模块可以按需求加载，但是编进去了，裁剪可就难了）</li>
+<li>开启了太多调试选项</li>
+<li>没有精简不必要的功能</li>
+</ul>
+<p>解决方法：使用menuconfig，把不需要的驱动设为m或n。</p>
+<h3 id="问题3配置冲突">问题3：配置冲突<a class="headerlink" href="#问题3配置冲突" title="链接到此章节">&para;</a></h3>
+<p>menuconfig里某个选项是灰色的，无法选择。这是因为依赖关系不满足。按<code>?</code>查看依赖：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1"></a><a href="#__codelineno-17-1"><span class="linenos" data-linenos="1 "></span></a>  Symbol: FOO [=n]
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2"></a><a href="#__codelineno-17-2"><span class="linenos" data-linenos="2 "></span></a>  Type  : tristate
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3"></a><a href="#__codelineno-17-3"><span class="linenos" data-linenos="3 "></span></a>  Prompt: Foo support
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4"></a><a href="#__codelineno-17-4"><span class="linenos" data-linenos="4 "></span></a>    Defined at drivers/Kconfig:10
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5"></a><a href="#__codelineno-17-5"><span class="linenos" data-linenos="5 "></span></a>    Depends on: BAR &amp;&amp; !BAZ
+</span></code></pre></div>
+<p>需要先选中BAR，取消BAZ。</p>
+<h3 id="问题4config被覆盖">问题4：.config被覆盖<a class="headerlink" href="#问题4config被覆盖" title="链接到此章节">&para;</a></h3>
+<p>你编辑了.config，但再次make时被覆盖。因为make会重新评估Kconfig依赖。</p>
+<p>解决方法：
+1. 修改defconfig，而不是直接改.config
+2. 用<code>make oldconfig</code>更新.config而不是重新生成
+3. 禁用CONFIG_IKCONFIG（内嵌配置）</p>
+<h2 id="实战创建自己的defconfig">实战：创建自己的defconfig<a class="headerlink" href="#实战创建自己的defconfig" title="链接到此章节">&para;</a></h2>
+<p>现在我们来创建一个适用于i.MX6ULL开发板的defconfig。</p>
+<h3 id="方法0从官方配置创建项目配置推荐新手">方法0：从官方配置创建项目配置（推荐新手）<a class="headerlink" href="#方法0从官方配置创建项目配置推荐新手" title="链接到此章节">&para;</a></h3>
+<p>IMX-Forge 项目的 <code>imx_aes_defconfig</code> 实际上就是这么创建的！它是基于 NXP 官方的 <code>imx_v7_defconfig</code>，<strong>可选地</strong>添加了 WiFi 固件支持。</p>
+<h4 id="基础配置适用于大多数情况">基础配置（适用于大多数情况）<a class="headerlink" href="#基础配置适用于大多数情况" title="链接到此章节">&para;</a></h4>
+<p>如果你不需要 WiFi 功能，直接使用官方配置即可：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1"></a><a href="#__codelineno-18-1"><span class="linenos" data-linenos="1 "></span></a><span class="nb">cd</span><span class="w"> </span>/path/to/imx-forge/third_party/linux-imx
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2"></a><a href="#__codelineno-18-2"><span class="linenos" data-linenos="2 "></span></a>make<span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span>arm<span class="w"> </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span>arm-none-linux-gnueabihf-<span class="w"> </span><span class="nv">O</span><span class="o">=</span>../../out/linux<span class="w"> </span>imx_v7_defconfig
+</span></code></pre></div>
+<p><code>imx_v7_defconfig</code> 已经包含了 i.MX6ULL 所需的所有基本配置。</p>
+<h4 id="可选添加-wifi-固件支持消除启动警告">可选：添加 WiFi 固件支持（消除启动警告）<a class="headerlink" href="#可选添加-wifi-固件支持消除启动警告" title="链接到此章节">&para;</a></h4>
+<p><strong>为什么需要？</strong> 如果你的板子使用 WiFi 模块，没有内置固件的话，内核启动时会显示类似这样的警告：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1"></a><a href="#__codelineno-19-1"><span class="linenos" data-linenos="1 "></span></a>cfg80211: failed to load regulatory.db
+</span></code></pre></div>
+<p>这个警告不影响功能，但如果你想在内核中预装固件来消除警告，可以这样做：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1"></a><a href="#__codelineno-20-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 1. 创建自定义配置（基于官方配置）</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2"></a><a href="#__codelineno-20-2"><span class="linenos" data-linenos="2 "></span></a><span class="nb">cd</span><span class="w"> </span>/path/to/imx-forge/third_party/linux-imx
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3"></a><a href="#__codelineno-20-3"><span class="linenos" data-linenos="3 "></span></a>cp<span class="w"> </span>arch/arm/configs/imx_v7_defconfig<span class="w"> </span>arch/arm/configs/my_imx6ull_defconfig
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4"></a><a href="#__codelineno-20-4"><span class="linenos" data-linenos="4 "></span></a>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5"></a><a href="#__codelineno-20-5"><span class="linenos" data-linenos="5 "></span></a><span class="c1"># 2. 添加固件配置（可选）</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6"></a><a href="#__codelineno-20-6"><span class="linenos" data-linenos="6 "></span></a>cat<span class="w"> </span>&gt;&gt;<span class="w"> </span>arch/arm/configs/my_imx6ull_defconfig<span class="w"> </span><span class="s">&lt;&lt; EOF</span>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7"></a><a href="#__codelineno-20-7"><span class="linenos" data-linenos="7 "></span></a><span class="s">CONFIG_EXTRA_FIRMWARE=&quot;regulatory.db regulatory.db.p7s&quot;</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8"></a><a href="#__codelineno-20-8"><span class="linenos" data-linenos="8 "></span></a><span class="s">CONFIG_EXTRA_FIRMWARE_DIR=&quot;/path/to/imx-forge/driver/firmwares&quot;</span>
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9"></a><a href="#__codelineno-20-9"><span class="linenos" data-linenos="9 "></span></a><span class="s">EOF</span>
+</span></code></pre></div>
+<p><strong>准备固件文件</strong>（如果添加了上面的配置）：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1"></a><a href="#__codelineno-21-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 创建固件目录</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2"></a><a href="#__codelineno-21-2"><span class="linenos" data-linenos="2 "></span></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/path/to/imx-forge/driver/firmwares
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3"></a><a href="#__codelineno-21-3"><span class="linenos" data-linenos="3 "></span></a>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4"></a><a href="#__codelineno-21-4"><span class="linenos" data-linenos="4 "></span></a><span class="c1"># 克隆并生成无线监管数据库</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5"></a><a href="#__codelineno-21-5"><span class="linenos" data-linenos="5 "></span></a><span class="nb">cd</span><span class="w"> </span>/tmp
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6"></a><a href="#__codelineno-21-6"><span class="linenos" data-linenos="6 "></span></a>git<span class="w"> </span>clone<span class="w"> </span>https://git.kernel.org/pub/scm/linux/kernel/git/sforshee/wireless-regdb.git
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7"></a><a href="#__codelineno-21-7"><span class="linenos" data-linenos="7 "></span></a><span class="nb">cd</span><span class="w"> </span>wireless-regdb
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8"></a><a href="#__codelineno-21-8"><span class="linenos" data-linenos="8 "></span></a>make
+</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9"></a><a href="#__codelineno-21-9"><span class="linenos" data-linenos="9 "></span></a>cp<span class="w"> </span>regulatory.db*<span class="w"> </span>/path/to/imx-forge/driver/firmwares/
+</span></code></pre></div>
+<p><strong>验证配置</strong>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1"></a><a href="#__codelineno-22-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 使用新配置</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2"></a><a href="#__codelineno-22-2"><span class="linenos" data-linenos="2 "></span></a>make<span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span>arm<span class="w"> </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span>arm-none-linux-gnueabihf-<span class="w"> </span><span class="nv">O</span><span class="o">=</span>../../out/linux<span class="w"> </span>my_imx6ull_defconfig
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3"></a><a href="#__codelineno-22-3"><span class="linenos" data-linenos="3 "></span></a>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4"></a><a href="#__codelineno-22-4"><span class="linenos" data-linenos="4 "></span></a><span class="c1"># 检查配置（如果添加了固件配置）</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5"></a><a href="#__codelineno-22-5"><span class="linenos" data-linenos="5 "></span></a>grep<span class="w"> </span><span class="s2">&quot;CONFIG_EXTRA_FIRMWARE&quot;</span><span class="w"> </span>../../out/linux/.config
+</span></code></pre></div>
+<h4 id="配置对比">配置对比<a class="headerlink" href="#配置对比" title="链接到此章节">&para;</a></h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1"></a><a href="#__codelineno-23-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 官方配置（推荐用于大多数情况）</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2"></a><a href="#__codelineno-23-2"><span class="linenos" data-linenos="2 "></span></a>imx_v7_defconfig<span class="w">     </span><span class="m">600</span><span class="w"> </span>行<span class="w">  </span>←<span class="w"> </span>直接使用这个
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3"></a><a href="#__codelineno-23-3"><span class="linenos" data-linenos="3 "></span></a>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4"></a><a href="#__codelineno-23-4"><span class="linenos" data-linenos="4 "></span></a><span class="c1"># IMX-Forge 自定义配置（添加了 WiFi 固件）</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5"></a><a href="#__codelineno-23-5"><span class="linenos" data-linenos="5 "></span></a>imx_aes_defconfig<span class="w">    </span><span class="m">602</span><span class="w"> </span>行<span class="w">  </span>←<span class="w"> </span>可选，仅在需要消除<span class="w"> </span>WiFi<span class="w"> </span>警告时使用
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6"></a><a href="#__codelineno-23-6"><span class="linenos" data-linenos="6 "></span></a>
+</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7"></a><a href="#__codelineno-23-7"><span class="linenos" data-linenos="7 "></span></a><span class="c1"># 差异仅 2 行：</span>
+</span><span id="__span-23-8"><a id="__codelineno-23-8" name="__codelineno-23-8"></a><a href="#__codelineno-23-8"><span class="linenos" data-linenos="8 "></span></a><span class="c1"># CONFIG_EXTRA_FIRMWARE=&quot;regulatory.db regulatory.db.p7s&quot;</span>
+</span><span id="__span-23-9"><a id="__codelineno-23-9" name="__codelineno-23-9"></a><a href="#__codelineno-23-9"><span class="linenos" data-linenos="9 "></span></a><span class="c1"># CONFIG_EXTRA_FIRMWARE_DIR=&quot;...&quot;</span>
+</span></code></pre></div>
+<p><strong>建议</strong>：大多数情况下，直接使用 <code>imx_v7_defconfig</code> 就足够了。只有在看到 WiFi 固件相关警告且想消除它时，才需要添加固件配置。</p>
+<h3 id="方法1基于现有defconfig修改">方法1：基于现有defconfig修改<a class="headerlink" href="#方法1基于现有defconfig修改" title="链接到此章节">&para;</a></h3>
+<p>最简单的方法是基于imx_aes_defconfig修改：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1"></a><a href="#__codelineno-24-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="c1"># 加载基础配置</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2"></a><a href="#__codelineno-24-2"><span class="linenos" data-linenos=" 2 "></span></a>make<span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span>arm<span class="w"> </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span>arm-none-linux-gnueabihf-<span class="w"> </span><span class="nv">O</span><span class="o">=</span>out/linux<span class="w"> </span>imx_aes_defconfig
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3"></a><a href="#__codelineno-24-3"><span class="linenos" data-linenos=" 3 "></span></a>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4"></a><a href="#__codelineno-24-4"><span class="linenos" data-linenos=" 4 "></span></a><span class="c1"># 用menuconfig调整</span>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5"></a><a href="#__codelineno-24-5"><span class="linenos" data-linenos=" 5 "></span></a>make<span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span>arm<span class="w"> </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span>arm-none-linux-gnueabihf-<span class="w"> </span><span class="nv">O</span><span class="o">=</span>out/linux<span class="w"> </span>menuconfig
+</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6"></a><a href="#__codelineno-24-6"><span class="linenos" data-linenos=" 6 "></span></a>
+</span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7"></a><a href="#__codelineno-24-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="c1"># 保存为精简defconfig</span>
+</span><span id="__span-24-8"><a id="__codelineno-24-8" name="__codelineno-24-8"></a><a href="#__codelineno-24-8"><span class="linenos" data-linenos=" 8 "></span></a>make<span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span>arm<span class="w"> </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span>arm-none-linux-gnueabihf-<span class="w"> </span><span class="nv">O</span><span class="o">=</span>out/linux<span class="w"> </span>savedefconfig
+</span><span id="__span-24-9"><a id="__codelineno-24-9" name="__codelineno-24-9"></a><a href="#__codelineno-24-9"><span class="linenos" data-linenos=" 9 "></span></a>
+</span><span id="__span-24-10"><a id="__codelineno-24-10" name="__codelineno-24-10"></a><a href="#__codelineno-24-10"><span class="linenos" data-linenos="10 "></span></a><span class="c1"># 复制到源码目录</span>
+</span><span id="__span-24-11"><a id="__codelineno-24-11" name="__codelineno-24-11"></a><a href="#__codelineno-24-11"><span class="linenos" data-linenos="11 "></span></a>cp<span class="w"> </span>out/linux/defconfig<span class="w"> </span>arch/arm/configs/my_imx6ull_defconfig
+</span></code></pre></div>
+<h3 id="方法2从头创建">方法2：从头创建<a class="headerlink" href="#方法2从头创建" title="链接到此章节">&para;</a></h3>
+<p>如果你想完全控制，可以：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1"></a><a href="#__codelineno-25-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 清空配置</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2"></a><a href="#__codelineno-25-2"><span class="linenos" data-linenos="2 "></span></a>make<span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span>arm<span class="w"> </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span>arm-none-linux-gnueabihf-<span class="w"> </span><span class="nv">O</span><span class="o">=</span>out/linux<span class="w"> </span>allnoconfig
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3"></a><a href="#__codelineno-25-3"><span class="linenos" data-linenos="3 "></span></a>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4"></a><a href="#__codelineno-25-4"><span class="linenos" data-linenos="4 "></span></a><span class="c1"># 用menuconfig逐步添加</span>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5"></a><a href="#__codelineno-25-5"><span class="linenos" data-linenos="5 "></span></a>make<span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span>arm<span class="w"> </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span>arm-none-linux-gnueabihf-<span class="w"> </span><span class="nv">O</span><span class="o">=</span>out/linux<span class="w"> </span>menuconfig
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6"></a><a href="#__codelineno-25-6"><span class="linenos" data-linenos="6 "></span></a>
+</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7"></a><a href="#__codelineno-25-7"><span class="linenos" data-linenos="7 "></span></a><span class="c1"># 保存defconfig</span>
+</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8"></a><a href="#__codelineno-25-8"><span class="linenos" data-linenos="8 "></span></a>cp<span class="w"> </span>out/linux/.config<span class="w"> </span>arch/arm/configs/my_imx6ull_defconfig
+</span></code></pre></div>
+<h3 id="方法3脚本化配置">方法3：脚本化配置<a class="headerlink" href="#方法3脚本化配置" title="链接到此章节">&para;</a></h3>
+<p>对于重复性配置，可以写一个脚本：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1"></a><a href="#__codelineno-26-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="ch">#!/bin/bash</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2"></a><a href="#__codelineno-26-2"><span class="linenos" data-linenos=" 2 "></span></a><span class="c1"># config_my_board.sh</span>
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3"></a><a href="#__codelineno-26-3"><span class="linenos" data-linenos=" 3 "></span></a>
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4"></a><a href="#__codelineno-26-4"><span class="linenos" data-linenos=" 4 "></span></a>make<span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span>arm<span class="w"> </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span>arm-none-linux-gnueabihf-<span class="w"> </span><span class="nv">O</span><span class="o">=</span>out/linux<span class="w"> </span>imx_aes_defconfig
+</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5"></a><a href="#__codelineno-26-5"><span class="linenos" data-linenos=" 5 "></span></a>
+</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6"></a><a href="#__codelineno-26-6"><span class="linenos" data-linenos=" 6 "></span></a><span class="c1"># 使用scripts/config工具修改配置</span>
+</span><span id="__span-26-7"><a id="__codelineno-26-7" name="__codelineno-26-7"></a><a href="#__codelineno-26-7"><span class="linenos" data-linenos=" 7 "></span></a>./scripts/config<span class="w"> </span>--file<span class="w"> </span>out/linux/.config<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-26-8"><a id="__codelineno-26-8" name="__codelineno-26-8"></a><a href="#__codelineno-26-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="w">    </span>--set-val<span class="w"> </span>CONFIG_LOCALVERSION<span class="w"> </span><span class="s2">&quot;-myboard&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-26-9"><a id="__codelineno-26-9" name="__codelineno-26-9"></a><a href="#__codelineno-26-9"><span class="linenos" data-linenos=" 9 "></span></a><span class="w">    </span>--disable<span class="w"> </span>CONFIG_DEBUG_KERNEL<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-26-10"><a id="__codelineno-26-10" name="__codelineno-26-10"></a><a href="#__codelineno-26-10"><span class="linenos" data-linenos="10 "></span></a><span class="w">    </span>--enable<span class="w"> </span>CONFIG_PREEMPT<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-26-11"><a id="__codelineno-26-11" name="__codelineno-26-11"></a><a href="#__codelineno-26-11"><span class="linenos" data-linenos="11 "></span></a><span class="w">    </span>--module<span class="w"> </span>CONFIG_DM9000
+</span><span id="__span-26-12"><a id="__codelineno-26-12" name="__codelineno-26-12"></a><a href="#__codelineno-26-12"><span class="linenos" data-linenos="12 "></span></a>
+</span><span id="__span-26-13"><a id="__codelineno-26-13" name="__codelineno-26-13"></a><a href="#__codelineno-26-13"><span class="linenos" data-linenos="13 "></span></a><span class="c1"># 更新配置</span>
+</span><span id="__span-26-14"><a id="__codelineno-26-14" name="__codelineno-26-14"></a><a href="#__codelineno-26-14"><span class="linenos" data-linenos="14 "></span></a>make<span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span>arm<span class="w"> </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span>arm-none-linux-gnueabihf-<span class="w"> </span><span class="nv">O</span><span class="o">=</span>out/linux<span class="w"> </span>olddefconfig
+</span><span id="__span-26-15"><a id="__codelineno-26-15" name="__codelineno-26-15"></a><a href="#__codelineno-26-15"><span class="linenos" data-linenos="15 "></span></a>
+</span><span id="__span-26-16"><a id="__codelineno-26-16" name="__codelineno-26-16"></a><a href="#__codelineno-26-16"><span class="linenos" data-linenos="16 "></span></a><span class="c1"># 保存</span>
+</span><span id="__span-26-17"><a id="__codelineno-26-17" name="__codelineno-26-17"></a><a href="#__codelineno-26-17"><span class="linenos" data-linenos="17 "></span></a>make<span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span>arm<span class="w"> </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span>arm-none-linux-gnueabihf-<span class="w"> </span><span class="nv">O</span><span class="o">=</span>out/linux<span class="w"> </span>savedefconfig
+</span><span id="__span-26-18"><a id="__codelineno-26-18" name="__codelineno-26-18"></a><a href="#__codelineno-26-18"><span class="linenos" data-linenos="18 "></span></a>cp<span class="w"> </span>out/linux/defconfig<span class="w"> </span>arch/arm/configs/my_imx6ull_defconfig
+</span></code></pre></div>
+<h2 id="配置优化建议">配置优化建议<a class="headerlink" href="#配置优化建议" title="链接到此章节">&para;</a></h2>
+<p>根据使用场景，给一些配置建议。</p>
+<h3 id="最小化配置体积优先">最小化配置（体积优先）<a class="headerlink" href="#最小化配置体积优先" title="链接到此章节">&para;</a></h3>
+<div class="language-makefile highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1"></a><a href="#__codelineno-27-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="c"># 不编译模块</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2"></a><a href="#__codelineno-27-2"><span class="linenos" data-linenos=" 2 "></span></a><span class="nv">CONFIG_MODULES</span><span class="o">=</span>n
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3"></a><a href="#__codelineno-27-3"><span class="linenos" data-linenos=" 3 "></span></a>
+</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4"></a><a href="#__codelineno-27-4"><span class="linenos" data-linenos=" 4 "></span></a><span class="c"># 精简驱动</span>
+</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5"></a><a href="#__codelineno-27-5"><span class="linenos" data-linenos=" 5 "></span></a><span class="nv">CONFIG_NETDEVICES</span><span class="o">=</span>y
+</span><span id="__span-27-6"><a id="__codelineno-27-6" name="__codelineno-27-6"></a><a href="#__codelineno-27-6"><span class="linenos" data-linenos=" 6 "></span></a><span class="c"># 只选必需的网卡驱动</span>
+</span><span id="__span-27-7"><a id="__codelineno-27-7" name="__codelineno-27-7"></a><a href="#__codelineno-27-7"><span class="linenos" data-linenos=" 7 "></span></a>
+</span><span id="__span-27-8"><a id="__codelineno-27-8" name="__codelineno-27-8"></a><a href="#__codelineno-27-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="c"># 去掉调试</span>
+</span><span id="__span-27-9"><a id="__codelineno-27-9" name="__codelineno-27-9"></a><a href="#__codelineno-27-9"><span class="linenos" data-linenos=" 9 "></span></a><span class="nv">CONFIG_DEBUG_KERNEL</span><span class="o">=</span>n
+</span><span id="__span-27-10"><a id="__codelineno-27-10" name="__codelineno-27-10"></a><a href="#__codelineno-27-10"><span class="linenos" data-linenos="10 "></span></a><span class="nv">CONFIG_DEBUG_INFO</span><span class="o">=</span>n
+</span></code></pre></div>
+<h3 id="低延迟配置实时性优先">低延迟配置（实时性优先）<a class="headerlink" href="#低延迟配置实时性优先" title="链接到此章节">&para;</a></h3>
+<div class="language-makefile highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1"></a><a href="#__codelineno-28-1"><span class="linenos" data-linenos="1 "></span></a><span class="c"># 抢占式内核</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2"></a><a href="#__codelineno-28-2"><span class="linenos" data-linenos="2 "></span></a><span class="nv">CONFIG_PREEMPT</span><span class="o">=</span>y
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3"></a><a href="#__codelineno-28-3"><span class="linenos" data-linenos="3 "></span></a>
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4"></a><a href="#__codelineno-28-4"><span class="linenos" data-linenos="4 "></span></a><span class="c"># 高精度定时器</span>
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5"></a><a href="#__codelineno-28-5"><span class="linenos" data-linenos="5 "></span></a><span class="nv">CONFIG_HIGH_RES_TIMERS</span><span class="o">=</span>y
+</span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6"></a><a href="#__codelineno-28-6"><span class="linenos" data-linenos="6 "></span></a>
+</span><span id="__span-28-7"><a id="__codelineno-28-7" name="__codelineno-28-7"></a><a href="#__codelineno-28-7"><span class="linenos" data-linenos="7 "></span></a><span class="c"># 关闭节流</span>
+</span><span id="__span-28-8"><a id="__codelineno-28-8" name="__codelineno-28-8"></a><a href="#__codelineno-28-8"><span class="linenos" data-linenos="8 "></span></a><span class="nv">CONFIG_CPU_FREQ</span><span class="o">=</span>n
+</span></code></pre></div>
+<h3 id="调试配置开发阶段">调试配置（开发阶段）<a class="headerlink" href="#调试配置开发阶段" title="链接到此章节">&para;</a></h3>
+<div class="language-makefile highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1"></a><a href="#__codelineno-29-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="c"># 调试信息</span>
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2"></a><a href="#__codelineno-29-2"><span class="linenos" data-linenos=" 2 "></span></a><span class="nv">CONFIG_DEBUG_INFO</span><span class="o">=</span>y
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3"></a><a href="#__codelineno-29-3"><span class="linenos" data-linenos=" 3 "></span></a><span class="nv">CONFIG_DEBUG_KERNEL</span><span class="o">=</span>y
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4"></a><a href="#__codelineno-29-4"><span class="linenos" data-linenos=" 4 "></span></a><span class="nv">CONFIG_MAGIC_SYSRQ</span><span class="o">=</span>y
+</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5"></a><a href="#__codelineno-29-5"><span class="linenos" data-linenos=" 5 "></span></a>
+</span><span id="__span-29-6"><a id="__codelineno-29-6" name="__codelineno-29-6"></a><a href="#__codelineno-29-6"><span class="linenos" data-linenos=" 6 "></span></a><span class="c"># 符号表</span>
+</span><span id="__span-29-7"><a id="__codelineno-29-7" name="__codelineno-29-7"></a><a href="#__codelineno-29-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="nv">CONFIG_KALLSYMS</span><span class="o">=</span>y
+</span><span id="__span-29-8"><a id="__codelineno-29-8" name="__codelineno-29-8"></a><a href="#__codelineno-29-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="nv">CONFIG_KALLSYMS_ALL</span><span class="o">=</span>y
+</span><span id="__span-29-9"><a id="__codelineno-29-9" name="__codelineno-29-9"></a><a href="#__codelineno-29-9"><span class="linenos" data-linenos=" 9 "></span></a>
+</span><span id="__span-29-10"><a id="__codelineno-29-10" name="__codelineno-29-10"></a><a href="#__codelineno-29-10"><span class="linenos" data-linenos="10 "></span></a><span class="c"># Oops定位</span>
+</span><span id="__span-29-11"><a id="__codelineno-29-11" name="__codelineno-29-11"></a><a href="#__codelineno-29-11"><span class="linenos" data-linenos="11 "></span></a><span class="nv">CONFIG_DEBUG_INFO</span><span class="o">=</span>y
+</span><span id="__span-29-12"><a id="__codelineno-29-12" name="__codelineno-29-12"></a><a href="#__codelineno-29-12"><span class="linenos" data-linenos="12 "></span></a><span class="nv">CONFIG_FRAME_POINTER</span><span class="o">=</span>y
+</span></code></pre></div>
+<h2 id="写在最后">写在最后<a class="headerlink" href="#写在最后" title="链接到此章节">&para;</a></h2>
+<p>到这里，Linux内核配置的核心内容你就掌握了。从Kconfig系统的原理，到menuconfig的使用，到常用配置项的含义，再到创建自己的defconfig，我们走完了配置的完整流程。</p>
+<p>配置不是神秘的艺术，而是有规律可循的系统工程。理解了依赖关系、知道常用选项的作用、掌握了创建defconfig的方法，你就可以根据自己的需求定制内核了——无论是最小化体积、优化性能，还是增强调试能力，都在你的掌控之中。</p>
+<p>下一篇文章，我们将进入内核模块的世界。你会看到：</p>
+<ul>
+<li>什么是内核模块，为什么需要它</li>
+<li>如何编写一个简单的内核模块</li>
+<li>如何编译和加载模块</li>
+<li>模块和驱动的区别</li>
+</ul>
+<p>准备好了吗？我们来探索内核的动态扩展能力。</p>
+<hr />
+<p><strong>延伸阅读</strong></p>
+<ul>
+<li><a href="https://www.kernel.org/doc/html/latest/kbuild/kconfig-language.html">Kconfig Language Documentation</a> - Kconfig语法文档</li>
+<li><a href="https://sysprog21.github.io/lkmpg/">Linux Kernel Module Programming Guide</a> - 内核模块编程指南</li>
+<li><a href="https://kernelnewbies.org/KernelBuildconfiguration">Kernel Newbies: Configuration</a> - 配置教程</li>
+</ul>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月7日 09:14:40 CST">2026年4月7日 09:14:40</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年3月15日 20:07:11 CST">2026年3月15日 20:07:11</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+        
+          
+          <a href="../02_kernel_compile/" class="md-footer__link md-footer__link--prev" aria-label="上一页: 从0开始编译Linux内核：当你发现make时少了一个包，第17次">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              <div class="md-ellipsis">
+                从0开始编译Linux内核：当你发现make时少了一个包，第17次
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../04_kernel_modules/" class="md-footer__link md-footer__link--next" aria-label="下一页: 内核模块详解：从 Hello World 到设备驱动">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                下一页
+              </span>
+              <div class="md-ellipsis">
+                内核模块详解：从 Hello World 到设备驱动
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 Charliechen - 保留所有权利
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/Awesome-Embedded-Learning-Studio" target="_blank" rel="noopener" title="GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="mailto:725610365@qq.com" target="_blank" rel="noopener" title="发送邮件" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M536.4-26.3c9.8-3.5 20.6-1 28 6.3s9.8 18.2 6.3 28l-178 496.9c-5 13.9-18.1 23.1-32.8 23.1-14.2 0-27-8.6-32.3-21.7l-64.2-158c-4.5-11-2.5-23.6 5.2-32.6l94.5-112.4c5.1-6.1 4.7-15-.9-20.6s-14.6-6-20.6-.9l-112.4 94.3c-9.1 7.6-21.6 9.6-32.6 5.2L38.1 216.8c-13.1-5.3-21.7-18.1-21.7-32.3 0-14.7 9.2-27.8 23.1-32.8z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.path", "navigation.indexes", "navigation.tabs", "navigation.tabs.sticky", "navigation.prune", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.select", "content.code.annotate", "content.tabs.link", "content.tooltips", "content.action.edit", "content.action.view"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

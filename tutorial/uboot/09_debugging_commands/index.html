@@ -1,0 +1,5075 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="IMX-Forge，专注于IMX6ULL的教程文档网站">
+      
+      
+        <meta name="author" content="Charliechen114514">
+      
+      
+        <link rel="canonical" href="https://awesome-embedded-learning-studio.github.io/imx-forge/tutorial/uboot/09_debugging_commands/">
+      
+      
+        <link rel="prev" href="../08_logo_splash/">
+      
+      
+        <link rel="next" href="../bonus_qa/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../Awesome-Embedded.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>2026正点原子开发板移植（UBoot篇完结）：U-Boot调试命令：命令行是嵌入式开发的神器 - IMX-Forge的教程文档</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#2026正点原子开发板移植uboot篇完结u-boot调试命令命令行是嵌入式开发的神器" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../.." title="IMX-Forge的教程文档" class="md-header__button md-logo" aria-label="IMX-Forge的教程文档" data-md-component="logo">
+      
+  <img src="../../../Awesome-Embedded.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            IMX-Forge的教程文档
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              2026正点原子开发板移植（UBoot篇完结）：U-Boot调试命令：命令行是嵌入式开发的神器
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换至暗色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换至暗色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="切换至亮色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换至亮色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  欢迎来到 IMX-Forge 教程文档
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../QUICK_START/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  IMX-Forge 快速入门指南
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../architecture/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Architecture
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ci/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Ci
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../development/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../logo/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Logo
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../modules/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Modules
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../scripts/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Scripts
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../todo/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Todo
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tutorial
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="IMX-Forge的教程文档" class="md-nav__button md-logo" aria-label="IMX-Forge的教程文档" data-md-component="logo">
+      
+  <img src="../../../Awesome-Embedded.png" alt="logo">
+
+    </a>
+    IMX-Forge的教程文档
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    欢迎来到 IMX-Forge 教程文档
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../QUICK_START/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IMX-Forge 快速入门指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../architecture/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../ci/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ci
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../development/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../logo/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logo
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../modules/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../scripts/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scripts
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../todo/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Todo
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorial
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../docker/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_2" id="__nav_10_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Docker
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../docker/01_docker_basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker 基础知识
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../docker/02_imx_forge_docker_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IMX-Forge Docker 开发指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../driver/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Driver
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_3" id="__nav_10_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Driver
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../driver/00_chardev_base/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    00 chardev base
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../driver/01_device_tree_base/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 device tree base
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../driver/02_pinctrl_gpio/01_introduction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 pinctrl gpio
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../driver/device_tree/01-Introduction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Device tree
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../driver/firmware_apply/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Firmware apply
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../driver/modules/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../kernel/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kernel
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_4" id="__nav_10_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Kernel
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernel/01_kernel_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从0开始认识Linux内核：那个让无数嵌入式工程师又爱又恨的庞然大物
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernel/02_kernel_compile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从0开始编译Linux内核：当你发现make时少了一个包，第17次
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernel/03_kernel_config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从0开始配置Linux内核：menuconfig不是黑魔法，只是有点绕
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernel/04_kernel_modules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    内核模块详解：从 Hello World 到设备驱动
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernel/05_kernel_device_tree/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    设备树在内核中的使用：从硬件描述到驱动匹配
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernel/06_wsl_network_boot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WSL2 + TFTP + 网络启动：那些年我们一起踩过的防火墙坑
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernel/07_driver_basic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linux驱动开发入门：从Hello World到第一个字符驱动
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kernel/08_kernel_boot_debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linux内核启动与调试：从bootargs到init进程的那几百万行代码
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../kernel/mainline/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mainline
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../practical/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Practical
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_5" id="__nav_10_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Practical
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../practical/01_practical_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    实战项目概述：我们要一起构建一个可用的 i.MX6ULL 系统
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../practical/02_build_system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从零构建完整系统：U-Boot、Linux 内核与 BusyBox Rootfs 的整合艺术
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../practical/03_boot_and_debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    系统启动与调试：见证系统启动的那一刻，并学会如何挽救它
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../practical/04-nfs-experience/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NFS rootfs 多版本切换：用 bind mount 解决嵌入式开发痛点
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../rootfs/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rootfs
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_6" id="__nav_10_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Rootfs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rootfs/01_rootfs_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rootfs 概述：Linux 系统的"最后一公里"，以及为什么内核启动后还需要它
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rootfs/02_busybox_compile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BusyBox 编译安装：一把瑞士军刀的自制指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rootfs/03_inittab_init/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    inittab 与 init 系统：Linux 启动的"第一号进程"全解析
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rootfs/04_rootfs_structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rootfs 目录结构创建：Linux 文件系统的"骨架"
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rootfs/05_nfs_wsl_troubleshoot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WSL + NFS 网络启动踩坑记：从挂载失败到成功启动的完整历程
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rootfs/06_apps_integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    应用集成：从最小化 Rootfs 到可用系统
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../start/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Start
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_7" id="__nav_10_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Start
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../start/01_start_from_toolchain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从 0 开始构建嵌入式 Linux 开发环境（Part 1）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../start/02_env_init_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    环境初始化指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../third_party/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Third party
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Third party
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_9" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uboot
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_9" id="__nav_10_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_10_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Uboot
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_what_is_uboot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从0开始理解 U-Boot：嵌入式系统的"第一道门"，以及我们为什么终于告别了硬编码时代
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_uboot_compile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从0开始编译 U-Boot：那些教程没告诉你的交叉编译原理和踩坑记录
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_uboot_porting_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    U-Boot完全移植概览：从官方源码到你的自制板，这条路有多远
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_board_config_basic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    板级配置基础：Kconfig系统的那些坑和我们的第一次移植
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_device_tree_basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    设备树基础：从硬编码噩梦到硬件描述分离
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_lcd_porting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第06章 LCD驱动移植
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_network_porting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第07章 网络驱动移植：从ping不通到tftp成功，那些让你抓狂的PHY时序问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_logo_splash/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第08章 Logo和启动画面
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2026正点原子开发板移植（UBoot篇完结）：U-Boot调试命令：命令行是嵌入式开发的神器
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2026正点原子开发板移植（UBoot篇完结）：U-Boot调试命令：命令行是嵌入式开发的神器
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#板子信息查询bdinfo-命令" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        板子信息查询：bdinfo 命令
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#存储操作mmc-命令家族" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        存储操作：mmc 命令家族
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="存储操作：mmc 命令家族">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mmc-info-和-mmc-dev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mmc info 和 mmc dev
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mmc-rescan-和-mmc-part" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mmc rescan 和 mmc part
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mmc-read-和-mmc-write" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mmc read 和 mmc write
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mmc-erase-和-mmc-bootbus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mmc erase 和 mmc bootbus
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#网络启动tftp-和-dhcp-命令" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        网络启动：tftp 和 dhcp 命令
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="网络启动：tftp 和 dhcp 命令">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dhcp-命令" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dhcp 命令
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tftp-命令" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tftp 命令
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#网络调试技巧" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        网络调试技巧
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#内核启动bootm-和-bootz-命令" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        内核启动：bootm 和 bootz 命令
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="内核启动：bootm 和 bootz 命令">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bootz-命令" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bootz 命令
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bootm-命令" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bootm 命令
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#启动流程细节" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        启动流程细节
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#环境变量管理printenvsetenvsaveenv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        环境变量管理：printenv、setenv、saveenv
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="环境变量管理：printenv、setenv、saveenv">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#printenv-查看变量" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        printenv 查看变量
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setenv-设置变量" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        setenv 设置变量
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#saveenv-保存变量" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        saveenv 保存变量
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#环境变量存储格式" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        环境变量存储格式
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#控制台信息coninfo-命令" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        控制台信息：coninfo 命令
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#设备树操作fdt-命令" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        设备树操作：fdt 命令
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="设备树操作：fdt 命令">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fdt-addr-和-fdt-print" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fdt addr 和 fdt print
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fdt-set-和-fdt-mknode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fdt set 和 fdt mknode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fdt-get-和-fdt-rm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fdt get 和 fdt rm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fdt-apply-和-fdt-resize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fdt apply 和 fdt resize
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#调试技巧和窍门" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        调试技巧和窍门
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="调试技巧和窍门">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#分段验证法" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        分段验证法
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#环境变量备份" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        环境变量备份
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#日志收集" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        日志收集
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#最小化配置" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        最小化配置
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#比较法" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        比较法
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#常见错误及解决方案" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        常见错误及解决方案
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="常见错误及解决方案">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bad-magic-number" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Bad Magic Number"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#crc-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "CRC error"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#no-mmc-device-available" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "No MMC device available"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tftp-timeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "TFTP timeout"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernel-panic---not-syncing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Kernel panic - not syncing"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-exceeds-reserved-area" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Environment exceeds reserved area"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#实战调试案例" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实战调试案例
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="实战调试案例">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#案例一网络启动失败" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        案例一：网络启动失败
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#案例二内核启动后立刻重启" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        案例二：内核启动后立刻重启
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#写在最后" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        写在最后
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bonus_qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    附录：常见问题解答（Q&amp;A）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#板子信息查询bdinfo-命令" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        板子信息查询：bdinfo 命令
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#存储操作mmc-命令家族" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        存储操作：mmc 命令家族
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="存储操作：mmc 命令家族">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mmc-info-和-mmc-dev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mmc info 和 mmc dev
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mmc-rescan-和-mmc-part" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mmc rescan 和 mmc part
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mmc-read-和-mmc-write" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mmc read 和 mmc write
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mmc-erase-和-mmc-bootbus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mmc erase 和 mmc bootbus
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#网络启动tftp-和-dhcp-命令" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        网络启动：tftp 和 dhcp 命令
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="网络启动：tftp 和 dhcp 命令">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dhcp-命令" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dhcp 命令
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tftp-命令" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tftp 命令
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#网络调试技巧" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        网络调试技巧
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#内核启动bootm-和-bootz-命令" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        内核启动：bootm 和 bootz 命令
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="内核启动：bootm 和 bootz 命令">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bootz-命令" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bootz 命令
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bootm-命令" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bootm 命令
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#启动流程细节" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        启动流程细节
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#环境变量管理printenvsetenvsaveenv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        环境变量管理：printenv、setenv、saveenv
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="环境变量管理：printenv、setenv、saveenv">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#printenv-查看变量" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        printenv 查看变量
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setenv-设置变量" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        setenv 设置变量
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#saveenv-保存变量" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        saveenv 保存变量
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#环境变量存储格式" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        环境变量存储格式
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#控制台信息coninfo-命令" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        控制台信息：coninfo 命令
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#设备树操作fdt-命令" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        设备树操作：fdt 命令
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="设备树操作：fdt 命令">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fdt-addr-和-fdt-print" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fdt addr 和 fdt print
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fdt-set-和-fdt-mknode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fdt set 和 fdt mknode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fdt-get-和-fdt-rm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fdt get 和 fdt rm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fdt-apply-和-fdt-resize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fdt apply 和 fdt resize
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#调试技巧和窍门" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        调试技巧和窍门
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="调试技巧和窍门">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#分段验证法" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        分段验证法
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#环境变量备份" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        环境变量备份
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#日志收集" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        日志收集
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#最小化配置" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        最小化配置
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#比较法" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        比较法
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#常见错误及解决方案" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        常见错误及解决方案
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="常见错误及解决方案">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bad-magic-number" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Bad Magic Number"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#crc-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "CRC error"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#no-mmc-device-available" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "No MMC device available"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tftp-timeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "TFTP timeout"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernel-panic---not-syncing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Kernel panic - not syncing"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-exceeds-reserved-area" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Environment exceeds reserved area"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#实战调试案例" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实战调试案例
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="实战调试案例">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#案例一网络启动失败" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        案例一：网络启动失败
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#案例二内核启动后立刻重启" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        案例二：内核启动后立刻重启
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#写在最后" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        写在最后
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="导航栏" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    欢迎来到 IMX-Forge 教程文档
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Tutorial
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Uboot
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="2026正点原子开发板移植uboot篇完结u-boot调试命令命令行是嵌入式开发的神器">2026正点原子开发板移植（UBoot篇完结）：U-Boot调试命令：命令行是嵌入式开发的神器<a class="headerlink" href="#2026正点原子开发板移植uboot篇完结u-boot调试命令命令行是嵌入式开发的神器" title="链接到此章节">&para;</a></h1>
+<h2 id="板子信息查询bdinfo-命令">板子信息查询：bdinfo 命令<a class="headerlink" href="#板子信息查询bdinfo-命令" title="链接到此章节">&para;</a></h2>
+<p>当你拿到一块新板子，或者 U-Boot 启动后第一件事干什么？我的习惯是先看看板子的基本信息。这就像医生看病先要量体温血压一样，你得先知道板子的"健康指标"。</p>
+<p><code>bdinfo</code> 命令就是用来查看板子信息的。敲一下这个命令，你会看到一堆信息冒出来：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1"></a><a href="#__codelineno-0-1"><span class="linenos" data-linenos=" 1 "></span></a>=&gt; bdinfo
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2"></a><a href="#__codelineno-0-2"><span class="linenos" data-linenos=" 2 "></span></a>arch_number = 0x00000000
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3"></a><a href="#__codelineno-0-3"><span class="linenos" data-linenos=" 3 "></span></a>boot_params = 0x80000100
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4"></a><a href="#__codelineno-0-4"><span class="linenos" data-linenos=" 4 "></span></a>DRAM bank   = 0x00000000
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5"></a><a href="#__codelineno-0-5"><span class="linenos" data-linenos=" 5 "></span></a>-&gt; start    = 0x80000000
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6"></a><a href="#__codelineno-0-6"><span class="linenos" data-linenos=" 6 "></span></a>-&gt; size     = 0x20000000
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7"></a><a href="#__codelineno-0-7"><span class="linenos" data-linenos=" 7 "></span></a>flashstart  = 0x00000000
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8"></a><a href="#__codelineno-0-8"><span class="linenos" data-linenos=" 8 "></span></a>flashsize   = 0x00000000
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9"></a><a href="#__codelineno-0-9"><span class="linenos" data-linenos=" 9 "></span></a>flashoffset = 0x00000000
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10"></a><a href="#__codelineno-0-10"><span class="linenos" data-linenos="10 "></span></a>baudrate    = 115200 bps
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11"></a><a href="#__codelineno-0-11"><span class="linenos" data-linenos="11 "></span></a>relocaddr   = 0x9ff4a000
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12"></a><a href="#__codelineno-0-12"><span class="linenos" data-linenos="12 "></span></a>reloc off   = 0x17f4a000
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13"></a><a href="#__codelineno-0-13"><span class="linenos" data-linenos="13 "></span></a>Build       = 32-bit
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14"></a><a href="#__codelineno-0-14"><span class="linenos" data-linenos="14 "></span></a>current eth = fec-1:02
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15"></a><a href="#__codelineno-0-15"><span class="linenos" data-linenos="15 "></span></a>ethaddr     = 00:04:25:1c:a0:00
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16"></a><a href="#__codelineno-0-16"><span class="linenos" data-linenos="16 "></span></a>IP addr     = 192.168.1.102
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17"></a><a href="#__codelineno-0-17"><span class="linenos" data-linenos="17 "></span></a>fdt_blob    = 0x88000000
+</span></code></pre></div>
+<p>别慌，我们来拆一下这些信息都是什么意思。</p>
+<p><code>arch_number</code> 是架构号，这个在老版本 U-Boot 里用来传递给内核告诉它自己的机器类型，现在用设备树了基本不怎么用。<code>boot_params</code> 是启动参数的地址，内核会从这里读取参数。<code>DRAM bank</code> 显示内存信息，i.MX6ULL 有一块 512MB 的 DDR，起始地址 0x80000000，这个信息很关键，如果你要手动加载内核到内存，得知道哪块内存区域是可用的。</p>
+<p><code>baudrate</code> 是串口波特率，默认 115200，如果你发现串口输出乱码，第一件事就是检查波特率对不对。<code>relocaddr</code> 和 <code>reloc off</code> 是 U-Boot 自己的重定位信息，U-Boot 启动后会把自己从 Flash 复制到 DDR 里运行，这两个值告诉你复制到了哪里。<code>Build</code> 告诉你这是 32 位还是 64 位构建，i.MX6ULL 是 32 位 ARM 架构。</p>
+<p>网络信息是重点，<code>current eth</code> 显示当前使用的网卡设备，<code>ethaddr</code> 是 MAC 地址，<code>IP addr</code> 是 IP 地址。如果你要调试网络相关的问题，比如 tftp 启动失败，第一步就是检查这些信息对不对。<code>fdt_blob</code> 是设备树树的地址，后面我们会详细讲怎么用 fdt 命令操作它。</p>
+<p>bdinfo 还有一些参数选项。<code>bdinfo -a</code> 显示所有信息，<code>bdinfo -e</code> 只显示网络信息，<code>bdinfo -m</code> 只显示内存信息。这些选项在你只需要看某类信息时很有用，不用在一堆输出里翻来翻去。</p>
+<p>我来举一个实际场景。有一次我调试一块板子，tftp 总是超时，换了网线换了交换机都不行。后来用 <code>bdinfo -e</code> 一看，发现 IP 地址是 0.0.0.0，根本没有分配到地址。原来是 <code>ipaddr</code> 环境变量没设置，设置一下就好了。你看，如果一上来就瞎改网络配置，可能折腾半天也找不到问题，用 bdinfo 看一眼就清楚了。</p>
+<h2 id="存储操作mmc-命令家族">存储操作：mmc 命令家族<a class="headerlink" href="#存储操作mmc-命令家族" title="链接到此章节">&para;</a></h2>
+<p>存储是嵌入式系统的基石，eMMC、SD 卡这些是 U-Boot 启动和加载文件的关键。<code>mmc</code> 命令家族是你与存储设备打交道的工具箱。</p>
+<h3 id="mmc-info-和-mmc-dev">mmc info 和 mmc dev<a class="headerlink" href="#mmc-info-和-mmc-dev" title="链接到此章节">&para;</a></h3>
+<p>最基础的是 <code>mmc info</code> 命令，它会显示当前 MMC 设备的详细信息：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1"></a><a href="#__codelineno-1-1"><span class="linenos" data-linenos=" 1 "></span></a>=&gt; mmc info
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2"></a><a href="#__codelineno-1-2"><span class="linenos" data-linenos=" 2 "></span></a>Device: FSL_SDHC
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3"></a><a href="#__codelineno-1-3"><span class="linenos" data-linenos=" 3 "></span></a>Manufacturer ID: 11
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4"></a><a href="#__codelineno-1-4"><span class="linenos" data-linenos=" 4 "></span></a>OEM: 149
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5"></a><a href="#__codelineno-1-5"><span class="linenos" data-linenos=" 5 "></span></a>Name: SD8GAA
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6"></a><a href="#__codelineno-1-6"><span class="linenos" data-linenos=" 6 "></span></a>Bus Speed: 52000000
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7"></a><a href="#__codelineno-1-7"><span class="linenos" data-linenos=" 7 "></span></a>Mode: MMC HS DDR
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8"></a><a href="#__codelineno-1-8"><span class="linenos" data-linenos=" 8 "></span></a>Rd Block Len: 512
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9"></a><a href="#__codelineno-1-9"><span class="linenos" data-linenos=" 9 "></span></a>MMC version 5.1
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10"></a><a href="#__codelineno-1-10"><span class="linenos" data-linenos="10 "></span></a>High Capacity: Yes
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11"></a><a href="#__codelineno-1-11"><span class="linenos" data-linenos="11 "></span></a>Capacity: 7.3 GiB
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12"></a><a href="#__codelineno-1-12"><span class="linenos" data-linenos="12 "></span></a>Bus Width: 8-bit DDR
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13"></a><a href="#__codelineno-1-13"><span class="linenos" data-linenos="13 "></span></a>Erase Group Size: 512 KiB
+</span></code></pre></div>
+<p>这些信息告诉你存储设备的"身份"。 Manufacturer ID 和 OEM 可以帮你识别用的是哪家的芯片，Bus Speed 和 Mode 显示当前传输速度和模式，Capacity 显示容量，Bus Width 显示数据位宽。如果你换了不同容量的 eMMC，或者换了不同厂商的芯片，用这个命令可以确认硬件识别是否正确。</p>
+<p>默认情况下，mmc 命令操作的是当前设备。如果你有多个 MMC 设备，比如一个 SD 卡和一个 eMMC，需要用 <code>mmc dev</code> 切换：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1"></a><a href="#__codelineno-2-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; mmc dev 0    # 切换到设备 0
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2"></a><a href="#__codelineno-2-2"><span class="linenos" data-linenos="2 "></span></a>=&gt; mmc dev 1    # 切换到设备 1
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3"></a><a href="#__codelineno-2-3"><span class="linenos" data-linenos="3 "></span></a>=&gt; mmc dev      # 不带参数显示当前设备
+</span></code></pre></div>
+<p>i.MX6ULL 上通常设备 0 是 SD 卡，设备 1 是 eMMC，但这个要看具体的板子设计，不确定的话就用 <code>mmc list</code> 命令查看所有设备：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1"></a><a href="#__codelineno-3-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; mmc list
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2"></a><a href="#__codelineno-3-2"><span class="linenos" data-linenos="2 "></span></a>FSL_SDHC: 0 (eMMC)
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3"></a><a href="#__codelineno-3-3"><span class="linenos" data-linenos="3 "></span></a>FSL_SDHC: 1 (SD)
+</span></code></pre></div>
+<h3 id="mmc-rescan-和-mmc-part">mmc rescan 和 mmc part<a class="headerlink" href="#mmc-rescan-和-mmc-part" title="链接到此章节">&para;</a></h3>
+<p>有时候你插拔了 SD 卡，或者热插拔了存储设备，U-Boot 不知道设备状态变了，这时候用 <code>mmc rescan</code> 重新扫描：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1"></a><a href="#__codelineno-4-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; mmc rescan
+</span></code></pre></div>
+<p>这个命令会重新初始化 MMC 控制器，重新读取设备信息。如果你发现读取操作失败，或者设备容量显示不对，试试这个命令。</p>
+<p><code>mmc part</code> 命令显示分区表：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1"></a><a href="#__codelineno-5-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; mmc part
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2"></a><a href="#__codelineno-5-2"><span class="linenos" data-linenos="2 "></span></a>Partition Map for MMC device 1  --   Partition Type: DOS
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3"></a><a href="#__codelineno-5-3"><span class="linenos" data-linenos="3 "></span></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4"></a><a href="#__codelineno-5-4"><span class="linenos" data-linenos="4 "></span></a>Part    Start LBA       Size                Type
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5"></a><a href="#__codelineno-5-5"><span class="linenos" data-linenos="5 "></span></a>  1     0x00000022      0x0007ffa0         0x83 Linux
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6"></a><a href="#__codelineno-5-6"><span class="linenos" data-linenos="6 "></span></a>  2     0x0007ffc2      0x0017ffa8         0x83 Linux
+</span></code></pre></div>
+<p>这里显示的是 DOS 分区表，有两个 Linux 分区。如果你看到分区表为空或者分区类型不对，可能是烧录出了问题，或者分区表损坏了。</p>
+<h3 id="mmc-read-和-mmc-write">mmc read 和 mmc write<a class="headerlink" href="#mmc-read-和-mmc-write" title="链接到此章节">&para;</a></h3>
+<p>读取和写入是核心操作。<code>mmc read</code> 从存储设备读取数据到内存：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1"></a><a href="#__codelineno-6-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; mmc read &lt;addr&gt; &lt;blk#&gt; &lt;cnt&gt;
+</span></code></pre></div>
+<p><code>addr</code> 是目标内存地址，<code>blk#</code> 是起始块号，<code>cnt</code> 是要读取的块数。MMC 设备通常以 512 字节为一个块，所以计算地址的时候要考虑这个。举个例子，要把 eMMC 的第一个块读到内存 0x88000000：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1"></a><a href="#__codelineno-7-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; mmc read 0x88000000 0x0 0x1
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2"></a><a href="#__codelineno-7-2"><span class="linenos" data-linenos="2 "></span></a>MMC read: dev # 1, block # 0, count 1 ... 1 blocks read: OK
+</span></code></pre></div>
+<p><code>mmc write</code> 是反向操作，从内存写入到存储设备：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1"></a><a href="#__codelineno-8-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; mmc write &lt;addr&gt; &lt;blk#&gt; &lt;cnt&gt;
+</span></code></pre></div>
+<p>这个命令要慎用，写错了位置可能把 bootloader 或者分区表覆盖掉。一个安全做法是先用 <code>mmc read</code> 读取一下看看内容对不对，确认无误后再写。</p>
+<p>有个实战技巧：你可以用 <code>mmc read</code> 把整个镜像加载到内存，然后用 <code>iminfo</code> 命令验证镜像格式，确认没问题后再用 <code>mmc write</code> 写回去。这比直接烧录安全多了，至少你知道烧的是什么。</p>
+<h3 id="mmc-erase-和-mmc-bootbus">mmc erase 和 mmc bootbus<a class="headerlink" href="#mmc-erase-和-mmc-bootbus" title="链接到此章节">&para;</a></h3>
+<p><code>mmc erase</code> 擦除存储区域：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1"></a><a href="#__codelineno-9-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; mmc erase &lt;blk#&gt; &lt;cnt&gt;
+</span></code></pre></div>
+<p>这个命令在某些场景下很有用，比如你想清空某个分区，或者测试坏块。不过要注意，eMMC 有擦写寿命，别没事就擦来擦去。</p>
+<p><code>mmc bootbus</code> 设置启动总线配置，这个主要和安全启动相关：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1"></a><a href="#__codelineno-10-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; mmc bootbus 1 2 1 0
+</span></code></pre></div>
+<p>四个参数分别是设备号、数据宽度、强制总线模式、保留位。如果你要做安全启动，可能需要配置这个，但大部分应用场景用不上。</p>
+<h2 id="网络启动tftp-和-dhcp-命令">网络启动：tftp 和 dhcp 命令<a class="headerlink" href="#网络启动tftp-和-dhcp-命令" title="链接到此章节">&para;</a></h2>
+<p>网络启动是嵌入式开发的神技。你想想，每次改了内核或者设备树，都要烧录到 eMMC，多麻烦啊。用网络启动，文件放在服务器上，板子启动时自动下载，改完代码重启就行，开发效率提升一大截。</p>
+<h3 id="dhcp-命令">dhcp 命令<a class="headerlink" href="#dhcp-命令" title="链接到此章节">&para;</a></h3>
+<p><code>dhcp</code> 命令通过 DHCP 协议获取 IP 地址，并可选地下载启动文件：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1"></a><a href="#__codelineno-11-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; dhcp
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2"></a><a href="#__codelineno-11-2"><span class="linenos" data-linenos="2 "></span></a>BOOTP broadcast 1
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3"></a><a href="#__codelineno-11-3"><span class="linenos" data-linenos="3 "></span></a>BOOTP broadcast 2
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4"></a><a href="#__codelineno-11-4"><span class="linenos" data-linenos="4 "></span></a>DHCP client bound to address 192.168.1.102 (1033 ms)
+</span></code></pre></div>
+<p>这是最简单的用法，只获取 IP 地址。如果你还想自动下载文件，可以在服务器上配置 BOOTP 文件名，或者在命令里指定：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1"></a><a href="#__codelineno-12-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; dhcp 0x82000000 zImage
+</span></code></pre></div>
+<p>这会在获取 IP 后，自动把 zImage 下载到 0x82000000 地址。不过我一般不用这种方式，因为不够灵活，我喜欢先用 dhcp 获取 IP，然后手动用 tftp 下载文件。</p>
+<p>dhcp 的 IP 分配过程很简单。板子广播一个 DHCP 请求，DHCP 服务器响应一个 offer 包，包含 IP 地址、子网掩码、网关等信息，板子发送请求确认，服务器响应确认完成分配。这个过程通常几百毫秒就能完成。</p>
+<p>如果你发现 dhcp 获取不到 IP，先检查网线插好了没，再用 <code>bdinfo -e</code> 看看网卡驱动是不是加载了。如果还不行，可能是 DHCP 服务器配置问题，看看服务器日志。</p>
+<h3 id="tftp-命令">tftp 命令<a class="headerlink" href="#tftp-命令" title="链接到此章节">&para;</a></h3>
+<p><code>tftp</code> 命令通过 TFTP 协议下载文件：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1"></a><a href="#__codelineno-13-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; tftp 0x82000000 zImage
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2"></a><a href="#__codelineno-13-2"><span class="linenos" data-linenos="2 "></span></a>Using ethernet@02188000 device
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3"></a><a href="#__codelineno-13-3"><span class="linenos" data-linenos="3 "></span></a>TFTP from server 192.168.1.1; our IP address is 192.168.1.102
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4"></a><a href="#__codelineno-13-4"><span class="linenos" data-linenos="4 "></span></a>Filename &#39;zImage&#39;.
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5"></a><a href="#__codelineno-13-5"><span class="linenos" data-linenos="5 "></span></a>Load address: 0x82000000
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6"></a><a href="#__codelineno-13-6"><span class="linenos" data-linenos="6 "></span></a>Loading: #################################################################
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7"></a><a href="#__codelineno-13-7"><span class="linenos" data-linenos="7 "></span></a>         6.2 MiB/s
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8"></a><a href="#__codelineno-13-8"><span class="linenos" data-linenos="8 "></span></a>done
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9"></a><a href="#__codelineno-13-9"><span class="linenos" data-linenos="9 "></span></a>Bytes transferred = 6821504 (6824d0 hex)
+</span></code></pre></div>
+<p>这个命令会从 TFTP 服务器下载 zImage 到内存 0x82000000。下载速度取决于网络状况，你看到的这个 6.2 MB/s 已经很快了，百兆网络理论速度也就 12.5 MB/s，实际能达到 6-8 MB/s 就很不错了。</p>
+<p>tftp 服务器怎么搭建？Linux 下最简单的是用 <code>tftpd-hpa</code>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1"></a><a href="#__codelineno-14-1"><span class="linenos" data-linenos="1 "></span></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>tftpd-hpa
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2"></a><a href="#__codelineno-14-2"><span class="linenos" data-linenos="2 "></span></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>tftpd-hpa
+</span></code></pre></div>
+<p>把文件放到 <code>/var/lib/tftpboot/</code> 目录下就行了。Windows 下可以用 tftpd32 或者 FileZilla Server，都很简单。</p>
+<p>TFTP 是基于 UDP 的，所以不保证可靠传输，但实现简单，资源占用少，非常适合嵌入式场景。不过要注意，TFTP 不支持大于 32MB 的文件，如果你要下载更大的东西，得用 NFS 或者 HTTP。</p>
+<h3 id="网络调试技巧">网络调试技巧<a class="headerlink" href="#网络调试技巧" title="链接到此章节">&para;</a></h3>
+<p>网络启动常见问题无非这么几个：获取不到 IP、下载超时、下载后校验失败。获取不到 IP 先检查网线和 DHCP 服务器，下载超时先检查防火墙和文件路径，校验失败可能是传输错误，重新下载试试。</p>
+<p>有个实用技巧是用 <code>ping</code> 命令测试网络连通性：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1"></a><a href="#__codelineno-15-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; ping 192.168.1.1
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2"></a><a href="#__codelineno-15-2"><span class="linenos" data-linenos="2 "></span></a>Using ethernet@02188000 device
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3"></a><a href="#__codelineno-15-3"><span class="linenos" data-linenos="3 "></span></a>host 192.168.1.1 is alive
+</span></code></pre></div>
+<p>如果 ping 不通，说明网络配置有问题，不用浪费时间尝试 tftp。还要注意，U-Boot 的 <code>ping</code> 命令只发送几个包就停止了，不像 Linux 的 ping 会一直跑，这是正常行为。</p>
+<p>调试网络问题时，<code>printenv</code> 命令也很有用，看看 <code>ipaddr</code>、<code>serverip</code>、<code>netmask</code> 这些环境变量设置对不对：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1"></a><a href="#__codelineno-16-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; printenv ipaddr serverip netmask
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2"></a><a href="#__codelineno-16-2"><span class="linenos" data-linenos="2 "></span></a>ipaddr=192.168.1.102
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3"></a><a href="#__codelineno-16-3"><span class="linenos" data-linenos="3 "></span></a>serverip=192.168.1.1
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4"></a><a href="#__codelineno-16-4"><span class="linenos" data-linenos="4 "></span></a>netmask=255.255.255.0
+</span></code></pre></div>
+<p>如果这些值不对，用 <code>setenv</code> 修改一下，然后 <code>saveenv</code> 保存。</p>
+<h2 id="内核启动bootm-和-bootz-命令">内核启动：bootm 和 bootz 命令<a class="headerlink" href="#内核启动bootm-和-bootz-命令" title="链接到此章节">&para;</a></h2>
+<p>U-Boot 的终极目标是启动内核。<code>bootm</code> 和 <code>bootz</code> 是两个最常用的启动命令，区别在于支持的镜像格式。<code>bootm</code> 启动 uImage 格式（老式的 Legacy Image），<code>bootz</code> 启动 zImage 格式（ARM Linux 的压缩内核镜像）。</p>
+<h3 id="bootz-命令">bootz 命令<a class="headerlink" href="#bootz-命令" title="链接到此章节">&para;</a></h3>
+<p>先说 <code>bootz</code>，因为现在大部分 ARM 系统都用 zImage。基本用法：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1"></a><a href="#__codelineno-17-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; bootz 0x82000000 - 0x88000000
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2"></a><a href="#__codelineno-17-2"><span class="linenos" data-linenos="2 "></span></a>Kernel image @ 0x82000000 [ 0x000000 - 0x68238f ]
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3"></a><a href="#__codelineno-17-3"><span class="linenos" data-linenos="3 "></span></a>## Flattened Device Tree blob at 0x88000000
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4"></a><a href="#__codelineno-17-4"><span class="linenos" data-linenos="4 "></span></a>   Booting using the fdt blob at 0x88000000
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5"></a><a href="#__codelineno-17-5"><span class="linenos" data-linenos="5 "></span></a>   Loading Device Tree to 0x87fff000, end 0x88005b9f ... OK
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6"></a><a href="#__codelineno-17-6"><span class="linenos" data-linenos="6 "></span></a>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7"></a><a href="#__codelineno-17-7"><span class="linenos" data-linenos="7 "></span></a>Starting kernel ...
+</span></code></pre></div>
+<p>三个参数分别是：内核地址、initrd 地址（用 <code>-</code> 表示没有）、设备树地址。内核地址就是你用 tftp 下载到的地址，设备树地址通常是加载地址后面的某个位置。</p>
+<p><code>bootz</code> 会先解压内核，然后设置启动参数，最后跳到内核入口点执行。解压这个过程需要一点时间，你会看到一段时间的"黑屏"，这是正常的，内核在初始化早期还没有串口输出。</p>
+<p>如果启动失败，<code>bootz</code> 会停住并显示错误信息。最常见的问题是解压失败、设备树格式不对、内存地址冲突。错误信息会给出一些线索，比如 "Bad magic number" 表示镜像格式不对，"CRC error" 表示文件损坏，重新下载试试。</p>
+<h3 id="bootm-命令">bootm 命令<a class="headerlink" href="#bootm-命令" title="链接到此章节">&para;</a></h3>
+<p><code>bootm</code> 的用法类似，但支持更多镜像格式：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1"></a><a href="#__codelineno-18-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; bootm 0x82000000
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2"></a><a href="#__codelineno-18-2"><span class="linenos" data-linenos="2 "></span></a>## Booting kernel from Legacy Image at 0x82000000 ...
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3"></a><a href="#__codelineno-18-3"><span class="linenos" data-linenos="3 "></span></a>   Image Name:   Linux-5.15.0
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4"></a><a href="#__codelineno-18-4"><span class="linenos" data-linenos="4 "></span></a>   Image Type:   ARM Linux Kernel Image (uncompressed)
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5"></a><a href="#__codelineno-18-5"><span class="linenos" data-linenos="5 "></span></a>   Data Size:    6821504 Bytes = 6.5 MiB
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6"></a><a href="#__codelineno-18-6"><span class="linenos" data-linenos="6 "></span></a>   Load Address: 0x80008000
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7"></a><a href="#__codelineno-18-7"><span class="linenos" data-linenos="7 "></span></a>   Entry Point:  0x80008000
+</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8"></a><a href="#__codelineno-18-8"><span class="linenos" data-linenos="8 "></span></a>   Verifying Checksum ... OK
+</span></code></pre></div>
+<p><code>bootm</code> 会先检查镜像头，验证 CRC 校验和，然后根据镜像类型决定如何处理。uImage 格式包含一个头，记录了镜像类型、加载地址、入口点等信息，<code>bootm</code> 根据这些信息正确加载和启动。</p>
+<p><code>bootm</code> 还支持 FIT 镜像（Flattened Image Tree），这是一种新的镜像格式，把内核、设备树、ramdisk 打包在一起，还支持签名和加密。FIT 镜像更灵活也更安全，是未来的趋势，但目前很多项目还在用 Legacy 格式，因为简单。</p>
+<h3 id="启动流程细节">启动流程细节<a class="headerlink" href="#启动流程细节" title="链接到此章节">&para;</a></h3>
+<p>无论是 <code>bootm</code> 还是 <code>bootz</code>，启动流程都分几个阶段。第一阶段是镜像验证，检查魔数、CRC 校验和，确保镜像没有损坏。第二阶段是解压和加载，zImage 需要解压，uImage 可能在正确的位置。第三阶段是设备树处理，把设备树放到内核期望的位置。第四阶段是准备启动参数，设置 ATAGS 或者设备树。最后阶段是跳转到内核。</p>
+<p>这个流程中，设备树处理很关键。内核需要知道硬件信息，比如内存布局、外设地址、中断号等，这些都在设备树里描述。U-Boot 要把设备树放到正确的位置，还要根据实际情况修改某些属性，比如 chosen 节点的 bootargs。</p>
+<h2 id="环境变量管理printenvsetenvsaveenv">环境变量管理：printenv、setenv、saveenv<a class="headerlink" href="#环境变量管理printenvsetenvsaveenv" title="链接到此章节">&para;</a></h2>
+<p>U-Boot 的环境变量是配置系统的核心。它就像一个全局的配置数据库，存储了启动参数、网络配置、设备信息等。掌握环境变量管理，就掌握了 U-Boot 的"配置中心"。</p>
+<h3 id="printenv-查看变量">printenv 查看变量<a class="headerlink" href="#printenv-查看变量" title="链接到此章节">&para;</a></h3>
+<p><code>printenv</code> 命令显示环境变量：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1"></a><a href="#__codelineno-19-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; printenv
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2"></a><a href="#__codelineno-19-2"><span class="linenos" data-linenos="2 "></span></a>arch=arm
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3"></a><a href="#__codelineno-19-3"><span class="linenos" data-linenos="3 "></span></a>baudrate=115200
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4"></a><a href="#__codelineno-19-4"><span class="linenos" data-linenos="4 "></span></a>board=mx6ull_14x14_evk
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5"></a><a href="#__codelineno-19-5"><span class="linenos" data-linenos="5 "></span></a>board_name=mx6ull_14x14_evk
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6"></a><a href="#__codelineno-19-6"><span class="linenos" data-linenos="6 "></span></a>bootargs=console=ttymxc0,115200 root=/dev/mmcblk1p2 rootwait rw
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7"></a><a href="#__codelineno-19-7"><span class="linenos" data-linenos="7 "></span></a>bootcmd=mmc dev 1; mmc read 0x82000000 0x800 0x4000; bootz 0x82000000 - 0x88000000
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8"></a><a href="#__codelineno-19-8"><span class="linenos" data-linenos="8 "></span></a>bootdelay=3
+</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9"></a><a href="#__codelineno-19-9"><span class="linenos" data-linenos="9 "></span></a>...
+</span></code></pre></div>
+<p>这是显示所有变量。你也可以指定只看某个变量：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1"></a><a href="#__codelineno-20-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; printenv bootargs
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2"></a><a href="#__codelineno-20-2"><span class="linenos" data-linenos="2 "></span></a>bootargs=console=ttymxc0,115200 root=/dev/mmcblk1p2 rootwait rw
+</span></code></pre></div>
+<p>有个隐藏选项 <code>-a</code> 可以显示以点开头的变量，这些通常是系统内部变量，平时用不上：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1"></a><a href="#__codelineno-21-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; printenv -a
+</span></code></pre></div>
+<h3 id="setenv-设置变量">setenv 设置变量<a class="headerlink" href="#setenv-设置变量" title="链接到此章节">&para;</a></h3>
+<p><code>setenv</code> 命令设置环境变量：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1"></a><a href="#__codelineno-22-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; setenv ipaddr 192.168.1.100
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2"></a><a href="#__codelineno-22-2"><span class="linenos" data-linenos="2 "></span></a>=&gt; setenv serverip 192.168.1.1
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3"></a><a href="#__codelineno-22-3"><span class="linenos" data-linenos="3 "></span></a>=&gt; setenv bootdelay 5
+</span></code></pre></div>
+<p>设置后会立即生效，但不会永久保存，重启后会丢失。要永久保存需要用 <code>saveenv</code> 命令，我们后面会讲。</p>
+<p><code>setenv</code> 还可以删除变量，赋值为空就行：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1"></a><a href="#__codelineno-23-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; setenv oldvar
+</span></code></pre></div>
+<p>这会删除 <code>oldvar</code> 变量。有个陷阱要注意，你不能直接 <code>setenv bootargs</code> 来删除 bootargs，这样会把它设为空字符串，而不是删除。要删除的话用 <code>setenv bootargs &amp;&amp; saveenv</code>，或者直接编辑存储设备上的环境变量区域。</p>
+<h3 id="saveenv-保存变量">saveenv 保存变量<a class="headerlink" href="#saveenv-保存变量" title="链接到此章节">&para;</a></h3>
+<p><code>saveenv</code> 命令把当前环境变量保存到存储设备：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1"></a><a href="#__codelineno-24-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; saveenv
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2"></a><a href="#__codelineno-24-2"><span class="linenos" data-linenos="2 "></span></a>Saving Environment to MMC...
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3"></a><a href="#__codelineno-24-3"><span class="linenos" data-linenos="3 "></span></a>Writing to MMC(1)... done
+</span></code></pre></div>
+<p>这个命令很关键，不然你设置的环境变量重启后就没了。保存位置通常在 eMMC 或者 SD 卡的某个固定区域，具体位置看配置。</p>
+<p>如果你发现保存失败，可能是存储设备写保护了，或者环境变量区域满了。eMMC 有时候会有写保护位，需要先清除。环境变量区域大小是固定的，如果变量太多超出了大小，saveenv 会失败，这时候得删掉一些不用的变量。</p>
+<h3 id="环境变量存储格式">环境变量存储格式<a class="headerlink" href="#环境变量存储格式" title="链接到此章节">&para;</a></h3>
+<p>环境变量在存储设备上是有特定格式的。开头是一个 32 位的 CRC 校验和，然后是一系列 "name=value" 字符串，用 null 字符分隔，最后用两个 null 字符表示结束。U-Boot 启动时会读取这个区域，计算 CRC 校验和，如果正确就加载到内存。</p>
+<p>这种设计的好处是简单可靠，但缺点是大小固定，用起来不够灵活。新版本的 U-Boot 支持环境变量重叠和多个存储位置，可以提高可靠性，但基本格式还是一样的。</p>
+<h2 id="控制台信息coninfo-命令">控制台信息：coninfo 命令<a class="headerlink" href="#控制台信息coninfo-命令" title="链接到此章节">&para;</a></h2>
+<p><code>coninfo</code> 命令显示控制台设备信息：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1"></a><a href="#__codelineno-25-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; coninfo
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2"></a><a href="#__codelineno-25-2"><span class="linenos" data-linenos="2 "></span></a>List of available devices
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3"></a><a href="#__codelineno-25-3"><span class="linenos" data-linenos="3 "></span></a>|-- serial
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4"></a><a href="#__codelineno-25-4"><span class="linenos" data-linenos="4 "></span></a>|   |-- stdin
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5"></a><a href="#__codelineno-25-5"><span class="linenos" data-linenos="5 "></span></a>|   |-- stdout
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6"></a><a href="#__codelineno-25-6"><span class="linenos" data-linenos="6 "></span></a>|   |-- stderr
+</span></code></pre></div>
+<p>这里显示当前有三个标准 IO 设备：stdin（标准输入）、stdout（标准输出）、stderr（标准错误），都映射到了串口设备。</p>
+<p>如果你有多个串口或者同时有串口和 LCD 显示器，<code>coninfo</code> 会显示更多设备：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1"></a><a href="#__codelineno-26-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; coninfo
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2"></a><a href="#__codelineno-26-2"><span class="linenos" data-linenos="2 "></span></a>List of available devices
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3"></a><a href="#__codelineno-26-3"><span class="linenos" data-linenos="3 "></span></a>|-- serial
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4"></a><a href="#__codelineno-26-4"><span class="linenos" data-linenos="4 "></span></a>|   |-- stdin
+</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5"></a><a href="#__codelineno-26-5"><span class="linenos" data-linenos="5 "></span></a>|   |-- stdout
+</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6"></a><a href="#__codelineno-26-6"><span class="linenos" data-linenos="6 "></span></a>|   |-- stderr
+</span><span id="__span-26-7"><a id="__codelineno-26-7" name="__codelineno-26-7"></a><a href="#__codelineno-26-7"><span class="linenos" data-linenos="7 "></span></a>|-- vidconsole
+</span><span id="__span-26-8"><a id="__codelineno-26-8" name="__codelineno-26-8"></a><a href="#__codelineno-26-8"><span class="linenos" data-linenos="8 "></span></a>|-- serial@021f0000
+</span></code></pre></div>
+<p><code>I</code> 标志表示该设备可以作输入，<code>O</code> 标志表示可以作输出。你可以用 <code>console</code> 命令或者修改环境变量来切换控制台设备。</p>
+<p>控制台切换的一个实用场景是调试多串口系统。比如你有调试串口和通信串口，想通过通信串口输出日志，就可以用 coninfo 看看设备名，然后修改 <code>stdout</code> 环境变量。</p>
+<h2 id="设备树操作fdt-命令">设备树操作：fdt 命令<a class="headerlink" href="#设备树操作fdt-命令" title="链接到此章节">&para;</a></h2>
+<p>设备树是现代 Linux 系统描述硬件的标准方式，U-Boot 提供了 <code>fdt</code> 命令来操作设备树。这个命令功能很强大，可以查看、修改、添加节点和属性。</p>
+<h3 id="fdt-addr-和-fdt-print">fdt addr 和 fdt print<a class="headerlink" href="#fdt-addr-和-fdt-print" title="链接到此章节">&para;</a></h3>
+<p>先用 <code>fdt addr</code> 设置设备树地址：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1"></a><a href="#__codelineno-27-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; fdt addr 0x88000000
+</span></code></pre></div>
+<p>然后用 <code>fdt print</code> 查看设备树内容：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1"></a><a href="#__codelineno-28-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; fdt print /
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2"></a><a href="#__codelineno-28-2"><span class="linenos" data-linenos="2 "></span></a>/ {
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3"></a><a href="#__codelineno-28-3"><span class="linenos" data-linenos="3 "></span></a>    model = &quot;Freescale i.MX6 UltraLite 14x14 EVK Board&quot;;
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4"></a><a href="#__codelineno-28-4"><span class="linenos" data-linenos="4 "></span></a>    compatible = &quot;fsl,imx6ull-14x14-evk&quot;, &quot;fsl,imx6ull&quot;;
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5"></a><a href="#__codelineno-28-5"><span class="linenos" data-linenos="5 "></span></a>    #address-cells = &lt;0x00000001&gt;;
+</span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6"></a><a href="#__codelineno-28-6"><span class="linenos" data-linenos="6 "></span></a>    #size-cells = &lt;0x00000001&gt;;
+</span><span id="__span-28-7"><a id="__codelineno-28-7" name="__codelineno-28-7"></a><a href="#__codelineno-28-7"><span class="linenos" data-linenos="7 "></span></a>    ...
+</span><span id="__span-28-8"><a id="__codelineno-28-8" name="__codelineno-28-8"></a><a href="#__codelineno-28-8"><span class="linenos" data-linenos="8 "></span></a>}
+</span></code></pre></div>
+<p>你也可以只看某个节点：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1"></a><a href="#__codelineno-29-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; fdt print /memory
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2"></a><a href="#__codelineno-29-2"><span class="linenos" data-linenos="2 "></span></a>memory {
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3"></a><a href="#__codelineno-29-3"><span class="linenos" data-linenos="3 "></span></a>    device_type = &quot;memory&quot;;
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4"></a><a href="#__codelineno-29-4"><span class="linenos" data-linenos="4 "></span></a>    reg = &lt;0x80000000 0x20000000&gt;;
+</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5"></a><a href="#__codelineno-29-5"><span class="linenos" data-linenos="5 "></span></a>};
+</span></code></pre></div>
+<p>或者只看某个属性：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1"></a><a href="#__codelineno-30-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; fdt print /memory reg
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2"></a><a href="#__codelineno-30-2"><span class="linenos" data-linenos="2 "></span></a>reg = &lt;0x80000000 0x20000000&gt;;
+</span></code></pre></div>
+<p><code>fdt list</code> 类似 <code>fdt print</code>，但只显示一级子节点，不递归显示：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1"></a><a href="#__codelineno-31-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; fdt list /
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2"></a><a href="#__codelineno-31-2"><span class="linenos" data-linenos="2 "></span></a>/ {
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3"></a><a href="#__codelineno-31-3"><span class="linenos" data-linenos="3 "></span></a>    aliases { ... };
+</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4"></a><a href="#__codelineno-31-4"><span class="linenos" data-linenos="4 "></span></a>    chosen { ... };
+</span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5"></a><a href="#__codelineno-31-5"><span class="linenos" data-linenos="5 "></span></a>    cpus { ... };
+</span><span id="__span-31-6"><a id="__codelineno-31-6" name="__codelineno-31-6"></a><a href="#__codelineno-31-6"><span class="linenos" data-linenos="6 "></span></a>    memory { ... };
+</span><span id="__span-31-7"><a id="__codelineno-31-7" name="__codelineno-31-7"></a><a href="#__codelineno-31-7"><span class="linenos" data-linenos="7 "></span></a>    soc { ... };
+</span><span id="__span-31-8"><a id="__codelineno-31-8" name="__codelineno-31-8"></a><a href="#__codelineno-31-8"><span class="linenos" data-linenos="8 "></span></a>};
+</span></code></pre></div>
+<h3 id="fdt-set-和-fdt-mknode">fdt set 和 fdt mknode<a class="headerlink" href="#fdt-set-和-fdt-mknode" title="链接到此章节">&para;</a></h3>
+<p><code>fdt set</code> 修改属性值：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1"></a><a href="#__codelineno-32-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; fdt set /memory reg &lt;0x80000000 0x40000000&gt;
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2"></a><a href="#__codelineno-32-2"><span class="linenos" data-linenos="2 "></span></a>=&gt; fdt set /chosen bootargs &quot;console=ttymxc0,115200 root=/dev/mmcblk1p2&quot;
+</span></code></pre></div>
+<p>第一个命令修改内存大小为 1GB，第二个命令设置启动参数。注意属性值的格式，数字用尖括号括起来，字符串直接写。</p>
+<p><code>fdt mknode</code> 创建新节点：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1"></a><a href="#__codelineno-33-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; fdt mknode /soc mydevice
+</span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2"></a><a href="#__codelineno-33-2"><span class="linenos" data-linenos="2 "></span></a>=&gt; fdt set /soc/mydevice compatible &quot;vendor,mydevice&quot;
+</span><span id="__span-33-3"><a id="__codelineno-33-3" name="__codelineno-33-3"></a><a href="#__codelineno-33-3"><span class="linenos" data-linenos="3 "></span></a>=&gt; fdt set /soc/mydevice reg &lt;0x021f0000 0x4000&gt;
+</span></code></pre></div>
+<p>这会创建一个新设备节点，设置 compatible 和 reg 属性。这在测试新硬件或者临时修改设备树时很有用，不用重新编译设备树就能生效。</p>
+<h3 id="fdt-get-和-fdt-rm">fdt get 和 fdt rm<a class="headerlink" href="#fdt-get-和-fdt-rm" title="链接到此章节">&para;</a></h3>
+<p><code>fdt get</code> 读取属性值到环境变量：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1"></a><a href="#__codelineno-34-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; fdt get memsize /memory reg
+</span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2"></a><a href="#__codelineno-34-2"><span class="linenos" data-linenos="2 "></span></a>=&gt; printenv memsize
+</span><span id="__span-34-3"><a id="__codelineno-34-3" name="__codelineno-34-3"></a><a href="#__codelineno-34-3"><span class="linenos" data-linenos="3 "></span></a>memsize=0x80000000 0x20000000
+</span><span id="__span-34-4"><a id="__codelineno-34-4" name="__codelineno-34-4"></a><a href="#__codelineno-34-4"><span class="linenos" data-linenos="4 "></span></a>=&gt; fdt get addr myvar /soc/mydevice reg
+</span><span id="__span-34-5"><a id="__codelineno-34-5" name="__codelineno-34-5"></a><a href="#__codelineno-34-5"><span class="linenos" data-linenos="5 "></span></a>=&gt; printenv myvar
+</span><span id="__span-34-6"><a id="__codelineno-34-6" name="__codelineno-34-6"></a><a href="#__codelineno-34-6"><span class="linenos" data-linenos="6 "></span></a>myvar=0x021f0000
+</span></code></pre></div>
+<p>第一个命令读取整个 reg 属性，第二个命令只读取第一个值。你可以在脚本里用这个命令提取设备树信息，然后根据这些信息做相应操作。</p>
+<p><code>fdt rm</code> 删除节点或属性：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1"></a><a href="#__codelineno-35-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; fdt rm /soc/olddevice
+</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2"></a><a href="#__codelineno-35-2"><span class="linenos" data-linenos="2 "></span></a>=&gt; fdt rm /chosen bootargs
+</span></code></pre></div>
+<p>第一个命令删除整个节点，第二个命令删除一个属性。这在调试时很有用，比如你怀疑某个设备导致问题，可以先删除它的节点看看。</p>
+<h3 id="fdt-apply-和-fdt-resize">fdt apply 和 fdt resize<a class="headerlink" href="#fdt-apply-和-fdt-resize" title="链接到此章节">&para;</a></h3>
+<p><code>fdt apply</code> 应用设备树叠加（overlay）：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1"></a><a href="#__codelineno-36-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; fdt apply 0x89000000
+</span></code></pre></div>
+<p>设备树叠加是一种在不修改主设备树的情况下添加或修改节点的方式，很适合模块化设计。比如你有多个硬件配置，每个配置一个叠加文件，启动时根据实际情况选择应用哪个。</p>
+<p><code>fdt resize</code> 调整设备树大小：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1"></a><a href="#__codelineno-37-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; fdt resize 0x1000
+</span></code></pre></div>
+<p>添加节点或属性后，设备树可能会变大，超出原来分配的空间，这时候需要用 resize 命令扩展。参数是额外的空间大小，按需调整。</p>
+<h2 id="调试技巧和窍门">调试技巧和窍门<a class="headerlink" href="#调试技巧和窍门" title="链接到此章节">&para;</a></h2>
+<p>讲了这么多命令，现在分享一些实战中总结的调试技巧。这些技巧不是命令文档会写的，都是踩坑后总结出来的经验。</p>
+<h3 id="分段验证法">分段验证法<a class="headerlink" href="#分段验证法" title="链接到此章节">&para;</a></h3>
+<p>遇到问题不要一头扎进去，要分段验证。比如网络启动失败，先验证网络通不通，再验证 TFTP 服务器有没有问题，最后验证镜像对不对。</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1"></a><a href="#__codelineno-38-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; ping 192.168.1.1              # 1. 测试网络
+</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2"></a><a href="#__codelineno-38-2"><span class="linenos" data-linenos="2 "></span></a>=&gt; tftp 0x82000000 test.txt      # 2. 测试 TFTP
+</span><span id="__span-38-3"><a id="__codelineno-38-3" name="__codelineno-38-3"></a><a href="#__codelineno-38-3"><span class="linenos" data-linenos="3 "></span></a>=&gt; tftp 0x82000000 zImage        # 3. 下载镜像
+</span><span id="__span-38-4"><a id="__codelineno-38-4" name="__codelineno-38-4"></a><a href="#__codelineno-38-4"><span class="linenos" data-linenos="4 "></span></a>=&gt; iminfo 0x82000000             # 4. 验证镜像
+</span><span id="__span-38-5"><a id="__codelineno-38-5" name="__codelineno-38-5"></a><a href="#__codelineno-38-5"><span class="linenos" data-linenos="5 "></span></a>=&gt; bootz 0x82000000 - 0x88000000 # 5. 启动内核
+</span></code></pre></div>
+<p>如果第 1 步就失败了，问题在网卡或者网线，不用浪费时间看 TFTP。如果第 2 步失败，问题在 TFTP 服务器配置。如果第 4 步失败，问题在镜像文件。这样一步步排查，很快就能定位到问题。</p>
+<h3 id="环境变量备份">环境变量备份<a class="headerlink" href="#环境变量备份" title="链接到此章节">&para;</a></h3>
+<p>修改环境变量前先备份，特别是 <code>bootargs</code> 和 <code>bootcmd</code> 这种关键变量：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1"></a><a href="#__codelineno-39-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; setenv bootargs_backup ${bootargs}
+</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2"></a><a href="#__codelineno-39-2"><span class="linenos" data-linenos="2 "></span></a>=&gt; setenv bootcmd_backup ${bootcmd}
+</span></code></pre></div>
+<p>这样改错了还能恢复：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1"></a><a href="#__codelineno-40-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; setenv bootargs ${bootargs_backup}
+</span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2"></a><a href="#__codelineno-40-2"><span class="linenos" data-linenos="2 "></span></a>=&gt; setenv bootcmd ${bootcmd_backup}
+</span><span id="__span-40-3"><a id="__codelineno-40-3" name="__codelineno-40-3"></a><a href="#__codelineno-40-3"><span class="linenos" data-linenos="3 "></span></a>=&gt; saveenv
+</span></code></pre></div>
+<p>我吃过这个亏，改了 bootargs 结果起不来，又忘了原来的值，只能重新烧录。从那以后我养成了备份的习惯，改之前先保存一份。</p>
+<h3 id="日志收集">日志收集<a class="headerlink" href="#日志收集" title="链接到此章节">&para;</a></h3>
+<p>调试时多收集日志，不要只盯着报错信息看。串口输出从头到尾都保存下来，很多问题的线索在早期的初始化阶段就出现了。</p>
+<p>可以用脚本自动收集日志，比如：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1"></a><a href="#__codelineno-41-1"><span class="linenos" data-linenos="1 "></span></a>picocom<span class="w"> </span>-b<span class="w"> </span><span class="m">115200</span><span class="w"> </span>/dev/ttyUSB0<span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>uboot.log
+</span></code></pre></div>
+<p>这样串口输出会同时显示在终端和保存到 <code>uboot.log</code> 文件。出问题时可以直接看日志，不用凭记忆回忆。</p>
+<h3 id="最小化配置">最小化配置<a class="headerlink" href="#最小化配置" title="链接到此章节">&para;</a></h3>
+<p>怀疑某个配置导致问题时，先最小化配置。比如启动失败，试试最简单的 bootargs：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1"></a><a href="#__codelineno-42-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; setenv bootargs &quot;console=ttymxc0,115200&quot;
+</span><span id="__span-42-2"><a id="__codelineno-42-2" name="__codelineno-42-2"></a><a href="#__codelineno-42-2"><span class="linenos" data-linenos="2 "></span></a>=&gt; bootz 0x82000000 - 0x88000000
+</span></code></pre></div>
+<p>如果这样能起来，说明是原来的 bootargs 有问题，慢慢加参数找原因。如果这样都不行，问题可能在内核或者设备树。</p>
+<h3 id="比较法">比较法<a class="headerlink" href="#比较法" title="链接到此章节">&para;</a></h3>
+<p>有块工作正常的板子是最好的参照。同样的命令、同样的环境变量、同样的镜像，对比一下哪里不一样：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1"></a><a href="#__codelineno-43-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; printenv &gt; env1.txt      # 问题板子的环境变量
+</span><span id="__span-43-2"><a id="__codelineno-43-2" name="__codelineno-43-2"></a><a href="#__codelineno-43-2"><span class="linenos" data-linenos="2 "></span></a>=&gt; printenv &gt; env2.txt      # 正常板子的环境变量
+</span><span id="__span-43-3"><a id="__codelineno-43-3" name="__codelineno-43-3"></a><a href="#__codelineno-43-3"><span class="linenos" data-linenos="3 "></span></a>=&gt; diff env1.txt env2.txt   # 找差异
+</span></code></pre></div>
+<p>这个方法很土但很有效，我遇到过环境变量有个字符打错了导致启动失败的情况，对比一下马上就发现了。</p>
+<h2 id="常见错误及解决方案">常见错误及解决方案<a class="headerlink" href="#常见错误及解决方案" title="链接到此章节">&para;</a></h2>
+<p>最后整理一些常见的错误和解决办法，这些是笔者在实战中反复遇到过的。</p>
+<h3 id="bad-magic-number">"Bad Magic Number"<a class="headerlink" href="#bad-magic-number" title="链接到此章节">&para;</a></h3>
+<p>这个错误表示镜像格式不对。可能原因：下载了错误的文件、传输过程中损坏、地址传错了。</p>
+<p>解决方法：用 <code>iminfo</code> 命令检查镜像格式：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1"></a><a href="#__codelineno-44-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; iminfo 0x82000000
+</span><span id="__span-44-2"><a id="__codelineno-44-2" name="__codelineno-44-2"></a><a href="#__codelineno-44-2"><span class="linenos" data-linenos="2 "></span></a>
+</span><span id="__span-44-3"><a id="__codelineno-44-3" name="__codelineno-44-3"></a><a href="#__codelineno-44-3"><span class="linenos" data-linenos="3 "></span></a>## Checking Image at 82000000 ...
+</span><span id="__span-44-4"><a id="__codelineno-44-4" name="__codelineno-44-4"></a><a href="#__codelineno-44-4"><span class="linenos" data-linenos="4 "></span></a>   Bad Magic Number
+</span></code></pre></div>
+<p>如果显示这个，说明该地址没有有效镜像。检查一下下载地址对不对，重新下载试试。</p>
+<h3 id="crc-error">"CRC error"<a class="headerlink" href="#crc-error" title="链接到此章节">&para;</a></h3>
+<p>CRC 校验失败，说明镜像文件损坏。可能原因：传输错误、存储设备坏块、文件本身有问题。</p>
+<p>解决方法：重新下载文件，如果还是不行，换一个下载源或者下载工具。也可以尝试换个存储设备试试。</p>
+<h3 id="no-mmc-device-available">"No MMC device available"<a class="headerlink" href="#no-mmc-device-available" title="链接到此章节">&para;</a></h3>
+<p>找不到 MMC 设备。可能原因：硬件问题、驱动没加载、设备号不对。</p>
+<p>解决方法：先用 <code>mmc list</code> 看看有哪些设备：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1"></a><a href="#__codelineno-45-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; mmc list
+</span><span id="__span-45-2"><a id="__codelineno-45-2" name="__codelineno-45-2"></a><a href="#__codelineno-45-2"><span class="linenos" data-linenos="2 "></span></a>FSL_SDHC: 0 (eMMC)
+</span><span id="__span-45-3"><a id="__codelineno-45-3" name="__codelineno-45-3"></a><a href="#__codelineno-45-3"><span class="linenos" data-linenos="3 "></span></a>FSL_SDHC: 1 (SD)
+</span></code></pre></div>
+<p>然后切换到正确的设备：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1"></a><a href="#__codelineno-46-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; mmc dev 0
+</span></code></pre></div>
+<p>如果还是不行，检查硬件连接，看看焊接是不是有问题。</p>
+<h3 id="tftp-timeout">"TFTP timeout"<a class="headerlink" href="#tftp-timeout" title="链接到此章节">&para;</a></h3>
+<p>TFTP 下载超时。可能原因：网络不通、TFTP 服务器没启动、文件路径不对、防火墙阻止。</p>
+<p>解决方法：先 ping 服务器确认网络通：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-47-1"><a id="__codelineno-47-1" name="__codelineno-47-1"></a><a href="#__codelineno-47-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; ping 192.168.1.1
+</span></code></pre></div>
+<p>然后检查 TFTP 服务器状态和文件路径。Linux 下可以查看服务器日志：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-48-1"><a id="__codelineno-48-1" name="__codelineno-48-1"></a><a href="#__codelineno-48-1"><span class="linenos" data-linenos="1 "></span></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>tftpd-hpa
+</span></code></pre></div>
+<h3 id="kernel-panic---not-syncing">"Kernel panic - not syncing"<a class="headerlink" href="#kernel-panic---not-syncing" title="链接到此章节">&para;</a></h3>
+<p>内核启动时崩溃。可能原因：bootargs 不对、设备树不匹配、内存地址冲突、驱动问题。</p>
+<p>解决方法：先简化 bootargs：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-49-1"><a id="__codelineno-49-1" name="__codelineno-49-1"></a><a href="#__codelineno-49-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; setenv bootargs &quot;console=ttymxc0,115200&quot;
+</span></code></pre></div>
+<p>如果能启动，说明原来的 bootargs 有问题。如果还是不行，可能是设备树的问题，用 <code>fdt print</code> 检查一下。</p>
+<h3 id="environment-exceeds-reserved-area">"Environment exceeds reserved area"<a class="headerlink" href="#environment-exceeds-reserved-area" title="链接到此章节">&para;</a></h3>
+<p>环境变量空间不足。可能原因：变量太多、某个变量值太大。</p>
+<p>解决方法：删除一些不需要的变量，或者增大环境变量区域。增大区域需要修改配置重新编译，这个比较麻烦，优先考虑清理不需要的变量。</p>
+<h2 id="实战调试案例">实战调试案例<a class="headerlink" href="#实战调试案例" title="链接到此章节">&para;</a></h2>
+<p>最后来两个实战案例，看看怎么综合运用这些命令解决问题。</p>
+<h3 id="案例一网络启动失败">案例一：网络启动失败<a class="headerlink" href="#案例一网络启动失败" title="链接到此章节">&para;</a></h3>
+<p>现象：tftp 下载总是超时，ping 服务器正常。</p>
+<p>排查过程：</p>
+<ol>
+<li>
+<p>先确认网络通：
+<div class="language-text highlight"><pre><span></span><code><span id="__span-50-1"><a id="__codelineno-50-1" name="__codelineno-50-1"></a><a href="#__codelineno-50-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; ping 192.168.1.1
+</span><span id="__span-50-2"><a id="__codelineno-50-2" name="__codelineno-50-2"></a><a href="#__codelineno-50-2"><span class="linenos" data-linenos="2 "></span></a>host 192.168.1.1 is alive
+</span></code></pre></div></p>
+</li>
+<li>
+<p>检查 TFTP 服务器，发现服务器配置正常，文件也存在。</p>
+</li>
+<li>
+<p>尝试下载一个小文件：
+<div class="language-text highlight"><pre><span></span><code><span id="__span-51-1"><a id="__codelineno-51-1" name="__codelineno-51-1"></a><a href="#__codelineno-51-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; tftp 0x82000000 test.txt
+</span></code></pre></div></p>
+</li>
+</ol>
+<p>成功了！说明 TFTP 本身没问题，问题在文件太大。</p>
+<ol>
+<li>检查文件大小：
+<div class="language-text highlight"><pre><span></span><code><span id="__span-52-1"><a id="__codelineno-52-1" name="__codelineno-52-1"></a><a href="#__codelineno-52-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; iminfo 0x82000000
+</span><span id="__span-52-2"><a id="__codelineno-52-2" name="__codelineno-52-2"></a><a href="#__codelineno-52-2"><span class="linenos" data-linenos="2 "></span></a>Image Name:   Linux-5.15.0
+</span><span id="__span-52-3"><a id="__codelineno-52-3" name="__codelineno-52-3"></a><a href="#__codelineno-52-3"><span class="linenos" data-linenos="3 "></span></a>Data Size:   6821504 Bytes = 6.5 MiB
+</span></code></pre></div></li>
+</ol>
+<p>6.5MB 不算大啊，为什么超时？</p>
+<ol>
+<li>怀疑是超时时间设置问题，检查环境变量：
+<div class="language-text highlight"><pre><span></span><code><span id="__span-53-1"><a id="__codelineno-53-1" name="__codelineno-53-1"></a><a href="#__codelineno-53-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; printenv netretry
+</span><span id="__span-53-2"><a id="__codelineno-53-2" name="__codelineno-53-2"></a><a href="#__codelineno-53-2"><span class="linenos" data-linenos="2 "></span></a>netretry=no
+</span></code></pre></div></li>
+</ol>
+<p>原来是设置了网络不重试，一次超时就放弃。修改一下：
+<div class="language-text highlight"><pre><span></span><code><span id="__span-54-1"><a id="__codelineno-54-1" name="__codelineno-54-1"></a><a href="#__codelineno-54-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; setenv netretry yes
+</span><span id="__span-54-2"><a id="__codelineno-54-2" name="__codelineno-54-2"></a><a href="#__codelineno-54-2"><span class="linenos" data-linenos="2 "></span></a>=&gt; saveenv
+</span></code></pre></div></p>
+<p>再试一次，成功了！</p>
+<h3 id="案例二内核启动后立刻重启">案例二：内核启动后立刻重启<a class="headerlink" href="#案例二内核启动后立刻重启" title="链接到此章节">&para;</a></h3>
+<p>现象：bootz 启动内核后，看到 "Starting kernel ..." 就重启，没有更多输出。</p>
+<p>排查过程：</p>
+<ol>
+<li>先简化 bootargs：
+<div class="language-text highlight"><pre><span></span><code><span id="__span-55-1"><a id="__codelineno-55-1" name="__codelineno-55-1"></a><a href="#__codelineno-55-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; setenv bootargs &quot;console=ttymxc0,115200&quot;
+</span><span id="__span-55-2"><a id="__codelineno-55-2" name="__codelineno-55-2"></a><a href="#__codelineno-55-2"><span class="linenos" data-linenos="2 "></span></a>=&gt; bootz 0x82000000 - 0x88000000
+</span></code></pre></div></li>
+</ol>
+<p>还是重启，说明不是 bootargs 的问题。</p>
+<ol>
+<li>检查设备树：
+<div class="language-text highlight"><pre><span></span><code><span id="__span-56-1"><a id="__codelineno-56-1" name="__codelineno-56-1"></a><a href="#__codelineno-56-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; fdt print /memory
+</span><span id="__span-56-2"><a id="__codelineno-56-2" name="__codelineno-56-2"></a><a href="#__codelineno-56-2"><span class="linenos" data-linenos="2 "></span></a>memory {
+</span><span id="__span-56-3"><a id="__codelineno-56-3" name="__codelineno-56-3"></a><a href="#__codelineno-56-3"><span class="linenos" data-linenos="3 "></span></a>    device_type = &quot;memory&quot;;
+</span><span id="__span-56-4"><a id="__codelineno-56-4" name="__codelineno-56-4"></a><a href="#__codelineno-56-4"><span class="linenos" data-linenos="4 "></span></a>    reg = &lt;0x80000000 0x20000000&gt;;
+</span><span id="__span-56-5"><a id="__codelineno-56-5" name="__codelineno-56-5"></a><a href="#__codelineno-56-5"><span class="linenos" data-linenos="5 "></span></a>};
+</span></code></pre></div></li>
+</ol>
+<p>内存配置看起来没问题。</p>
+<ol>
+<li>检查 CPU 频率设置：
+<div class="language-text highlight"><pre><span></span><code><span id="__span-57-1"><a id="__codelineno-57-1" name="__codelineno-57-1"></a><a href="#__codelineno-57-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; fdt print /cpu@0
+</span><span id="__span-57-2"><a id="__codelineno-57-2" name="__codelineno-57-2"></a><a href="#__codelineno-57-2"><span class="linenos" data-linenos="2 "></span></a>cpu@0 {
+</span><span id="__span-57-3"><a id="__codelineno-57-3" name="__codelineno-57-3"></a><a href="#__codelineno-57-3"><span class="linenos" data-linenos="3 "></span></a>    ...
+</span><span id="__span-57-4"><a id="__codelineno-57-4" name="__codelineno-57-4"></a><a href="#__codelineno-57-4"><span class="linenos" data-linenos="4 "></span></a>    clock-frequency = &lt;0x47868c00&gt;;
+</span><span id="__span-57-5"><a id="__codelineno-57-5" name="__codelineno-57-5"></a><a href="#__codelineno-57-5"><span class="linenos" data-linenos="5 "></span></a>};
+</span></code></pre></div></li>
+</ol>
+<p>这个频率有点高啊，换算一下是 1.2GHz，i.MX6ULL 最高 900MHz，可能是频率设置不对导致 CPU 过热或者不稳定。</p>
+<ol>
+<li>修改设备树：
+<div class="language-text highlight"><pre><span></span><code><span id="__span-58-1"><a id="__codelineno-58-1" name="__codelineno-58-1"></a><a href="#__codelineno-58-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; fdt set /cpu@0 clock-frequency &lt;0x35a4e900&gt;
+</span></code></pre></div></li>
+</ol>
+<p>设为 900MHz，再启动：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-59-1"><a id="__codelineno-59-1" name="__codelineno-59-1"></a><a href="#__codelineno-59-1"><span class="linenos" data-linenos="1 "></span></a>=&gt; bootz 0x82000000 - 0x88000000
+</span><span id="__span-59-2"><a id="__codelineno-59-2" name="__codelineno-59-2"></a><a href="#__codelineno-59-2"><span class="linenos" data-linenos="2 "></span></a>Starting kernel ...
+</span><span id="__span-59-3"><a id="__codelineno-59-3" name="__codelineno-59-3"></a><a href="#__codelineno-59-3"><span class="linenos" data-linenos="3 "></span></a>[    0.000000] Booting Linux on physical CPU 0x0
+</span><span id="__span-59-4"><a id="__codelineno-59-4" name="__codelineno-59-4"></a><a href="#__codelineno-59-4"><span class="linenos" data-linenos="4 "></span></a>[    0.000000] Linux version 5.15.0 ...
+</span></code></pre></div>
+<p>成功了！原来是设备树里 CPU 频率设置错误导致的。</p>
+<h2 id="写在最后">写在最后<a class="headerlink" href="#写在最后" title="链接到此章节">&para;</a></h2>
+<p>到这里，U-Boot 调试命令的主要内容就讲完了。从板子信息查询到存储操作，从网络启动到内核引导，从环境变量管理到设备树操作，我们系统性地过了一遍。</p>
+<p>掌握这些命令不是靠死记硬背，而是要在实战中不断练习。每次遇到问题，先尝试用命令定位，而不是盲目的改代码或者烧录。时间久了，你会形成一种直觉，知道该用哪个命令，该检查什么。</p>
+<p>命令行调试不是老派的做法，而是嵌入式开发的基本功。JTAG 很强大，但不是每次都方便用；IDE 很友好，但有时候不如命令行直接。一个好的工程师，应该掌握各种调试方法，根据实际情况选择最合适的工具。</p>
+<p>希望这篇文章能帮你建立起对 U-Boot 命令行调试的系统认识，下次遇到问题时，能冷静地敲几个命令，快速定位到原因。调试不是碰运气，而是有方法的，掌握了正确的方法，问题就解决了一半。</p>
+<hr />
+<p>至此，我们的U-Boot移植教程系列就告一段落了。从认识U-Boot的基础架构，到编译出第一个镜像；从板级配置和设备树移植，到LCD和网络这些复杂外设的驱动适配；再到Logo显示和调试命令的使用——你已经掌握了一套完整的U-Boot移植技能。</p>
+<p>这些技能不是孤立的，它们构成了一个完整的知识体系。理解了编译流程，你就知道每次修改后应该如何正确地构建；掌握了设备树，你就具备了硬件描述与代码分离的现代思维；调通了网络，你的开发效率会成倍提升；熟悉了调试命令，你就能从容应对各种突发问题。</p>
+<p>嵌入式开发没有银弹，但有方法论。掌握了正确的方法，再复杂的系统也能拆解成可管理的部分。希望这个教程系列能成为你U-Boot学习之路上的垫脚石，让你从"照着做"到"理解为什么"，再到"能独立解决新问题"。</p>
+<p>祝你在嵌入式开发的道路上越走越远！</p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年3月19日 18:06:50 CST">2026年3月19日 18:06:50</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年3月13日 14:55:15 CST">2026年3月13日 14:55:15</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+        
+          
+          <a href="../08_logo_splash/" class="md-footer__link md-footer__link--prev" aria-label="上一页: 第08章 Logo和启动画面">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              <div class="md-ellipsis">
+                第08章 Logo和启动画面
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../bonus_qa/" class="md-footer__link md-footer__link--next" aria-label="下一页: 附录：常见问题解答（Q&amp;amp;A）">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                下一页
+              </span>
+              <div class="md-ellipsis">
+                附录：常见问题解答（Q&amp;A）
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 Charliechen - 保留所有权利
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/Awesome-Embedded-Learning-Studio" target="_blank" rel="noopener" title="GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="mailto:725610365@qq.com" target="_blank" rel="noopener" title="发送邮件" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M536.4-26.3c9.8-3.5 20.6-1 28 6.3s9.8 18.2 6.3 28l-178 496.9c-5 13.9-18.1 23.1-32.8 23.1-14.2 0-27-8.6-32.3-21.7l-64.2-158c-4.5-11-2.5-23.6 5.2-32.6l94.5-112.4c5.1-6.1 4.7-15-.9-20.6s-14.6-6-20.6-.9l-112.4 94.3c-9.1 7.6-21.6 9.6-32.6 5.2L38.1 216.8c-13.1-5.3-21.7-18.1-21.7-32.3 0-14.7 9.2-27.8 23.1-32.8z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.path", "navigation.indexes", "navigation.tabs", "navigation.tabs.sticky", "navigation.prune", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.select", "content.code.annotate", "content.tabs.link", "content.tooltips", "content.action.edit", "content.action.view"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,5300 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="IMX-Forge，专注于IMX6ULL的教程文档网站">
+      
+      
+        <meta name="author" content="Charliechen114514">
+      
+      
+        <link rel="canonical" href="https://awesome-embedded-learning-studio.github.io/imx-forge/tutorial/kernel/04_kernel_modules/">
+      
+      
+        <link rel="prev" href="../03_kernel_config/">
+      
+      
+        <link rel="next" href="../05_kernel_device_tree/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../Awesome-Embedded.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>内核模块详解：从 Hello World 到设备驱动 - IMX-Forge的教程文档</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#内核模块详解从-hello-world-到设备驱动" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../.." title="IMX-Forge的教程文档" class="md-header__button md-logo" aria-label="IMX-Forge的教程文档" data-md-component="logo">
+      
+  <img src="../../../Awesome-Embedded.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            IMX-Forge的教程文档
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              内核模块详解：从 Hello World 到设备驱动
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换至暗色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换至暗色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="切换至亮色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换至亮色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  欢迎来到 IMX-Forge 教程文档
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../QUICK_START/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  IMX-Forge 快速入门指南
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../architecture/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Architecture
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ci/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Ci
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../development/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../logo/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Logo
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../modules/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Modules
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../scripts/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Scripts
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../todo/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Todo
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tutorial
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="IMX-Forge的教程文档" class="md-nav__button md-logo" aria-label="IMX-Forge的教程文档" data-md-component="logo">
+      
+  <img src="../../../Awesome-Embedded.png" alt="logo">
+
+    </a>
+    IMX-Forge的教程文档
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    欢迎来到 IMX-Forge 教程文档
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../QUICK_START/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IMX-Forge 快速入门指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../architecture/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../ci/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ci
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../development/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../logo/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logo
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../modules/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../scripts/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scripts
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../todo/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Todo
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorial
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../docker/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_2" id="__nav_10_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Docker
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../docker/01_docker_basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker 基础知识
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../docker/02_imx_forge_docker_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IMX-Forge Docker 开发指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../driver/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Driver
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_3" id="__nav_10_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Driver
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../driver/00_chardev_base/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    00 chardev base
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../driver/01_device_tree_base/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 device tree base
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../driver/02_pinctrl_gpio/01_introduction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 pinctrl gpio
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../driver/device_tree/01-Introduction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Device tree
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../driver/firmware_apply/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Firmware apply
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../driver/modules/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kernel
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_4" id="__nav_10_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_10_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Kernel
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_kernel_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从0开始认识Linux内核：那个让无数嵌入式工程师又爱又恨的庞然大物
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_kernel_compile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从0开始编译Linux内核：当你发现make时少了一个包，第17次
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_kernel_config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从0开始配置Linux内核：menuconfig不是黑魔法，只是有点绕
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    内核模块详解：从 Hello World 到设备驱动
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    内核模块详解：从 Hello World 到设备驱动
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#为什么要写这一章" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么要写这一章
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#内核模块是什么为什么需要它" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        内核模块是什么，为什么需要它
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="内核模块是什么，为什么需要它">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#模块-vs-静态编译" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        模块 vs 静态编译
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#模块的好处" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        模块的好处
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#模块的局限性" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        模块的局限性
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#手写一个-hello-world-模块" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        手写一个 Hello World 模块
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="手写一个 Hello World 模块">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#创建工作目录" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        创建工作目录
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#编写模块源码" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        编写模块源码
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#编写-makefile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        编写 Makefile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#编译模块" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        编译模块
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#加载和卸载模块" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        加载和卸载模块
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#交叉编译为目标板编译模块" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        交叉编译：为目标板编译模块
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="交叉编译：为目标板编译模块">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#准备交叉编译环境" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        准备交叉编译环境
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#准备内核源码" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        准备内核源码
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#修改-makefile-用于交叉编译" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        修改 Makefile 用于交叉编译
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#在开发板上测试" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        在开发板上测试
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#模块参数传递" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        模块参数传递
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="模块参数传递">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#添加模块参数" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        添加模块参数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#参数类型说明" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        参数类型说明
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#权限标志" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        权限标志
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#加载时传递参数" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        加载时传递参数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#运行时查看和修改参数" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        运行时查看和修改参数
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#模块依赖管理" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        模块依赖管理
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="模块依赖管理">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#查看模块依赖" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        查看模块依赖
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#导出符号让模块提供-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        导出符号：让模块提供 API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modprobe自动处理依赖" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        modprobe：自动处理依赖
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#依赖信息存储" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        依赖信息存储
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#模块信息查看命令" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        模块信息查看命令
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="模块信息查看命令">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lsmod列出已加载模块" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        lsmod：列出已加载模块
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modinfo查看模块信息" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        modinfo：查看模块信息
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#depmod生成模块依赖" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        depmod：生成模块依赖
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modprobe智能加载卸载模块" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        modprobe：智能加载/卸载模块
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#insmodrmmod手动加载卸载" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        insmod/rmmod：手动加载/卸载
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#模块调试技巧" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        模块调试技巧
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="模块调试技巧">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#查看内核日志" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        查看内核日志
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#实时监控日志" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实时监控日志
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#查看模块符号" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        查看模块符号
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#查看模块参数" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        查看模块参数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#动态调试dynamic-debug" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        动态调试（dynamic debug）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#常见错误排查" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        常见错误排查
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="常见错误排查">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#invalid-module-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Invalid module format"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unknown-symbol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Unknown symbol"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operation-not-permitted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Operation not permitted"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#device-or-resource-busy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Device or resource busy"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#写在最后" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        写在最后
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_kernel_device_tree/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    设备树在内核中的使用：从硬件描述到驱动匹配
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_wsl_network_boot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WSL2 + TFTP + 网络启动：那些年我们一起踩过的防火墙坑
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_driver_basic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linux驱动开发入门：从Hello World到第一个字符驱动
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_kernel_boot_debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linux内核启动与调试：从bootargs到init进程的那几百万行代码
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../mainline/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mainline
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../practical/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Practical
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_5" id="__nav_10_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Practical
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../practical/01_practical_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    实战项目概述：我们要一起构建一个可用的 i.MX6ULL 系统
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../practical/02_build_system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从零构建完整系统：U-Boot、Linux 内核与 BusyBox Rootfs 的整合艺术
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../practical/03_boot_and_debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    系统启动与调试：见证系统启动的那一刻，并学会如何挽救它
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../practical/04-nfs-experience/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NFS rootfs 多版本切换：用 bind mount 解决嵌入式开发痛点
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../rootfs/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rootfs
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_6" id="__nav_10_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Rootfs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rootfs/01_rootfs_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rootfs 概述：Linux 系统的"最后一公里"，以及为什么内核启动后还需要它
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rootfs/02_busybox_compile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BusyBox 编译安装：一把瑞士军刀的自制指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rootfs/03_inittab_init/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    inittab 与 init 系统：Linux 启动的"第一号进程"全解析
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rootfs/04_rootfs_structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rootfs 目录结构创建：Linux 文件系统的"骨架"
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rootfs/05_nfs_wsl_troubleshoot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WSL + NFS 网络启动踩坑记：从挂载失败到成功启动的完整历程
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rootfs/06_apps_integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    应用集成：从最小化 Rootfs 到可用系统
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../start/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Start
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_7" id="__nav_10_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Start
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../start/01_start_from_toolchain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从 0 开始构建嵌入式 Linux 开发环境（Part 1）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../start/02_env_init_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    环境初始化指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../third_party/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Third party
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Third party
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../uboot/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uboot
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10_9" id="__nav_10_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_10_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Uboot
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/01_what_is_uboot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从0开始理解 U-Boot：嵌入式系统的"第一道门"，以及我们为什么终于告别了硬编码时代
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/02_uboot_compile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    从0开始编译 U-Boot：那些教程没告诉你的交叉编译原理和踩坑记录
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/03_uboot_porting_overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    U-Boot完全移植概览：从官方源码到你的自制板，这条路有多远
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/04_board_config_basic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    板级配置基础：Kconfig系统的那些坑和我们的第一次移植
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/05_device_tree_basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    设备树基础：从硬编码噩梦到硬件描述分离
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/06_lcd_porting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第06章 LCD驱动移植
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/07_network_porting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第07章 网络驱动移植：从ping不通到tftp成功，那些让你抓狂的PHY时序问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/08_logo_splash/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第08章 Logo和启动画面
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/09_debugging_commands/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2026正点原子开发板移植（UBoot篇完结）：U-Boot调试命令：命令行是嵌入式开发的神器
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uboot/bonus_qa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    附录：常见问题解答（Q&amp;A）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#为什么要写这一章" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么要写这一章
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#内核模块是什么为什么需要它" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        内核模块是什么，为什么需要它
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="内核模块是什么，为什么需要它">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#模块-vs-静态编译" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        模块 vs 静态编译
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#模块的好处" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        模块的好处
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#模块的局限性" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        模块的局限性
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#手写一个-hello-world-模块" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        手写一个 Hello World 模块
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="手写一个 Hello World 模块">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#创建工作目录" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        创建工作目录
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#编写模块源码" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        编写模块源码
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#编写-makefile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        编写 Makefile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#编译模块" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        编译模块
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#加载和卸载模块" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        加载和卸载模块
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#交叉编译为目标板编译模块" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        交叉编译：为目标板编译模块
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="交叉编译：为目标板编译模块">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#准备交叉编译环境" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        准备交叉编译环境
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#准备内核源码" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        准备内核源码
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#修改-makefile-用于交叉编译" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        修改 Makefile 用于交叉编译
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#在开发板上测试" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        在开发板上测试
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#模块参数传递" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        模块参数传递
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="模块参数传递">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#添加模块参数" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        添加模块参数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#参数类型说明" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        参数类型说明
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#权限标志" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        权限标志
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#加载时传递参数" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        加载时传递参数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#运行时查看和修改参数" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        运行时查看和修改参数
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#模块依赖管理" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        模块依赖管理
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="模块依赖管理">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#查看模块依赖" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        查看模块依赖
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#导出符号让模块提供-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        导出符号：让模块提供 API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modprobe自动处理依赖" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        modprobe：自动处理依赖
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#依赖信息存储" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        依赖信息存储
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#模块信息查看命令" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        模块信息查看命令
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="模块信息查看命令">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lsmod列出已加载模块" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        lsmod：列出已加载模块
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modinfo查看模块信息" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        modinfo：查看模块信息
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#depmod生成模块依赖" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        depmod：生成模块依赖
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modprobe智能加载卸载模块" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        modprobe：智能加载/卸载模块
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#insmodrmmod手动加载卸载" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        insmod/rmmod：手动加载/卸载
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#模块调试技巧" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        模块调试技巧
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="模块调试技巧">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#查看内核日志" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        查看内核日志
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#实时监控日志" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实时监控日志
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#查看模块符号" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        查看模块符号
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#查看模块参数" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        查看模块参数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#动态调试dynamic-debug" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        动态调试（dynamic debug）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#常见错误排查" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        常见错误排查
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="常见错误排查">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#invalid-module-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Invalid module format"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unknown-symbol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Unknown symbol"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operation-not-permitted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Operation not permitted"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#device-or-resource-busy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Device or resource busy"
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#写在最后" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        写在最后
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="导航栏" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    欢迎来到 IMX-Forge 教程文档
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Tutorial
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Kernel
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="内核模块详解从-hello-world-到设备驱动">内核模块详解：从 Hello World 到设备驱动<a class="headerlink" href="#内核模块详解从-hello-world-到设备驱动" title="链接到此章节">&para;</a></h1>
+<h2 id="为什么要写这一章">为什么要写这一章<a class="headerlink" href="#为什么要写这一章" title="链接到此章节">&para;</a></h2>
+<p>前面我们花了三章的篇幅，把 Linux 内核从哪里来、怎么编译、设备树是什么都讲清楚了。你可能觉得好了，现在我对内核有认识了，可以开始写驱动了吧？</p>
+<p>但这里有一个坎儿：你写的代码怎么放进内核里？</p>
+<p>传统的做法是把代码直接编进内核镜像。这种方式有几个问题：一是每次修改都要重新编译整个内核，耗时漫长；二是代码会一直占用内存，即使用不到；三是调试不方便，出错可能导致整个系统起不来。</p>
+<p>有没有一种方式，可以让代码在需要的时候加载，不用的时候卸载，修改后也不需要重编内核？答案就是——内核模块。</p>
+<p>说实话，我刚接触内核模块的时候也有点懵。明明就是 C 代码，为什么不能直接编译成普通程序运行？为什么必须用特殊的宏？为什么 insmod 的时候提示 "unknown symbol"？这些坑我都踩过，而且不止一次。</p>
+<p>所以这一章，我们手把手地从零开始写一个内核模块，搞清楚它是什么、怎么编译、怎么加载卸载、怎么传参数、怎么处理依赖关系。当你把这些都弄明白了，后面的设备驱动开发就是顺水推舟的事情。</p>
+<h2 id="内核模块是什么为什么需要它">内核模块是什么，为什么需要它<a class="headerlink" href="#内核模块是什么为什么需要它" title="链接到此章节">&para;</a></h2>
+<h3 id="模块-vs-静态编译">模块 vs 静态编译<a class="headerlink" href="#模块-vs-静态编译" title="链接到此章节">&para;</a></h3>
+<p>Linux 内核有两种代码组织方式：静态编译和模块化编译。</p>
+<p><strong>静态编译</strong>就是把代码直接编进内核镜像（vmlinux/zImage）。系统启动时，这些代码就驻留在内存里了。比如你查看一下 <code>/proc/kallsyms</code>，里面列出的就是内核里所有符号（函数和变量）的地址。</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1"></a><a href="#__codelineno-0-1"><span class="linenos" data-linenos="1 "></span></a>cat<span class="w"> </span>/proc/kallsyms<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+</span></code></pre></div>
+<p>输出类似这样：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1"></a><a href="#__codelineno-1-1"><span class="linenos" data-linenos="1 "></span></a>00000000 T startup_64
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2"></a><a href="#__codelineno-1-2"><span class="linenos" data-linenos="2 "></span></a>00000000 T _text
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3"></a><a href="#__codelineno-1-3"><span class="linenos" data-linenos="3 "></span></a>ffffffff81000000 T _stext
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4"></a><a href="#__codelineno-1-4"><span class="linenos" data-linenos="4 "></span></a>...
+</span></code></pre></div>
+<p>这些符号大部分是静态编入内核的代码。</p>
+<p><strong>模块化编译</strong>则是把代码编译成独立的 .ko（Kernel Object）文件，运行时通过 <code>insmod</code> 或 <code>modprobe</code> 加载到内核空间。模块加载后，它的符号会被注册到内核的符号表里，就像它本来就在内核里一样。</p>
+<h3 id="模块的好处">模块的好处<a class="headerlink" href="#模块的好处" title="链接到此章节">&para;</a></h3>
+<p>模块化设计有几个明显的好处：</p>
+<p><strong>动态加载</strong>。用不到的功能可以不加载，节省内存。比如你开发板上可能没有 SCSI 设备，那 SCSI 驱动模块就不需要加载。这在资源受限的嵌入式系统上很重要。</p>
+<p><strong>快速迭代</strong>。开发驱动时，每次修改代码只需要重新编译模块，然后 <code>rmmod</code> 旧模块、<code>insmod</code> 新模块。这比每次都重编内核快太多了。我记得我第一次碰驱动，大概就几秒钟吧，LED的驱动更简单，我还没反应过来编完了。内核可就不好说了（笑）</p>
+<p><strong>安全隔离</strong>。模块有 BUG 导致内核崩溃的概率比静态代码低，因为模块可以选择性加载，出问题时更容易定位。</p>
+<p><strong>闭源兼容</strong>。有些厂商的驱动是闭源的，必须以模块形式提供（虽然这不是内核社区鼓励的做法，嗯）。</p>
+<h3 id="模块的局限性">模块的局限性<a class="headerlink" href="#模块的局限性" title="链接到此章节">&para;</a></h3>
+<p>当然，模块也不是万能的：</p>
+<p><strong>启动前依赖</strong>。如果某个设备是系统启动必需的（比如根文件系统所在的存储设备），它的驱动就不能是模块，必须静态编入内核。</p>
+<p><strong>性能开销</strong>。模块加载/卸载有开销，虽然不大，但对性能敏感的场景可能需要注意。</p>
+<p><strong>符号依赖</strong>。模块只能调用内核导出的符号，不能直接访问内核内部的静态函数。</p>
+<h2 id="手写一个-hello-world-模块">手写一个 Hello World 模块<a class="headerlink" href="#手写一个-hello-world-模块" title="链接到此章节">&para;</a></h2>
+<p>好了，理论讲够了。我们来写一个最简单的内核模块。</p>
+<h3 id="创建工作目录">创建工作目录<a class="headerlink" href="#创建工作目录" title="链接到此章节">&para;</a></h3>
+<p>首先，在合适的地方创建一个目录来存放模块代码：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1"></a><a href="#__codelineno-2-1"><span class="linenos" data-linenos="1 "></span></a>mkdir<span class="w"> </span>-p<span class="w"> </span>~/kernel-module-tutorial
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2"></a><a href="#__codelineno-2-2"><span class="linenos" data-linenos="2 "></span></a><span class="nb">cd</span><span class="w"> </span>~/kernel-module-tutorial
+</span></code></pre></div>
+<h3 id="编写模块源码">编写模块源码<a class="headerlink" href="#编写模块源码" title="链接到此章节">&para;</a></h3>
+<p>创建 <code>hello.c</code> 文件：</p>
+<div class="language-c highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1"></a><a href="#__codelineno-3-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;linux/init.h&gt;</span><span class="c1">   // __init __exit 宏定义</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2"></a><a href="#__codelineno-3-2"><span class="linenos" data-linenos=" 2 "></span></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;linux/module.h&gt;</span><span class="c1"> // module_init module_exit 等核心宏</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3"></a><a href="#__codelineno-3-3"><span class="linenos" data-linenos=" 3 "></span></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;linux/printk.h&gt;</span><span class="c1"> // pr_info printk</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4"></a><a href="#__codelineno-3-4"><span class="linenos" data-linenos=" 4 "></span></a>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5"></a><a href="#__codelineno-3-5"><span class="linenos" data-linenos=" 5 "></span></a><span class="c1">// 模块加载时执行的函数</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6"></a><a href="#__codelineno-3-6"><span class="linenos" data-linenos=" 6 "></span></a><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">__init</span><span class="w"> </span><span class="nf">hello_init</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7"></a><a href="#__codelineno-3-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="p">{</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8"></a><a href="#__codelineno-3-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="w">    </span><span class="c1">// 使用 pr_info 而不是 printk，更简洁</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9"></a><a href="#__codelineno-3-9"><span class="linenos" data-linenos=" 9 "></span></a><span class="w">    </span><span class="n">pr_info</span><span class="p">(</span><span class="s">&quot;Hello, kernel module!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10"></a><a href="#__codelineno-3-10"><span class="linenos" data-linenos="10 "></span></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11"></a><a href="#__codelineno-3-11"><span class="linenos" data-linenos="11 "></span></a><span class="p">}</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12"></a><a href="#__codelineno-3-12"><span class="linenos" data-linenos="12 "></span></a>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13"></a><a href="#__codelineno-3-13"><span class="linenos" data-linenos="13 "></span></a><span class="c1">// 模块卸载时执行的函数</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14"></a><a href="#__codelineno-3-14"><span class="linenos" data-linenos="14 "></span></a><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">__exit</span><span class="w"> </span><span class="nf">hello_exit</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15"></a><a href="#__codelineno-3-15"><span class="linenos" data-linenos="15 "></span></a><span class="p">{</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16"></a><a href="#__codelineno-3-16"><span class="linenos" data-linenos="16 "></span></a><span class="w">    </span><span class="n">pr_info</span><span class="p">(</span><span class="s">&quot;Goodbye, kernel module!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17"></a><a href="#__codelineno-3-17"><span class="linenos" data-linenos="17 "></span></a><span class="p">}</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18"></a><a href="#__codelineno-3-18"><span class="linenos" data-linenos="18 "></span></a>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19"></a><a href="#__codelineno-3-19"><span class="linenos" data-linenos="19 "></span></a><span class="c1">// 注册初始化和清理函数</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20"></a><a href="#__codelineno-3-20"><span class="linenos" data-linenos="20 "></span></a><span class="n">module_init</span><span class="p">(</span><span class="n">hello_init</span><span class="p">);</span>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21"></a><a href="#__codelineno-3-21"><span class="linenos" data-linenos="21 "></span></a><span class="n">module_exit</span><span class="p">(</span><span class="n">hello_exit</span><span class="p">);</span>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22"></a><a href="#__codelineno-3-22"><span class="linenos" data-linenos="22 "></span></a>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23"></a><a href="#__codelineno-3-23"><span class="linenos" data-linenos="23 "></span></a><span class="c1">// 模块元信息</span>
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24"></a><a href="#__codelineno-3-24"><span class="linenos" data-linenos="24 "></span></a><span class="n">MODULE_LICENSE</span><span class="p">(</span><span class="s">&quot;GPL&quot;</span><span class="p">);</span>
+</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25"></a><a href="#__codelineno-3-25"><span class="linenos" data-linenos="25 "></span></a><span class="n">MODULE_AUTHOR</span><span class="p">(</span><span class="s">&quot;Your Name &lt;your.email@example.com&gt;&quot;</span><span class="p">);</span>
+</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26"></a><a href="#__codelineno-3-26"><span class="linenos" data-linenos="26 "></span></a><span class="n">MODULE_DESCRIPTION</span><span class="p">(</span><span class="s">&quot;A simple hello world kernel module&quot;</span><span class="p">);</span>
+</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27"></a><a href="#__codelineno-3-27"><span class="linenos" data-linenos="27 "></span></a><span class="n">MODULE_VERSION</span><span class="p">(</span><span class="s">&quot;1.0&quot;</span><span class="p">);</span>
+</span></code></pre></div>
+<blockquote>
+<p><strong>踩坑提醒</strong>：一定要包含 <code>MODULE_LICENSE("GPL")</code>！否则内核会认为你的模块是"被污染的"（tainted），某些功能会受限。而且使用 GPL 以外的许可证，你不能访问某些只有 GPL 模块才能用的内核符号。</p>
+</blockquote>
+<h3 id="编写-makefile">编写 Makefile<a class="headerlink" href="#编写-makefile" title="链接到此章节">&para;</a></h3>
+<p>内核模块的编译和普通程序不同，它需要使用内核的构建系统。创建一个 <code>Makefile</code>：</p>
+<div class="language-makefile highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1"></a><a href="#__codelineno-4-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="c"># 模块名称</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2"></a><a href="#__codelineno-4-2"><span class="linenos" data-linenos=" 2 "></span></a><span class="nv">obj-m</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>hello.o
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3"></a><a href="#__codelineno-4-3"><span class="linenos" data-linenos=" 3 "></span></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4"></a><a href="#__codelineno-4-4"><span class="linenos" data-linenos=" 4 "></span></a><span class="c"># 获取当前运行的内核构建目录</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5"></a><a href="#__codelineno-4-5"><span class="linenos" data-linenos=" 5 "></span></a><span class="nv">KDIR</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>/lib/modules/<span class="k">$(</span>shell<span class="w"> </span>uname<span class="w"> </span>-r<span class="k">)</span>/build
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6"></a><a href="#__codelineno-4-6"><span class="linenos" data-linenos=" 6 "></span></a>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7"></a><a href="#__codelineno-4-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="c"># 当前目录</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8"></a><a href="#__codelineno-4-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="nv">PWD</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span><span class="nb">pwd</span><span class="k">)</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9"></a><a href="#__codelineno-4-9"><span class="linenos" data-linenos=" 9 "></span></a>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10"></a><a href="#__codelineno-4-10"><span class="linenos" data-linenos="10 "></span></a><span class="c"># 默认目标：构建模块</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11"></a><a href="#__codelineno-4-11"><span class="linenos" data-linenos="11 "></span></a><span class="nf">all</span><span class="o">:</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12"></a><a href="#__codelineno-4-12"><span class="linenos" data-linenos="12 "></span></a><span class="w">    </span><span class="k">$(</span>MAKE<span class="k">)</span><span class="w"> </span>-C<span class="w"> </span><span class="k">$(</span>KDIR<span class="k">)</span><span class="w"> </span><span class="nv">M</span><span class="o">=</span><span class="k">$(</span>PWD<span class="k">)</span><span class="w"> </span>modules
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13"></a><a href="#__codelineno-4-13"><span class="linenos" data-linenos="13 "></span></a>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14"></a><a href="#__codelineno-4-14"><span class="linenos" data-linenos="14 "></span></a><span class="c"># 清理编译产物</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15"></a><a href="#__codelineno-4-15"><span class="linenos" data-linenos="15 "></span></a><span class="nf">clean</span><span class="o">:</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16"></a><a href="#__codelineno-4-16"><span class="linenos" data-linenos="16 "></span></a><span class="w">    </span><span class="k">$(</span>MAKE<span class="k">)</span><span class="w"> </span>-C<span class="w"> </span><span class="k">$(</span>KDIR<span class="k">)</span><span class="w"> </span><span class="nv">M</span><span class="o">=</span><span class="k">$(</span>PWD<span class="k">)</span><span class="w"> </span>clean
+</span></code></pre></div>
+<blockquote>
+<p><strong>注意</strong>：Makefile 里的缩进必须是 <strong>Tab</strong>，不能是空格！这是 Makefile 的语法要求，用空格会报错 "missing separator"。</p>
+</blockquote>
+<h3 id="编译模块">编译模块<a class="headerlink" href="#编译模块" title="链接到此章节">&para;</a></h3>
+<p>现在可以编译了：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1"></a><a href="#__codelineno-5-1"><span class="linenos" data-linenos="1 "></span></a>make
+</span></code></pre></div>
+<p>你应该能看到类似这样的输出：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1"></a><a href="#__codelineno-6-1"><span class="linenos" data-linenos="1 "></span></a>make -C /lib/modules/6.8.0-48-generic/build M=/home/charliechen/kernel-module-tutorial modules
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2"></a><a href="#__codelineno-6-2"><span class="linenos" data-linenos="2 "></span></a>make[1]: Entering directory &#39;/usr/src/linux-headers-6.8.0-48-generic&#39;
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3"></a><a href="#__codelineno-6-3"><span class="linenos" data-linenos="3 "></span></a>  CC [M]  /home/charliechen/kernel-module-tutorial/hello.o
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4"></a><a href="#__codelineno-6-4"><span class="linenos" data-linenos="4 "></span></a>  MODPOST /home/charliechen/kernel-module-tutorial/Module.symvers
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5"></a><a href="#__codelineno-6-5"><span class="linenos" data-linenos="5 "></span></a>  CC [M]  /home/charliechen/kernel-module-tutorial/hello.mod.o
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6"></a><a href="#__codelineno-6-6"><span class="linenos" data-linenos="6 "></span></a>  LD [M]  /home/charliechen/kernel-module-tutorial/hello.ko
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7"></a><a href="#__codelineno-6-7"><span class="linenos" data-linenos="7 "></span></a>  BTF [M] /home/charliechen/kernel-module-tutorial/hello.ko
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8"></a><a href="#__codelineno-6-8"><span class="linenos" data-linenos="8 "></span></a>make[1]: Leaving directory &#39;/usr/src/linux-headers-6.8.0-48-generic&#39;
+</span></code></pre></div>
+<p>编译成功后，当前目录下会出现几个文件：</p>
+<ul>
+<li><code>hello.o</code>：目标文件</li>
+<li><code>hello.ko</code>：内核模块文件（这就是我们需要的）</li>
+<li><code>hello.mod.o</code>、<code>hello.mod.c</code>：模块版本信息相关</li>
+<li><code>Module.symvers</code>：符号导出文件</li>
+<li><code>.hello.ko.cmd</code> 等隐藏文件：编译过程记录</li>
+</ul>
+<h3 id="加载和卸载模块">加载和卸载模块<a class="headerlink" href="#加载和卸载模块" title="链接到此章节">&para;</a></h3>
+<p>现在来加载模块：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1"></a><a href="#__codelineno-7-1"><span class="linenos" data-linenos="1 "></span></a>sudo<span class="w"> </span>insmod<span class="w"> </span>hello.ko
+</span></code></pre></div>
+<p>如果一切正常，命令没有任何输出。那怎么知道模块加载成功了？查看内核日志：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1"></a><a href="#__codelineno-8-1"><span class="linenos" data-linenos="1 "></span></a>sudo<span class="w"> </span>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-5
+</span></code></pre></div>
+<p>你应该能看到：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1"></a><a href="#__codelineno-9-1"><span class="linenos" data-linenos="1 "></span></a>[ 1234.567890] Hello, kernel module!
+</span></code></pre></div>
+<p>你也可以用 <code>lsmod</code> 命令查看已加载的模块：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1"></a><a href="#__codelineno-10-1"><span class="linenos" data-linenos="1 "></span></a>lsmod<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>hello
+</span></code></pre></div>
+<p>输出：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1"></a><a href="#__codelineno-11-1"><span class="linenos" data-linenos="1 "></span></a>hello                  16384  0
+</span></code></pre></div>
+<p>这表示 <code>hello</code> 模块已加载，大小是 16384 字节（16KB），被引用次数是 0。</p>
+<p>现在来卸载模块：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1"></a><a href="#__codelineno-12-1"><span class="linenos" data-linenos="1 "></span></a>sudo<span class="w"> </span>rmmod<span class="w"> </span>hello
+</span></code></pre></div>
+<p>再查看日志：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1"></a><a href="#__codelineno-13-1"><span class="linenos" data-linenos="1 "></span></a>sudo<span class="w"> </span>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-5
+</span></code></pre></div>
+<p>你应该能看到：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1"></a><a href="#__codelineno-14-1"><span class="linenos" data-linenos="1 "></span></a>[ 1235.678901] Goodbye, kernel module!
+</span></code></pre></div>
+<p>恭喜！你已经成功完成了第一个内核模块的编写、编译、加载和卸载。</p>
+<h2 id="交叉编译为目标板编译模块">交叉编译：为目标板编译模块<a class="headerlink" href="#交叉编译为目标板编译模块" title="链接到此章节">&para;</a></h2>
+<p>刚才的编译是针对你当前运行的开发机的。但我们的目标是 i.MX6ULL 开发板，它用的是 ARM 架构，需要交叉编译。</p>
+<h3 id="准备交叉编译环境">准备交叉编译环境<a class="headerlink" href="#准备交叉编译环境" title="链接到此章节">&para;</a></h3>
+<p>首先确保你有 ARM 交叉编译工具链：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1"></a><a href="#__codelineno-15-1"><span class="linenos" data-linenos="1 "></span></a>arm-none-linux-gnueabihf-gcc<span class="w"> </span>--version
+</span></code></pre></div>
+<p>应该能输出版本信息。</p>
+<h3 id="准备内核源码">准备内核源码<a class="headerlink" href="#准备内核源码" title="链接到此章节">&para;</a></h3>
+<p>交叉编译模块时，需要访问目标架构的内核源码或头文件。你不需要完整编译一遍内核，但至少要有内核源码树和配置好的 <code>.config</code>。</p>
+<p>假设你内核源码在 <code>~/linux-imx</code>，输出目录在 <code>~/linux-imx-build</code>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1"></a><a href="#__codelineno-16-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 确保内核已经配置过</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2"></a><a href="#__codelineno-16-2"><span class="linenos" data-linenos="2 "></span></a><span class="nb">cd</span><span class="w"> </span>~/linux-imx
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3"></a><a href="#__codelineno-16-3"><span class="linenos" data-linenos="3 "></span></a>make<span class="w"> </span><span class="nv">O</span><span class="o">=</span>~/linux-imx-build<span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span>arm<span class="w"> </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span>arm-none-linux-gnueabihf-<span class="w"> </span>imx_aes_defconfig
+</span></code></pre></div>
+<h3 id="修改-makefile-用于交叉编译">修改 Makefile 用于交叉编译<a class="headerlink" href="#修改-makefile-用于交叉编译" title="链接到此章节">&para;</a></h3>
+<p>回到模块目录，修改 <code>Makefile</code>：</p>
+<div class="language-makefile highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1"></a><a href="#__codelineno-17-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="nv">obj-m</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>hello.o
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2"></a><a href="#__codelineno-17-2"><span class="linenos" data-linenos=" 2 "></span></a>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3"></a><a href="#__codelineno-17-3"><span class="linenos" data-linenos=" 3 "></span></a><span class="c"># 交叉编译相关变量</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4"></a><a href="#__codelineno-17-4"><span class="linenos" data-linenos=" 4 "></span></a><span class="nv">ARCH</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>arm
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5"></a><a href="#__codelineno-17-5"><span class="linenos" data-linenos=" 5 "></span></a><span class="nv">CROSS_COMPILE</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>arm-none-linux-gnueabihf-
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6"></a><a href="#__codelineno-17-6"><span class="linenos" data-linenos=" 6 "></span></a>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7"></a><a href="#__codelineno-17-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="c"># 内核源码目录（根据你的实际路径修改）</span>
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8"></a><a href="#__codelineno-17-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="nv">KDIR</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>~/linux-imx
+</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9"></a><a href="#__codelineno-17-9"><span class="linenos" data-linenos=" 9 "></span></a>
+</span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10"></a><a href="#__codelineno-17-10"><span class="linenos" data-linenos="10 "></span></a><span class="c"># 输出目录</span>
+</span><span id="__span-17-11"><a id="__codelineno-17-11" name="__codelineno-17-11"></a><a href="#__codelineno-17-11"><span class="linenos" data-linenos="11 "></span></a><span class="nv">MODDIR</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>~/linux-imx-build
+</span><span id="__span-17-12"><a id="__codelineno-17-12" name="__codelineno-17-12"></a><a href="#__codelineno-17-12"><span class="linenos" data-linenos="12 "></span></a>
+</span><span id="__span-17-13"><a id="__codelineno-17-13" name="__codelineno-17-13"></a><a href="#__codelineno-17-13"><span class="linenos" data-linenos="13 "></span></a><span class="c"># 当前目录</span>
+</span><span id="__span-17-14"><a id="__codelineno-17-14" name="__codelineno-17-14"></a><a href="#__codelineno-17-14"><span class="linenos" data-linenos="14 "></span></a><span class="nv">PWD</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span><span class="nb">pwd</span><span class="k">)</span>
+</span><span id="__span-17-15"><a id="__codelineno-17-15" name="__codelineno-17-15"></a><a href="#__codelineno-17-15"><span class="linenos" data-linenos="15 "></span></a>
+</span><span id="__span-17-16"><a id="__codelineno-17-16" name="__codelineno-17-16"></a><a href="#__codelineno-17-16"><span class="linenos" data-linenos="16 "></span></a><span class="nf">all</span><span class="o">:</span>
+</span><span id="__span-17-17"><a id="__codelineno-17-17" name="__codelineno-17-17"></a><a href="#__codelineno-17-17"><span class="linenos" data-linenos="17 "></span></a><span class="w">    </span><span class="k">$(</span>MAKE<span class="k">)</span><span class="w"> </span>-C<span class="w"> </span><span class="k">$(</span>KDIR<span class="k">)</span><span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span><span class="k">$(</span>ARCH<span class="k">)</span><span class="w"> </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span><span class="k">$(</span>CROSS_COMPILE<span class="k">)</span><span class="w"> </span><span class="nv">O</span><span class="o">=</span><span class="k">$(</span>MODDIR<span class="k">)</span><span class="w"> </span><span class="nv">M</span><span class="o">=</span><span class="k">$(</span>PWD<span class="k">)</span><span class="w"> </span>modules
+</span><span id="__span-17-18"><a id="__codelineno-17-18" name="__codelineno-17-18"></a><a href="#__codelineno-17-18"><span class="linenos" data-linenos="18 "></span></a>
+</span><span id="__span-17-19"><a id="__codelineno-17-19" name="__codelineno-17-19"></a><a href="#__codelineno-17-19"><span class="linenos" data-linenos="19 "></span></a><span class="nf">clean</span><span class="o">:</span>
+</span><span id="__span-17-20"><a id="__codelineno-17-20" name="__codelineno-17-20"></a><a href="#__codelineno-17-20"><span class="linenos" data-linenos="20 "></span></a><span class="w">    </span><span class="k">$(</span>MAKE<span class="k">)</span><span class="w"> </span>-C<span class="w"> </span><span class="k">$(</span>KDIR<span class="k">)</span><span class="w"> </span><span class="nv">ARCH</span><span class="o">=</span><span class="k">$(</span>ARCH<span class="k">)</span><span class="w"> </span><span class="nv">CROSS_COMPILE</span><span class="o">=</span><span class="k">$(</span>CROSS_COMPILE<span class="k">)</span><span class="w"> </span><span class="nv">O</span><span class="o">=</span><span class="k">$(</span>MODDIR<span class="k">)</span><span class="w"> </span><span class="nv">M</span><span class="o">=</span><span class="k">$(</span>PWD<span class="k">)</span><span class="w"> </span>clean
+</span></code></pre></div>
+<p>重新编译：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1"></a><a href="#__codelineno-18-1"><span class="linenos" data-linenos="1 "></span></a>make<span class="w"> </span>clean<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make
+</span></code></pre></div>
+<p>这次生成的 <code>hello.ko</code> 就是 ARM 架构的模块了。你可以验证一下：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1"></a><a href="#__codelineno-19-1"><span class="linenos" data-linenos="1 "></span></a>file<span class="w"> </span>hello.ko
+</span></code></pre></div>
+<p>输出应该显示：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1"></a><a href="#__codelineno-20-1"><span class="linenos" data-linenos="1 "></span></a>hello.ko: ELF 32-bit LSB relocatable, ARM, EABI5 version 1 (SYSV) ...
+</span></code></pre></div>
+<h3 id="在开发板上测试">在开发板上测试<a class="headerlink" href="#在开发板上测试" title="链接到此章节">&para;</a></h3>
+<p>把模块传到开发板（通过 TFTP、NFS 或 SD 卡），然后在开发板上加载：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1"></a><a href="#__codelineno-21-1"><span class="linenos" data-linenos="1 "></span></a>insmod<span class="w"> </span>hello.ko
+</span></code></pre></div>
+<p>查看日志：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1"></a><a href="#__codelineno-22-1"><span class="linenos" data-linenos="1 "></span></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail
+</span></code></pre></div>
+<p>你应该能看到熟悉的 "Hello, kernel module!" 输出。</p>
+<h2 id="模块参数传递">模块参数传递<a class="headerlink" href="#模块参数传递" title="链接到此章节">&para;</a></h2>
+<p>硬编码的模块不太实用。更多时候，我们希望能在加载模块时传递参数，让模块行为更灵活。</p>
+<h3 id="添加模块参数">添加模块参数<a class="headerlink" href="#添加模块参数" title="链接到此章节">&para;</a></h3>
+<p>修改 <code>hello.c</code>，添加参数支持：</p>
+<div class="language-c highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1"></a><a href="#__codelineno-23-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;linux/init.h&gt;</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2"></a><a href="#__codelineno-23-2"><span class="linenos" data-linenos=" 2 "></span></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;linux/module.h&gt;</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3"></a><a href="#__codelineno-23-3"><span class="linenos" data-linenos=" 3 "></span></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;linux/printk.h&gt;</span>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4"></a><a href="#__codelineno-23-4"><span class="linenos" data-linenos=" 4 "></span></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;linux/moduleparam.h&gt;</span><span class="c1"> // module_param 宏</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5"></a><a href="#__codelineno-23-5"><span class="linenos" data-linenos=" 5 "></span></a>
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6"></a><a href="#__codelineno-23-6"><span class="linenos" data-linenos=" 6 "></span></a><span class="c1">// 定义一个整型参数，默认值 0</span>
+</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7"></a><a href="#__codelineno-23-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span id="__span-23-8"><a id="__codelineno-23-8" name="__codelineno-23-8"></a><a href="#__codelineno-23-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="c1">// 参数名、类型、权限（S_IRUGO 表示所有用户可读）</span>
+</span><span id="__span-23-9"><a id="__codelineno-23-9" name="__codelineno-23-9"></a><a href="#__codelineno-23-9"><span class="linenos" data-linenos=" 9 "></span></a><span class="n">module_param</span><span class="p">(</span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="n">S_IRUGO</span><span class="p">);</span>
+</span><span id="__span-23-10"><a id="__codelineno-23-10" name="__codelineno-23-10"></a><a href="#__codelineno-23-10"><span class="linenos" data-linenos="10 "></span></a><span class="n">MODULE_PARM_DESC</span><span class="p">(</span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Number of times to print hello&quot;</span><span class="p">);</span>
+</span><span id="__span-23-11"><a id="__codelineno-23-11" name="__codelineno-23-11"></a><a href="#__codelineno-23-11"><span class="linenos" data-linenos="11 "></span></a>
+</span><span id="__span-23-12"><a id="__codelineno-23-12" name="__codelineno-23-12"></a><a href="#__codelineno-23-12"><span class="linenos" data-linenos="12 "></span></a><span class="c1">// 定义一个字符串参数，默认值 &quot;world&quot;</span>
+</span><span id="__span-23-13"><a id="__codelineno-23-13" name="__codelineno-23-13"></a><a href="#__codelineno-23-13"><span class="linenos" data-linenos="13 "></span></a><span class="k">static</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;world&quot;</span><span class="p">;</span>
+</span><span id="__span-23-14"><a id="__codelineno-23-14" name="__codelineno-23-14"></a><a href="#__codelineno-23-14"><span class="linenos" data-linenos="14 "></span></a><span class="n">module_param</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">charp</span><span class="p">,</span><span class="w"> </span><span class="n">S_IRUGO</span><span class="p">);</span>
+</span><span id="__span-23-15"><a id="__codelineno-23-15" name="__codelineno-23-15"></a><a href="#__codelineno-23-15"><span class="linenos" data-linenos="15 "></span></a><span class="n">MODULE_PARM_DESC</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Who to say hello to&quot;</span><span class="p">);</span>
+</span><span id="__span-23-16"><a id="__codelineno-23-16" name="__codelineno-23-16"></a><a href="#__codelineno-23-16"><span class="linenos" data-linenos="16 "></span></a>
+</span><span id="__span-23-17"><a id="__codelineno-23-17" name="__codelineno-23-17"></a><a href="#__codelineno-23-17"><span class="linenos" data-linenos="17 "></span></a><span class="c1">// 定义一个布尔型参数，默认值 false</span>
+</span><span id="__span-23-18"><a id="__codelineno-23-18" name="__codelineno-23-18"></a><a href="#__codelineno-23-18"><span class="linenos" data-linenos="18 "></span></a><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">verbose</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+</span><span id="__span-23-19"><a id="__codelineno-23-19" name="__codelineno-23-19"></a><a href="#__codelineno-23-19"><span class="linenos" data-linenos="19 "></span></a><span class="n">module_param</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="n">S_IRUGO</span><span class="p">);</span>
+</span><span id="__span-23-20"><a id="__codelineno-23-20" name="__codelineno-23-20"></a><a href="#__codelineno-23-20"><span class="linenos" data-linenos="20 "></span></a><span class="n">MODULE_PARM_DESC</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Enable verbose output&quot;</span><span class="p">);</span>
+</span><span id="__span-23-21"><a id="__codelineno-23-21" name="__codelineno-23-21"></a><a href="#__codelineno-23-21"><span class="linenos" data-linenos="21 "></span></a>
+</span><span id="__span-23-22"><a id="__codelineno-23-22" name="__codelineno-23-22"></a><a href="#__codelineno-23-22"><span class="linenos" data-linenos="22 "></span></a><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">__init</span><span class="w"> </span><span class="nf">hello_init</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span><span id="__span-23-23"><a id="__codelineno-23-23" name="__codelineno-23-23"></a><a href="#__codelineno-23-23"><span class="linenos" data-linenos="23 "></span></a><span class="p">{</span>
+</span><span id="__span-23-24"><a id="__codelineno-23-24" name="__codelineno-23-24"></a><a href="#__codelineno-23-24"><span class="linenos" data-linenos="24 "></span></a><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+</span><span id="__span-23-25"><a id="__codelineno-23-25" name="__codelineno-23-25"></a><a href="#__codelineno-23-25"><span class="linenos" data-linenos="25 "></span></a>
+</span><span id="__span-23-26"><a id="__codelineno-23-26" name="__codelineno-23-26"></a><a href="#__codelineno-23-26"><span class="linenos" data-linenos="26 "></span></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-23-27"><a id="__codelineno-23-27" name="__codelineno-23-27"></a><a href="#__codelineno-23-27"><span class="linenos" data-linenos="27 "></span></a><span class="w">        </span><span class="n">pr_info</span><span class="p">(</span><span class="s">&quot;Module parameters: count=%d, name=%s, verbose=%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+</span><span id="__span-23-28"><a id="__codelineno-23-28" name="__codelineno-23-28"></a><a href="#__codelineno-23-28"><span class="linenos" data-linenos="28 "></span></a><span class="w">                </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">verbose</span><span class="p">);</span>
+</span><span id="__span-23-29"><a id="__codelineno-23-29" name="__codelineno-23-29"></a><a href="#__codelineno-23-29"><span class="linenos" data-linenos="29 "></span></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-23-30"><a id="__codelineno-23-30" name="__codelineno-23-30"></a><a href="#__codelineno-23-30"><span class="linenos" data-linenos="30 "></span></a>
+</span><span id="__span-23-31"><a id="__codelineno-23-31" name="__codelineno-23-31"></a><a href="#__codelineno-23-31"><span class="linenos" data-linenos="31 "></span></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">count</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-23-32"><a id="__codelineno-23-32" name="__codelineno-23-32"></a><a href="#__codelineno-23-32"><span class="linenos" data-linenos="32 "></span></a><span class="w">        </span><span class="n">pr_info</span><span class="p">(</span><span class="s">&quot;Hello, %s! (#%d)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+</span><span id="__span-23-33"><a id="__codelineno-23-33" name="__codelineno-23-33"></a><a href="#__codelineno-23-33"><span class="linenos" data-linenos="33 "></span></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-23-34"><a id="__codelineno-23-34" name="__codelineno-23-34"></a><a href="#__codelineno-23-34"><span class="linenos" data-linenos="34 "></span></a>
+</span><span id="__span-23-35"><a id="__codelineno-23-35" name="__codelineno-23-35"></a><a href="#__codelineno-23-35"><span class="linenos" data-linenos="35 "></span></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">count</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-23-36"><a id="__codelineno-23-36" name="__codelineno-23-36"></a><a href="#__codelineno-23-36"><span class="linenos" data-linenos="36 "></span></a><span class="w">        </span><span class="n">pr_info</span><span class="p">(</span><span class="s">&quot;Hello, %s!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">);</span>
+</span><span id="__span-23-37"><a id="__codelineno-23-37" name="__codelineno-23-37"></a><a href="#__codelineno-23-37"><span class="linenos" data-linenos="37 "></span></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-23-38"><a id="__codelineno-23-38" name="__codelineno-23-38"></a><a href="#__codelineno-23-38"><span class="linenos" data-linenos="38 "></span></a>
+</span><span id="__span-23-39"><a id="__codelineno-23-39" name="__codelineno-23-39"></a><a href="#__codelineno-23-39"><span class="linenos" data-linenos="39 "></span></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span id="__span-23-40"><a id="__codelineno-23-40" name="__codelineno-23-40"></a><a href="#__codelineno-23-40"><span class="linenos" data-linenos="40 "></span></a><span class="p">}</span>
+</span><span id="__span-23-41"><a id="__codelineno-23-41" name="__codelineno-23-41"></a><a href="#__codelineno-23-41"><span class="linenos" data-linenos="41 "></span></a>
+</span><span id="__span-23-42"><a id="__codelineno-23-42" name="__codelineno-23-42"></a><a href="#__codelineno-23-42"><span class="linenos" data-linenos="42 "></span></a><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">__exit</span><span class="w"> </span><span class="nf">hello_exit</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span><span id="__span-23-43"><a id="__codelineno-23-43" name="__codelineno-23-43"></a><a href="#__codelineno-23-43"><span class="linenos" data-linenos="43 "></span></a><span class="p">{</span>
+</span><span id="__span-23-44"><a id="__codelineno-23-44" name="__codelineno-23-44"></a><a href="#__codelineno-23-44"><span class="linenos" data-linenos="44 "></span></a><span class="w">    </span><span class="n">pr_info</span><span class="p">(</span><span class="s">&quot;Goodbye, %s!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">);</span>
+</span><span id="__span-23-45"><a id="__codelineno-23-45" name="__codelineno-23-45"></a><a href="#__codelineno-23-45"><span class="linenos" data-linenos="45 "></span></a><span class="p">}</span>
+</span><span id="__span-23-46"><a id="__codelineno-23-46" name="__codelineno-23-46"></a><a href="#__codelineno-23-46"><span class="linenos" data-linenos="46 "></span></a>
+</span><span id="__span-23-47"><a id="__codelineno-23-47" name="__codelineno-23-47"></a><a href="#__codelineno-23-47"><span class="linenos" data-linenos="47 "></span></a><span class="n">module_init</span><span class="p">(</span><span class="n">hello_init</span><span class="p">);</span>
+</span><span id="__span-23-48"><a id="__codelineno-23-48" name="__codelineno-23-48"></a><a href="#__codelineno-23-48"><span class="linenos" data-linenos="48 "></span></a><span class="n">module_exit</span><span class="p">(</span><span class="n">hello_exit</span><span class="p">);</span>
+</span><span id="__span-23-49"><a id="__codelineno-23-49" name="__codelineno-23-49"></a><a href="#__codelineno-23-49"><span class="linenos" data-linenos="49 "></span></a>
+</span><span id="__span-23-50"><a id="__codelineno-23-50" name="__codelineno-23-50"></a><a href="#__codelineno-23-50"><span class="linenos" data-linenos="50 "></span></a><span class="n">MODULE_LICENSE</span><span class="p">(</span><span class="s">&quot;GPL&quot;</span><span class="p">);</span>
+</span><span id="__span-23-51"><a id="__codelineno-23-51" name="__codelineno-23-51"></a><a href="#__codelineno-23-51"><span class="linenos" data-linenos="51 "></span></a><span class="n">MODULE_AUTHOR</span><span class="p">(</span><span class="s">&quot;Your Name &lt;your.email@example.com&gt;&quot;</span><span class="p">);</span>
+</span><span id="__span-23-52"><a id="__codelineno-23-52" name="__codelineno-23-52"></a><a href="#__codelineno-23-52"><span class="linenos" data-linenos="52 "></span></a><span class="n">MODULE_DESCRIPTION</span><span class="p">(</span><span class="s">&quot;A hello world module with parameters&quot;</span><span class="p">);</span>
+</span><span id="__span-23-53"><a id="__codelineno-23-53" name="__codelineno-23-53"></a><a href="#__codelineno-23-53"><span class="linenos" data-linenos="53 "></span></a><span class="n">MODULE_VERSION</span><span class="p">(</span><span class="s">&quot;1.0&quot;</span><span class="p">);</span>
+</span></code></pre></div>
+<h3 id="参数类型说明">参数类型说明<a class="headerlink" href="#参数类型说明" title="链接到此章节">&para;</a></h3>
+<p><code>module_param</code> 宏支持这些类型：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>C 类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>int</code></td>
+<td>int</td>
+<td>整型</td>
+</tr>
+<tr>
+<td><code>short</code></td>
+<td>short</td>
+<td>短整型</td>
+</tr>
+<tr>
+<td><code>uint</code></td>
+<td>unsigned int</td>
+<td>无符号整型</td>
+</tr>
+<tr>
+<td><code>ushort</code></td>
+<td>unsigned short</td>
+<td>无符号短整型</td>
+</tr>
+<tr>
+<td><code>long</code></td>
+<td>long</td>
+<td>长整型</td>
+</tr>
+<tr>
+<td><code>ulong</code></td>
+<td>unsigned long</td>
+<td>无符号长整型</td>
+</tr>
+<tr>
+<td><code>charp</code></td>
+<td>char *</td>
+<td>字符串指针</td>
+</tr>
+<tr>
+<td><code>bool</code></td>
+<td>bool / int</td>
+<td>布尔型</td>
+</tr>
+</tbody>
+</table>
+<h3 id="权限标志">权限标志<a class="headerlink" href="#权限标志" title="链接到此章节">&para;</a></h3>
+<p>权限标志定义了谁可以通过 <code>/sys/module</code> 访问这个参数：</p>
+<div class="language-c highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1"></a><a href="#__codelineno-24-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1">// S_IRUGO：所有用户可读</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2"></a><a href="#__codelineno-24-2"><span class="linenos" data-linenos="2 "></span></a><span class="n">module_param</span><span class="p">(</span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="n">S_IRUGO</span><span class="p">);</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3"></a><a href="#__codelineno-24-3"><span class="linenos" data-linenos="3 "></span></a>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4"></a><a href="#__codelineno-24-4"><span class="linenos" data-linenos="4 "></span></a><span class="c1">// S_IWUSR：只有 root 可写</span>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5"></a><a href="#__codelineno-24-5"><span class="linenos" data-linenos="5 "></span></a><span class="n">module_param</span><span class="p">(</span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="n">S_IWUSR</span><span class="p">);</span>
+</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6"></a><a href="#__codelineno-24-6"><span class="linenos" data-linenos="6 "></span></a>
+</span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7"></a><a href="#__codelineno-24-7"><span class="linenos" data-linenos="7 "></span></a><span class="c1">// S_IRUGO | S_IWUSR：所有用户可读，root 可写</span>
+</span><span id="__span-24-8"><a id="__codelineno-24-8" name="__codelineno-24-8"></a><a href="#__codelineno-24-8"><span class="linenos" data-linenos="8 "></span></a><span class="n">module_param</span><span class="p">(</span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="n">S_IRUGO</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">S_IWUSR</span><span class="p">);</span>
+</span></code></pre></div>
+<p>常用权限常量：</p>
+<table>
+<thead>
+<tr>
+<th>常量</th>
+<th>值</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S_IRUSR</td>
+<td>0400</td>
+<td>所有者可读</td>
+</tr>
+<tr>
+<td>S_IWUSR</td>
+<td>0200</td>
+<td>所有者可写</td>
+</tr>
+<tr>
+<td>S_IRGRP</td>
+<td>0040</td>
+<td>组用户可读</td>
+</tr>
+<tr>
+<td>S_IWGRP</td>
+<td>0020</td>
+<td>组用户可写</td>
+</tr>
+<tr>
+<td>S_IROTH</td>
+<td>0004</td>
+<td>其他用户可读</td>
+</tr>
+<tr>
+<td>S_IWOTH</td>
+<td>0002</td>
+<td>其他用户可写</td>
+</tr>
+<tr>
+<td>S_IRUGO</td>
+<td>0444</td>
+<td>所有用户可读</td>
+</tr>
+<tr>
+<td>S_IWUGO</td>
+<td>0222</td>
+<td>所有用户可写</td>
+</tr>
+</tbody>
+</table>
+<h3 id="加载时传递参数">加载时传递参数<a class="headerlink" href="#加载时传递参数" title="链接到此章节">&para;</a></h3>
+<p>重新编译模块，然后加载时传递参数：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1"></a><a href="#__codelineno-25-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="c1"># 使用默认参数</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2"></a><a href="#__codelineno-25-2"><span class="linenos" data-linenos=" 2 "></span></a>sudo<span class="w"> </span>insmod<span class="w"> </span>hello.ko
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3"></a><a href="#__codelineno-25-3"><span class="linenos" data-linenos=" 3 "></span></a>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4"></a><a href="#__codelineno-25-4"><span class="linenos" data-linenos=" 4 "></span></a><span class="c1"># 指定 count</span>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5"></a><a href="#__codelineno-25-5"><span class="linenos" data-linenos=" 5 "></span></a>sudo<span class="w"> </span>insmod<span class="w"> </span>hello.ko<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">3</span>
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6"></a><a href="#__codelineno-25-6"><span class="linenos" data-linenos=" 6 "></span></a>
+</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7"></a><a href="#__codelineno-25-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="c1"># 指定 name</span>
+</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8"></a><a href="#__codelineno-25-8"><span class="linenos" data-linenos=" 8 "></span></a>sudo<span class="w"> </span>insmod<span class="w"> </span>hello.ko<span class="w"> </span><span class="nv">name</span><span class="o">=</span><span class="s2">&quot;Kernel&quot;</span>
+</span><span id="__span-25-9"><a id="__codelineno-25-9" name="__codelineno-25-9"></a><a href="#__codelineno-25-9"><span class="linenos" data-linenos=" 9 "></span></a>
+</span><span id="__span-25-10"><a id="__codelineno-25-10" name="__codelineno-25-10"></a><a href="#__codelineno-25-10"><span class="linenos" data-linenos="10 "></span></a><span class="c1"># 同时指定多个参数</span>
+</span><span id="__span-25-11"><a id="__codelineno-25-11" name="__codelineno-25-11"></a><a href="#__codelineno-25-11"><span class="linenos" data-linenos="11 "></span></a>sudo<span class="w"> </span>insmod<span class="w"> </span>hello.ko<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">5</span><span class="w"> </span><span class="nv">name</span><span class="o">=</span><span class="s2">&quot;World&quot;</span><span class="w"> </span><span class="nv">verbose</span><span class="o">=</span><span class="m">1</span>
+</span></code></pre></div>
+<p>查看日志：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1"></a><a href="#__codelineno-26-1"><span class="linenos" data-linenos="1 "></span></a>sudo<span class="w"> </span>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
+</span></code></pre></div>
+<h3 id="运行时查看和修改参数">运行时查看和修改参数<a class="headerlink" href="#运行时查看和修改参数" title="链接到此章节">&para;</a></h3>
+<p>模块加载后，可以通过 <code>/sys/module</code> 查看和修改参数：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1"></a><a href="#__codelineno-27-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="c1"># 查看模块参数目录</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2"></a><a href="#__codelineno-27-2"><span class="linenos" data-linenos=" 2 "></span></a>ls<span class="w"> </span>-la<span class="w"> </span>/sys/module/hello/parameters/
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3"></a><a href="#__codelineno-27-3"><span class="linenos" data-linenos=" 3 "></span></a>
+</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4"></a><a href="#__codelineno-27-4"><span class="linenos" data-linenos=" 4 "></span></a><span class="c1"># 查看参数值</span>
+</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5"></a><a href="#__codelineno-27-5"><span class="linenos" data-linenos=" 5 "></span></a>cat<span class="w"> </span>/sys/module/hello/parameters/count
+</span><span id="__span-27-6"><a id="__codelineno-27-6" name="__codelineno-27-6"></a><a href="#__codelineno-27-6"><span class="linenos" data-linenos=" 6 "></span></a>cat<span class="w"> </span>/sys/module/hello/parameters/name
+</span><span id="__span-27-7"><a id="__codelineno-27-7" name="__codelineno-27-7"></a><a href="#__codelineno-27-7"><span class="linenos" data-linenos=" 7 "></span></a>cat<span class="w"> </span>/sys/module/hello/parameters/verbose
+</span><span id="__span-27-8"><a id="__codelineno-27-8" name="__codelineno-27-8"></a><a href="#__codelineno-27-8"><span class="linenos" data-linenos=" 8 "></span></a>
+</span><span id="__span-27-9"><a id="__codelineno-27-9" name="__codelineno-27-9"></a><a href="#__codelineno-27-9"><span class="linenos" data-linenos=" 9 "></span></a><span class="c1"># 修改参数（如果权限允许）</span>
+</span><span id="__span-27-10"><a id="__codelineno-27-10" name="__codelineno-27-10"></a><a href="#__codelineno-27-10"><span class="linenos" data-linenos="10 "></span></a>sudo<span class="w"> </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;echo 10 &gt; /sys/module/hello/parameters/count&quot;</span>
+</span></code></pre></div>
+<blockquote>
+<p><strong>注意</strong>：修改参数是否生效取决于模块代码如何使用参数。有些参数只在初始化时读取，后续修改不会影响行为。</p>
+</blockquote>
+<h2 id="模块依赖管理">模块依赖管理<a class="headerlink" href="#模块依赖管理" title="链接到此章节">&para;</a></h2>
+<p>实际开发中，模块之间往往有依赖关系。比如一个网络设备驱动模块可能依赖于通用 PHY 层模块。这时候加载顺序就很重要。</p>
+<h3 id="查看模块依赖">查看模块依赖<a class="headerlink" href="#查看模块依赖" title="链接到此章节">&para;</a></h3>
+<p>用 <code>modinfo</code> 命令查看模块信息：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1"></a><a href="#__codelineno-28-1"><span class="linenos" data-linenos="1 "></span></a>modinfo<span class="w"> </span>hello.ko
+</span></code></pre></div>
+<p>输出类似：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1"></a><a href="#__codelineno-29-1"><span class="linenos" data-linenos=" 1 "></span></a>filename:       /home/charliechen/kernel-module-tutorial/hello.ko
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2"></a><a href="#__codelineno-29-2"><span class="linenos" data-linenos=" 2 "></span></a>version:        1.0
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3"></a><a href="#__codelineno-29-3"><span class="linenos" data-linenos=" 3 "></span></a>description:    A hello world module with parameters
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4"></a><a href="#__codelineno-29-4"><span class="linenos" data-linenos=" 4 "></span></a>author:         Your Name &lt;your.email@example.com&gt;
+</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5"></a><a href="#__codelineno-29-5"><span class="linenos" data-linenos=" 5 "></span></a>license:        GPL
+</span><span id="__span-29-6"><a id="__codelineno-29-6" name="__codelineno-29-6"></a><a href="#__codelineno-29-6"><span class="linenos" data-linenos=" 6 "></span></a>srcversion:     XXXXXXXXXXXXXXXXXXXX
+</span><span id="__span-29-7"><a id="__codelineno-29-7" name="__codelineno-29-7"></a><a href="#__codelineno-29-7"><span class="linenos" data-linenos=" 7 "></span></a>depends:
+</span><span id="__span-29-8"><a id="__codelineno-29-8" name="__codelineno-29-8"></a><a href="#__codelineno-29-8"><span class="linenos" data-linenos=" 8 "></span></a>retpoline:      Y
+</span><span id="__span-29-9"><a id="__codelineno-29-9" name="__codelineno-29-9"></a><a href="#__codelineno-29-9"><span class="linenos" data-linenos=" 9 "></span></a>name:           hello
+</span><span id="__span-29-10"><a id="__codelineno-29-10" name="__codelineno-29-10"></a><a href="#__codelineno-29-10"><span class="linenos" data-linenos="10 "></span></a>vermagic:       6.8.0-48-generic SMP mod_unload modversions aarch64
+</span></code></pre></div>
+<p><code>depends</code> 字段显示了这个模块依赖的其他模块。我们的 hello 模块没有依赖，所以是空的。</p>
+<h3 id="导出符号让模块提供-api">导出符号：让模块提供 API<a class="headerlink" href="#导出符号让模块提供-api" title="链接到此章节">&para;</a></h3>
+<p>如果一个模块想提供函数给其他模块使用，需要导出符号。</p>
+<p><strong>模块 A：导出符号</strong></p>
+<p>创建 <code>provider.c</code>：</p>
+<div class="language-c highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1"></a><a href="#__codelineno-30-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;linux/init.h&gt;</span>
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2"></a><a href="#__codelineno-30-2"><span class="linenos" data-linenos=" 2 "></span></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;linux/module.h&gt;</span>
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3"></a><a href="#__codelineno-30-3"><span class="linenos" data-linenos=" 3 "></span></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;linux/printk.h&gt;</span>
+</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4"></a><a href="#__codelineno-30-4"><span class="linenos" data-linenos=" 4 "></span></a>
+</span><span id="__span-30-5"><a id="__codelineno-30-5" name="__codelineno-30-5"></a><a href="#__codelineno-30-5"><span class="linenos" data-linenos=" 5 "></span></a><span class="c1">// 导出一个函数</span>
+</span><span id="__span-30-6"><a id="__codelineno-30-6" name="__codelineno-30-6"></a><a href="#__codelineno-30-6"><span class="linenos" data-linenos=" 6 "></span></a><span class="kt">int</span><span class="w"> </span><span class="nf">provider_add</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+</span><span id="__span-30-7"><a id="__codelineno-30-7" name="__codelineno-30-7"></a><a href="#__codelineno-30-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="p">{</span>
+</span><span id="__span-30-8"><a id="__codelineno-30-8" name="__codelineno-30-8"></a><a href="#__codelineno-30-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="w">    </span><span class="n">pr_info</span><span class="p">(</span><span class="s">&quot;provider_add: %d + %d = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">);</span>
+</span><span id="__span-30-9"><a id="__codelineno-30-9" name="__codelineno-30-9"></a><a href="#__codelineno-30-9"><span class="linenos" data-linenos=" 9 "></span></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+</span><span id="__span-30-10"><a id="__codelineno-30-10" name="__codelineno-30-10"></a><a href="#__codelineno-30-10"><span class="linenos" data-linenos="10 "></span></a><span class="p">}</span>
+</span><span id="__span-30-11"><a id="__codelineno-30-11" name="__codelineno-30-11"></a><a href="#__codelineno-30-11"><span class="linenos" data-linenos="11 "></span></a><span class="n">EXPORT_SYMBOL</span><span class="p">(</span><span class="n">provider_add</span><span class="p">);</span>
+</span><span id="__span-30-12"><a id="__codelineno-30-12" name="__codelineno-30-12"></a><a href="#__codelineno-30-12"><span class="linenos" data-linenos="12 "></span></a>
+</span><span id="__span-30-13"><a id="__codelineno-30-13" name="__codelineno-30-13"></a><a href="#__codelineno-30-13"><span class="linenos" data-linenos="13 "></span></a><span class="c1">// 导出一个变量</span>
+</span><span id="__span-30-14"><a id="__codelineno-30-14" name="__codelineno-30-14"></a><a href="#__codelineno-30-14"><span class="linenos" data-linenos="14 "></span></a><span class="kt">int</span><span class="w"> </span><span class="n">provider_counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span id="__span-30-15"><a id="__codelineno-30-15" name="__codelineno-30-15"></a><a href="#__codelineno-30-15"><span class="linenos" data-linenos="15 "></span></a><span class="n">EXPORT_SYMBOL</span><span class="p">(</span><span class="n">provider_counter</span><span class="p">);</span>
+</span><span id="__span-30-16"><a id="__codelineno-30-16" name="__codelineno-30-16"></a><a href="#__codelineno-30-16"><span class="linenos" data-linenos="16 "></span></a>
+</span><span id="__span-30-17"><a id="__codelineno-30-17" name="__codelineno-30-17"></a><a href="#__codelineno-30-17"><span class="linenos" data-linenos="17 "></span></a><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">__init</span><span class="w"> </span><span class="nf">provider_init</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span><span id="__span-30-18"><a id="__codelineno-30-18" name="__codelineno-30-18"></a><a href="#__codelineno-30-18"><span class="linenos" data-linenos="18 "></span></a><span class="p">{</span>
+</span><span id="__span-30-19"><a id="__codelineno-30-19" name="__codelineno-30-19"></a><a href="#__codelineno-30-19"><span class="linenos" data-linenos="19 "></span></a><span class="w">    </span><span class="n">pr_info</span><span class="p">(</span><span class="s">&quot;Provider module loaded</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span id="__span-30-20"><a id="__codelineno-30-20" name="__codelineno-30-20"></a><a href="#__codelineno-30-20"><span class="linenos" data-linenos="20 "></span></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span id="__span-30-21"><a id="__codelineno-30-21" name="__codelineno-30-21"></a><a href="#__codelineno-30-21"><span class="linenos" data-linenos="21 "></span></a><span class="p">}</span>
+</span><span id="__span-30-22"><a id="__codelineno-30-22" name="__codelineno-30-22"></a><a href="#__codelineno-30-22"><span class="linenos" data-linenos="22 "></span></a>
+</span><span id="__span-30-23"><a id="__codelineno-30-23" name="__codelineno-30-23"></a><a href="#__codelineno-30-23"><span class="linenos" data-linenos="23 "></span></a><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">__exit</span><span class="w"> </span><span class="nf">provider_exit</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span><span id="__span-30-24"><a id="__codelineno-30-24" name="__codelineno-30-24"></a><a href="#__codelineno-30-24"><span class="linenos" data-linenos="24 "></span></a><span class="p">{</span>
+</span><span id="__span-30-25"><a id="__codelineno-30-25" name="__codelineno-30-25"></a><a href="#__codelineno-30-25"><span class="linenos" data-linenos="25 "></span></a><span class="w">    </span><span class="n">pr_info</span><span class="p">(</span><span class="s">&quot;Provider module unloaded</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span id="__span-30-26"><a id="__codelineno-30-26" name="__codelineno-30-26"></a><a href="#__codelineno-30-26"><span class="linenos" data-linenos="26 "></span></a><span class="p">}</span>
+</span><span id="__span-30-27"><a id="__codelineno-30-27" name="__codelineno-30-27"></a><a href="#__codelineno-30-27"><span class="linenos" data-linenos="27 "></span></a>
+</span><span id="__span-30-28"><a id="__codelineno-30-28" name="__codelineno-30-28"></a><a href="#__codelineno-30-28"><span class="linenos" data-linenos="28 "></span></a><span class="n">module_init</span><span class="p">(</span><span class="n">provider_init</span><span class="p">);</span>
+</span><span id="__span-30-29"><a id="__codelineno-30-29" name="__codelineno-30-29"></a><a href="#__codelineno-30-29"><span class="linenos" data-linenos="29 "></span></a><span class="n">module_exit</span><span class="p">(</span><span class="n">provider_exit</span><span class="p">);</span>
+</span><span id="__span-30-30"><a id="__codelineno-30-30" name="__codelineno-30-30"></a><a href="#__codelineno-30-30"><span class="linenos" data-linenos="30 "></span></a>
+</span><span id="__span-30-31"><a id="__codelineno-30-31" name="__codelineno-30-31"></a><a href="#__codelineno-30-31"><span class="linenos" data-linenos="31 "></span></a><span class="n">MODULE_LICENSE</span><span class="p">(</span><span class="s">&quot;GPL&quot;</span><span class="p">);</span>
+</span></code></pre></div>
+<p><strong>模块 B：使用导出的符号</strong></p>
+<p>创建 <code>consumer.c</code>：</p>
+<div class="language-c highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1"></a><a href="#__codelineno-31-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;linux/init.h&gt;</span>
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2"></a><a href="#__codelineno-31-2"><span class="linenos" data-linenos=" 2 "></span></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;linux/module.h&gt;</span>
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3"></a><a href="#__codelineno-31-3"><span class="linenos" data-linenos=" 3 "></span></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;linux/printk.h&gt;</span>
+</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4"></a><a href="#__codelineno-31-4"><span class="linenos" data-linenos=" 4 "></span></a>
+</span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5"></a><a href="#__codelineno-31-5"><span class="linenos" data-linenos=" 5 "></span></a><span class="c1">// 声明外部符号</span>
+</span><span id="__span-31-6"><a id="__codelineno-31-6" name="__codelineno-31-6"></a><a href="#__codelineno-31-6"><span class="linenos" data-linenos=" 6 "></span></a><span class="k">extern</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">provider_add</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">b</span><span class="p">);</span>
+</span><span id="__span-31-7"><a id="__codelineno-31-7" name="__codelineno-31-7"></a><a href="#__codelineno-31-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="k">extern</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">provider_counter</span><span class="p">;</span>
+</span><span id="__span-31-8"><a id="__codelineno-31-8" name="__codelineno-31-8"></a><a href="#__codelineno-31-8"><span class="linenos" data-linenos=" 8 "></span></a>
+</span><span id="__span-31-9"><a id="__codelineno-31-9" name="__codelineno-31-9"></a><a href="#__codelineno-31-9"><span class="linenos" data-linenos=" 9 "></span></a><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">__init</span><span class="w"> </span><span class="nf">consumer_init</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span><span id="__span-31-10"><a id="__codelineno-31-10" name="__codelineno-31-10"></a><a href="#__codelineno-31-10"><span class="linenos" data-linenos="10 "></span></a><span class="p">{</span>
+</span><span id="__span-31-11"><a id="__codelineno-31-11" name="__codelineno-31-11"></a><a href="#__codelineno-31-11"><span class="linenos" data-linenos="11 "></span></a><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+</span><span id="__span-31-12"><a id="__codelineno-31-12" name="__codelineno-31-12"></a><a href="#__codelineno-31-12"><span class="linenos" data-linenos="12 "></span></a>
+</span><span id="__span-31-13"><a id="__codelineno-31-13" name="__codelineno-31-13"></a><a href="#__codelineno-31-13"><span class="linenos" data-linenos="13 "></span></a><span class="w">    </span><span class="n">pr_info</span><span class="p">(</span><span class="s">&quot;Consumer module loaded</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span id="__span-31-14"><a id="__codelineno-31-14" name="__codelineno-31-14"></a><a href="#__codelineno-31-14"><span class="linenos" data-linenos="14 "></span></a>
+</span><span id="__span-31-15"><a id="__codelineno-31-15" name="__codelineno-31-15"></a><a href="#__codelineno-31-15"><span class="linenos" data-linenos="15 "></span></a><span class="w">    </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">provider_add</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">);</span>
+</span><span id="__span-31-16"><a id="__codelineno-31-16" name="__codelineno-31-16"></a><a href="#__codelineno-31-16"><span class="linenos" data-linenos="16 "></span></a><span class="w">    </span><span class="n">pr_info</span><span class="p">(</span><span class="s">&quot;Result from provider: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">);</span>
+</span><span id="__span-31-17"><a id="__codelineno-31-17" name="__codelineno-31-17"></a><a href="#__codelineno-31-17"><span class="linenos" data-linenos="17 "></span></a>
+</span><span id="__span-31-18"><a id="__codelineno-31-18" name="__codelineno-31-18"></a><a href="#__codelineno-31-18"><span class="linenos" data-linenos="18 "></span></a><span class="w">    </span><span class="n">pr_info</span><span class="p">(</span><span class="s">&quot;Provider counter: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">provider_counter</span><span class="p">);</span>
+</span><span id="__span-31-19"><a id="__codelineno-31-19" name="__codelineno-31-19"></a><a href="#__codelineno-31-19"><span class="linenos" data-linenos="19 "></span></a>
+</span><span id="__span-31-20"><a id="__codelineno-31-20" name="__codelineno-31-20"></a><a href="#__codelineno-31-20"><span class="linenos" data-linenos="20 "></span></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span id="__span-31-21"><a id="__codelineno-31-21" name="__codelineno-31-21"></a><a href="#__codelineno-31-21"><span class="linenos" data-linenos="21 "></span></a><span class="p">}</span>
+</span><span id="__span-31-22"><a id="__codelineno-31-22" name="__codelineno-31-22"></a><a href="#__codelineno-31-22"><span class="linenos" data-linenos="22 "></span></a>
+</span><span id="__span-31-23"><a id="__codelineno-31-23" name="__codelineno-31-23"></a><a href="#__codelineno-31-23"><span class="linenos" data-linenos="23 "></span></a><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">__exit</span><span class="w"> </span><span class="nf">consumer_exit</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span><span id="__span-31-24"><a id="__codelineno-31-24" name="__codelineno-31-24"></a><a href="#__codelineno-31-24"><span class="linenos" data-linenos="24 "></span></a><span class="p">{</span>
+</span><span id="__span-31-25"><a id="__codelineno-31-25" name="__codelineno-31-25"></a><a href="#__codelineno-31-25"><span class="linenos" data-linenos="25 "></span></a><span class="w">    </span><span class="n">pr_info</span><span class="p">(</span><span class="s">&quot;Consumer module unloaded</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span id="__span-31-26"><a id="__codelineno-31-26" name="__codelineno-31-26"></a><a href="#__codelineno-31-26"><span class="linenos" data-linenos="26 "></span></a><span class="p">}</span>
+</span><span id="__span-31-27"><a id="__codelineno-31-27" name="__codelineno-31-27"></a><a href="#__codelineno-31-27"><span class="linenos" data-linenos="27 "></span></a>
+</span><span id="__span-31-28"><a id="__codelineno-31-28" name="__codelineno-31-28"></a><a href="#__codelineno-31-28"><span class="linenos" data-linenos="28 "></span></a><span class="n">module_init</span><span class="p">(</span><span class="n">consumer_init</span><span class="p">);</span>
+</span><span id="__span-31-29"><a id="__codelineno-31-29" name="__codelineno-31-29"></a><a href="#__codelineno-31-29"><span class="linenos" data-linenos="29 "></span></a><span class="n">module_exit</span><span class="p">(</span><span class="n">consumer_exit</span><span class="p">);</span>
+</span><span id="__span-31-30"><a id="__codelineno-31-30" name="__codelineno-31-30"></a><a href="#__codelineno-31-30"><span class="linenos" data-linenos="30 "></span></a>
+</span><span id="__span-31-31"><a id="__codelineno-31-31" name="__codelineno-31-31"></a><a href="#__codelineno-31-31"><span class="linenos" data-linenos="31 "></span></a><span class="n">MODULE_LICENSE</span><span class="p">(</span><span class="s">&quot;GPL&quot;</span><span class="p">);</span>
+</span></code></pre></div>
+<p><strong>更新 Makefile</strong></p>
+<div class="language-makefile highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1"></a><a href="#__codelineno-32-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="nv">obj-m</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>provider.o
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2"></a><a href="#__codelineno-32-2"><span class="linenos" data-linenos=" 2 "></span></a><span class="nv">obj-m</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>consumer.o
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3"></a><a href="#__codelineno-32-3"><span class="linenos" data-linenos=" 3 "></span></a>
+</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4"></a><a href="#__codelineno-32-4"><span class="linenos" data-linenos=" 4 "></span></a><span class="nv">KDIR</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>/lib/modules/<span class="k">$(</span>shell<span class="w"> </span>uname<span class="w"> </span>-r<span class="k">)</span>/build
+</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5"></a><a href="#__codelineno-32-5"><span class="linenos" data-linenos=" 5 "></span></a><span class="nv">PWD</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span><span class="nb">pwd</span><span class="k">)</span>
+</span><span id="__span-32-6"><a id="__codelineno-32-6" name="__codelineno-32-6"></a><a href="#__codelineno-32-6"><span class="linenos" data-linenos=" 6 "></span></a>
+</span><span id="__span-32-7"><a id="__codelineno-32-7" name="__codelineno-32-7"></a><a href="#__codelineno-32-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="nf">all</span><span class="o">:</span>
+</span><span id="__span-32-8"><a id="__codelineno-32-8" name="__codelineno-32-8"></a><a href="#__codelineno-32-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="w">    </span><span class="k">$(</span>MAKE<span class="k">)</span><span class="w"> </span>-C<span class="w"> </span><span class="k">$(</span>KDIR<span class="k">)</span><span class="w"> </span><span class="nv">M</span><span class="o">=</span><span class="k">$(</span>PWD<span class="k">)</span><span class="w"> </span>modules
+</span><span id="__span-32-9"><a id="__codelineno-32-9" name="__codelineno-32-9"></a><a href="#__codelineno-32-9"><span class="linenos" data-linenos=" 9 "></span></a>
+</span><span id="__span-32-10"><a id="__codelineno-32-10" name="__codelineno-32-10"></a><a href="#__codelineno-32-10"><span class="linenos" data-linenos="10 "></span></a><span class="nf">clean</span><span class="o">:</span>
+</span><span id="__span-32-11"><a id="__codelineno-32-11" name="__codelineno-32-11"></a><a href="#__codelineno-32-11"><span class="linenos" data-linenos="11 "></span></a><span class="w">    </span><span class="k">$(</span>MAKE<span class="k">)</span><span class="w"> </span>-C<span class="w"> </span><span class="k">$(</span>KDIR<span class="k">)</span><span class="w"> </span><span class="nv">M</span><span class="o">=</span><span class="k">$(</span>PWD<span class="k">)</span><span class="w"> </span>clean
+</span></code></pre></div>
+<p><strong>编译和测试</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1"></a><a href="#__codelineno-33-1"><span class="linenos" data-linenos="1 "></span></a>make
+</span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2"></a><a href="#__codelineno-33-2"><span class="linenos" data-linenos="2 "></span></a>sudo<span class="w"> </span>insmod<span class="w"> </span>provider.ko
+</span><span id="__span-33-3"><a id="__codelineno-33-3" name="__codelineno-33-3"></a><a href="#__codelineno-33-3"><span class="linenos" data-linenos="3 "></span></a>sudo<span class="w"> </span>insmod<span class="w"> </span>consumer.ko
+</span><span id="__span-33-4"><a id="__codelineno-33-4" name="__codelineno-33-4"></a><a href="#__codelineno-33-4"><span class="linenos" data-linenos="4 "></span></a>sudo<span class="w"> </span>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
+</span></code></pre></div>
+<p><strong>加载顺序错误会怎样？</strong></p>
+<p>如果你先加载 <code>consumer</code>，会报错：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1"></a><a href="#__codelineno-34-1"><span class="linenos" data-linenos="1 "></span></a>sudo<span class="w"> </span>rmmod<span class="w"> </span>provider<span class="w"> </span>consumer<span class="w">  </span><span class="c1"># 先卸载</span>
+</span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2"></a><a href="#__codelineno-34-2"><span class="linenos" data-linenos="2 "></span></a>sudo<span class="w"> </span>insmod<span class="w"> </span>consumer.ko
+</span></code></pre></div>
+<p>输出：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1"></a><a href="#__codelineno-35-1"><span class="linenos" data-linenos="1 "></span></a>insmod: ERROR: could not insert module consumer.ko: Unknown symbol
+</span></code></pre></div>
+<p>查看详细错误：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1"></a><a href="#__codelineno-36-1"><span class="linenos" data-linenos="1 "></span></a>sudo<span class="w"> </span>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail
+</span></code></pre></div>
+<p>你会看到：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1"></a><a href="#__codelineno-37-1"><span class="linenos" data-linenos="1 "></span></a>consumer: Unknown symbol provider_add (err 0)
+</span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2"></a><a href="#__codelineno-37-2"><span class="linenos" data-linenos="2 "></span></a>consumer: Unknown symbol provider_counter (err 0)
+</span></code></pre></div>
+<p>这就是符号依赖：<code>consumer</code> 需要 <code>provider</code> 导出的符号，但 <code>provider</code> 还没加载。</p>
+<h3 id="modprobe自动处理依赖">modprobe：自动处理依赖<a class="headerlink" href="#modprobe自动处理依赖" title="链接到此章节">&para;</a></h3>
+<p><code>insmod</code> 不会自动处理依赖，但 <code>modprobe</code> 会。</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1"></a><a href="#__codelineno-38-1"><span class="linenos" data-linenos="1 "></span></a>sudo<span class="w"> </span>rmmod<span class="w"> </span>consumer<span class="w"> </span>provider
+</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2"></a><a href="#__codelineno-38-2"><span class="linenos" data-linenos="2 "></span></a>sudo<span class="w"> </span>modprobe<span class="w"> </span>consumer
+</span></code></pre></div>
+<p><code>modprobe</code> 会自动分析依赖，先加载 <code>provider</code>，再加载 <code>consumer</code>。</p>
+<p>卸载时也类似：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1"></a><a href="#__codelineno-39-1"><span class="linenos" data-linenos="1 "></span></a>sudo<span class="w"> </span>modprobe<span class="w"> </span>-r<span class="w"> </span>consumer
+</span></code></pre></div>
+<p><code>modprobe -r</code> 会自动卸载不再被依赖的模块（比如 <code>provider</code>）。</p>
+<h3 id="依赖信息存储">依赖信息存储<a class="headerlink" href="#依赖信息存储" title="链接到此章节">&para;</a></h3>
+<p>模块的依赖信息存储在 <code>/lib/modules/$(uname -r)/modules.dep</code> 文件中：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1"></a><a href="#__codelineno-40-1"><span class="linenos" data-linenos="1 "></span></a>cat<span class="w"> </span>/lib/modules/<span class="k">$(</span>uname<span class="w"> </span>-r<span class="k">)</span>/modules.dep<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>provider
+</span></code></pre></div>
+<p>这个文件是在安装内核模块时由 <code>depmod -a</code> 命令生成的。你自己编译的模块不在系统目录里，所以 <code>modprobe</code> 可能找不到。解决方法是把模块 <code>.ko</code> 文件复制到 <code>/lib/modules/$(uname -r)/extra/</code>，然后运行 <code>sudo depmod -a</code>。</p>
+<h2 id="模块信息查看命令">模块信息查看命令<a class="headerlink" href="#模块信息查看命令" title="链接到此章节">&para;</a></h2>
+<p>我们总结一下常用的模块管理命令：</p>
+<h3 id="lsmod列出已加载模块">lsmod：列出已加载模块<a class="headerlink" href="#lsmod列出已加载模块" title="链接到此章节">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1"></a><a href="#__codelineno-41-1"><span class="linenos" data-linenos="1 "></span></a>lsmod
+</span></code></pre></div>
+<p>输出格式：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1"></a><a href="#__codelineno-42-1"><span class="linenos" data-linenos="1 "></span></a>Module                  Size  Used by
+</span><span id="__span-42-2"><a id="__codelineno-42-2" name="__codelineno-42-2"></a><a href="#__codelineno-42-2"><span class="linenos" data-linenos="2 "></span></a>hello                   16384  0
+</span><span id="__span-42-3"><a id="__codelineno-42-3" name="__codelineno-42-3"></a><a href="#__codelineno-42-3"><span class="linenos" data-linenos="3 "></span></a>provider                20480  1 consumer
+</span><span id="__span-42-4"><a id="__codelineno-42-4" name="__codelineno-42-4"></a><a href="#__codelineno-42-4"><span class="linenos" data-linenos="4 "></span></a>consumer                16384  0
+</span><span id="__span-42-5"><a id="__codelineno-42-5" name="__codelineno-42-5"></a><a href="#__codelineno-42-5"><span class="linenos" data-linenos="5 "></span></a>...
+</span></code></pre></div>
+<ul>
+<li><code>Module</code>：模块名</li>
+<li><code>Size</code>：模块占用内存大小（字节）</li>
+<li><code>Used by</code>：被引用次数，以及被哪些模块引用</li>
+</ul>
+<h3 id="modinfo查看模块信息">modinfo：查看模块信息<a class="headerlink" href="#modinfo查看模块信息" title="链接到此章节">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1"></a><a href="#__codelineno-43-1"><span class="linenos" data-linenos="1 "></span></a>modinfo<span class="w"> </span>hello.ko<span class="w">          </span><span class="c1"># 查看未加载的模块</span>
+</span><span id="__span-43-2"><a id="__codelineno-43-2" name="__codelineno-43-2"></a><a href="#__codelineno-43-2"><span class="linenos" data-linenos="2 "></span></a>modinfo<span class="w"> </span>hello<span class="w">             </span><span class="c1"># 查看已加载的模块</span>
+</span></code></pre></div>
+<h3 id="depmod生成模块依赖">depmod：生成模块依赖<a class="headerlink" href="#depmod生成模块依赖" title="链接到此章节">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1"></a><a href="#__codelineno-44-1"><span class="linenos" data-linenos="1 "></span></a>sudo<span class="w"> </span>depmod<span class="w"> </span>-a<span class="w">            </span><span class="c1"># 重新生成所有模块的依赖信息</span>
+</span><span id="__span-44-2"><a id="__codelineno-44-2" name="__codelineno-44-2"></a><a href="#__codelineno-44-2"><span class="linenos" data-linenos="2 "></span></a>sudo<span class="w"> </span>depmod<span class="w"> </span>-n<span class="w">            </span><span class="c1"># 只显示，不实际写入文件</span>
+</span></code></pre></div>
+<h3 id="modprobe智能加载卸载模块">modprobe：智能加载/卸载模块<a class="headerlink" href="#modprobe智能加载卸载模块" title="链接到此章节">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1"></a><a href="#__codelineno-45-1"><span class="linenos" data-linenos="1 "></span></a>sudo<span class="w"> </span>modprobe<span class="w"> </span>hello<span class="w">               </span><span class="c1"># 加载模块（自动处理依赖）</span>
+</span><span id="__span-45-2"><a id="__codelineno-45-2" name="__codelineno-45-2"></a><a href="#__codelineno-45-2"><span class="linenos" data-linenos="2 "></span></a>sudo<span class="w"> </span>modprobe<span class="w"> </span>-r<span class="w"> </span>hello<span class="w">            </span><span class="c1"># 卸载模块（自动卸载不再需要的依赖）</span>
+</span><span id="__span-45-3"><a id="__codelineno-45-3" name="__codelineno-45-3"></a><a href="#__codelineno-45-3"><span class="linenos" data-linenos="3 "></span></a>sudo<span class="w"> </span>modprobe<span class="w"> </span>hello<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">5</span><span class="w">       </span><span class="c1"># 加载并传递参数</span>
+</span></code></pre></div>
+<h3 id="insmodrmmod手动加载卸载">insmod/rmmod：手动加载/卸载<a class="headerlink" href="#insmodrmmod手动加载卸载" title="链接到此章节">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1"></a><a href="#__codelineno-46-1"><span class="linenos" data-linenos="1 "></span></a>sudo<span class="w"> </span>insmod<span class="w"> </span>hello.ko<span class="w">              </span><span class="c1"># 加载模块（不处理依赖）</span>
+</span><span id="__span-46-2"><a id="__codelineno-46-2" name="__codelineno-46-2"></a><a href="#__codelineno-46-2"><span class="linenos" data-linenos="2 "></span></a>sudo<span class="w"> </span>insmod<span class="w"> </span>hello.ko<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">5</span><span class="w">      </span><span class="c1"># 加载并传递参数</span>
+</span><span id="__span-46-3"><a id="__codelineno-46-3" name="__codelineno-46-3"></a><a href="#__codelineno-46-3"><span class="linenos" data-linenos="3 "></span></a>sudo<span class="w"> </span>rmmod<span class="w"> </span>hello<span class="w">                  </span><span class="c1"># 卸载模块</span>
+</span></code></pre></div>
+<h2 id="模块调试技巧">模块调试技巧<a class="headerlink" href="#模块调试技巧" title="链接到此章节">&para;</a></h2>
+<h3 id="查看内核日志">查看内核日志<a class="headerlink" href="#查看内核日志" title="链接到此章节">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-47-1"><a id="__codelineno-47-1" name="__codelineno-47-1"></a><a href="#__codelineno-47-1"><span class="linenos" data-linenos="1 "></span></a>sudo<span class="w"> </span>dmesg<span class="w">                        </span><span class="c1"># 查看所有日志</span>
+</span><span id="__span-47-2"><a id="__codelineno-47-2" name="__codelineno-47-2"></a><a href="#__codelineno-47-2"><span class="linenos" data-linenos="2 "></span></a>sudo<span class="w"> </span>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20<span class="w">             </span><span class="c1"># 查看最近 20 行</span>
+</span><span id="__span-47-3"><a id="__codelineno-47-3" name="__codelineno-47-3"></a><a href="#__codelineno-47-3"><span class="linenos" data-linenos="3 "></span></a>sudo<span class="w"> </span>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>hello<span class="w">        </span><span class="c1"># 过滤包含 hello 的日志</span>
+</span><span id="__span-47-4"><a id="__codelineno-47-4" name="__codelineno-47-4"></a><a href="#__codelineno-47-4"><span class="linenos" data-linenos="4 "></span></a>sudo<span class="w"> </span>dmesg<span class="w"> </span>-c<span class="w">                     </span><span class="c1"># 清空日志</span>
+</span></code></pre></div>
+<h3 id="实时监控日志">实时监控日志<a class="headerlink" href="#实时监控日志" title="链接到此章节">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-48-1"><a id="__codelineno-48-1" name="__codelineno-48-1"></a><a href="#__codelineno-48-1"><span class="linenos" data-linenos="1 "></span></a>sudo<span class="w"> </span>dmesg<span class="w"> </span>-w<span class="w">                     </span><span class="c1"># 持续监控新日志</span>
+</span><span id="__span-48-2"><a id="__codelineno-48-2" name="__codelineno-48-2"></a><a href="#__codelineno-48-2"><span class="linenos" data-linenos="2 "></span></a><span class="c1"># 或</span>
+</span><span id="__span-48-3"><a id="__codelineno-48-3" name="__codelineno-48-3"></a><a href="#__codelineno-48-3"><span class="linenos" data-linenos="3 "></span></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-kf<span class="w">               </span><span class="c1"># 使用 systemd journal</span>
+</span></code></pre></div>
+<h3 id="查看模块符号">查看模块符号<a class="headerlink" href="#查看模块符号" title="链接到此章节">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-49-1"><a id="__codelineno-49-1" name="__codelineno-49-1"></a><a href="#__codelineno-49-1"><span class="linenos" data-linenos="1 "></span></a>cat<span class="w"> </span>/proc/kallsyms<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>hello
+</span></code></pre></div>
+<h3 id="查看模块参数">查看模块参数<a class="headerlink" href="#查看模块参数" title="链接到此章节">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-50-1"><a id="__codelineno-50-1" name="__codelineno-50-1"></a><a href="#__codelineno-50-1"><span class="linenos" data-linenos="1 "></span></a>ls<span class="w"> </span>/sys/module/hello/parameters/
+</span><span id="__span-50-2"><a id="__codelineno-50-2" name="__codelineno-50-2"></a><a href="#__codelineno-50-2"><span class="linenos" data-linenos="2 "></span></a>cat<span class="w"> </span>/sys/module/hello/parameters/count
+</span></code></pre></div>
+<h3 id="动态调试dynamic-debug">动态调试（dynamic debug）<a class="headerlink" href="#动态调试dynamic-debug" title="链接到此章节">&para;</a></h3>
+<p>如果你的模块使用 <code>pr_debug()</code> 或 <code>dev_dbg()</code> 打印调试信息，可以通过 dynamic debug 动态控制：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-51-1"><a id="__codelineno-51-1" name="__codelineno-51-1"></a><a href="#__codelineno-51-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="c1"># 启用某个模块的所有调试信息</span>
+</span><span id="__span-51-2"><a id="__codelineno-51-2" name="__codelineno-51-2"></a><a href="#__codelineno-51-2"><span class="linenos" data-linenos=" 2 "></span></a>sudo<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;module hello +p&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/kernel/debug/dynamic_debug/control
+</span><span id="__span-51-3"><a id="__codelineno-51-3" name="__codelineno-51-3"></a><a href="#__codelineno-51-3"><span class="linenos" data-linenos=" 3 "></span></a>
+</span><span id="__span-51-4"><a id="__codelineno-51-4" name="__codelineno-51-4"></a><a href="#__codelineno-51-4"><span class="linenos" data-linenos=" 4 "></span></a><span class="c1"># 启用某个文件的所有调试信息</span>
+</span><span id="__span-51-5"><a id="__codelineno-51-5" name="__codelineno-51-5"></a><a href="#__codelineno-51-5"><span class="linenos" data-linenos=" 5 "></span></a>sudo<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;file hello.c +p&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/kernel/debug/dynamic_debug/control
+</span><span id="__span-51-6"><a id="__codelineno-51-6" name="__codelineno-51-6"></a><a href="#__codelineno-51-6"><span class="linenos" data-linenos=" 6 "></span></a>
+</span><span id="__span-51-7"><a id="__codelineno-51-7" name="__codelineno-51-7"></a><a href="#__codelineno-51-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="c1"># 启用某个函数的所有调试信息</span>
+</span><span id="__span-51-8"><a id="__codelineno-51-8" name="__codelineno-51-8"></a><a href="#__codelineno-51-8"><span class="linenos" data-linenos=" 8 "></span></a>sudo<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;func hello_init +p&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/kernel/debug/dynamic_debug/control
+</span><span id="__span-51-9"><a id="__codelineno-51-9" name="__codelineno-51-9"></a><a href="#__codelineno-51-9"><span class="linenos" data-linenos=" 9 "></span></a>
+</span><span id="__span-51-10"><a id="__codelineno-51-10" name="__codelineno-51-10"></a><a href="#__codelineno-51-10"><span class="linenos" data-linenos="10 "></span></a><span class="c1"># 查看当前调试设置</span>
+</span><span id="__span-51-11"><a id="__codelineno-51-11" name="__codelineno-51-11"></a><a href="#__codelineno-51-11"><span class="linenos" data-linenos="11 "></span></a>sudo<span class="w"> </span>cat<span class="w"> </span>/sys/kernel/debug/dynamic_debug/control<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>hello
+</span></code></pre></div>
+<h2 id="常见错误排查">常见错误排查<a class="headerlink" href="#常见错误排查" title="链接到此章节">&para;</a></h2>
+<h3 id="invalid-module-format">"Invalid module format"<a class="headerlink" href="#invalid-module-format" title="链接到此章节">&para;</a></h3>
+<p>这个错误通常表示模块和内核版本不匹配。可能是：
+- 编译模块时用的内核源码和运行中的内核版本不一致
+- 交叉编译时架构不匹配</p>
+<p>解决方法：
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-52-1"><a id="__codelineno-52-1" name="__codelineno-52-1"></a><a href="#__codelineno-52-1"><span class="linenos" data-linenos="1 "></span></a>uname<span class="w"> </span>-r<span class="w">                    </span><span class="c1"># 查看当前内核版本</span>
+</span><span id="__span-52-2"><a id="__codelineno-52-2" name="__codelineno-52-2"></a><a href="#__codelineno-52-2"><span class="linenos" data-linenos="2 "></span></a>modinfo<span class="w"> </span>hello.ko<span class="w">            </span><span class="c1"># 查看模块编译的内核版本（vermagic 字段）</span>
+</span></code></pre></div></p>
+<h3 id="unknown-symbol">"Unknown symbol"<a class="headerlink" href="#unknown-symbol" title="链接到此章节">&para;</a></h3>
+<p>表示模块依赖的符号不存在。可能是：
+- 依赖的模块没有加载
+- 依赖的符号没有被导出
+- 内核配置问题，该符号没有编入内核</p>
+<p>解决方法：
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-53-1"><a id="__codelineno-53-1" name="__codelineno-53-1"></a><a href="#__codelineno-53-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 查看缺失的符号名称</span>
+</span><span id="__span-53-2"><a id="__codelineno-53-2" name="__codelineno-53-2"></a><a href="#__codelineno-53-2"><span class="linenos" data-linenos="2 "></span></a>sudo<span class="w"> </span>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail
+</span><span id="__span-53-3"><a id="__codelineno-53-3" name="__codelineno-53-3"></a><a href="#__codelineno-53-3"><span class="linenos" data-linenos="3 "></span></a>
+</span><span id="__span-53-4"><a id="__codelineno-53-4" name="__codelineno-53-4"></a><a href="#__codelineno-53-4"><span class="linenos" data-linenos="4 "></span></a><span class="c1"># 搜索符号在哪个模块</span>
+</span><span id="__span-53-5"><a id="__codelineno-53-5" name="__codelineno-53-5"></a><a href="#__codelineno-53-5"><span class="linenos" data-linenos="5 "></span></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;missing_symbol_name&quot;</span><span class="w"> </span>/lib/modules/<span class="k">$(</span>uname<span class="w"> </span>-r<span class="k">)</span>/
+</span></code></pre></div></p>
+<h3 id="operation-not-permitted">"Operation not permitted"<a class="headerlink" href="#operation-not-permitted" title="链接到此章节">&para;</a></h3>
+<p>表示权限不足。确保使用 <code>sudo</code> 加载/卸载模块。</p>
+<h3 id="device-or-resource-busy">"Device or resource busy"<a class="headerlink" href="#device-or-resource-busy" title="链接到此章节">&para;</a></h3>
+<p>表示模块正被使用（Used by &gt; 0），无法卸载。</p>
+<p>先查看谁在使用：
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-54-1"><a id="__codelineno-54-1" name="__codelineno-54-1"></a><a href="#__codelineno-54-1"><span class="linenos" data-linenos="1 "></span></a>lsmod<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>module_name
+</span></code></pre></div></p>
+<p>先卸载依赖它的模块，再卸载它。</p>
+<h2 id="写在最后">写在最后<a class="headerlink" href="#写在最后" title="链接到此章节">&para;</a></h2>
+<p>到这里，你应该对内核模块有了全面的认识。从简单的 Hello World 到参数传递，从符号导出到依赖管理，这些知识是后续驱动开发的基础。</p>
+<p>内核模块是 Linux 内核"可扩展性"设计的体现。它让内核既能保持稳定性，又能灵活地支持新硬件和新功能。对于嵌入式开发者来说，模块更是必不可少的工具——它让我们能够快速迭代代码，而不需要每次都重新编译和烧录整个内核。</p>
+<p>下一章，我们将深入探讨设备树在内核中的使用。你会看到内核如何解析设备树、如何根据设备树信息匹配设备和驱动、如何调试设备树相关的问题。那是从"写代码"到"写驱动"的关键一步。</p>
+<p>准备好了吗？让我们继续。</p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年3月15日 20:07:11 CST">2026年3月15日 20:07:11</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年3月15日 20:07:11 CST">2026年3月15日 20:07:11</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+        
+          
+          <a href="../03_kernel_config/" class="md-footer__link md-footer__link--prev" aria-label="上一页: 从0开始配置Linux内核：menuconfig不是黑魔法，只是有点绕">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              <div class="md-ellipsis">
+                从0开始配置Linux内核：menuconfig不是黑魔法，只是有点绕
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../05_kernel_device_tree/" class="md-footer__link md-footer__link--next" aria-label="下一页: 设备树在内核中的使用：从硬件描述到驱动匹配">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                下一页
+              </span>
+              <div class="md-ellipsis">
+                设备树在内核中的使用：从硬件描述到驱动匹配
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 Charliechen - 保留所有权利
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/Awesome-Embedded-Learning-Studio" target="_blank" rel="noopener" title="GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="mailto:725610365@qq.com" target="_blank" rel="noopener" title="发送邮件" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M536.4-26.3c9.8-3.5 20.6-1 28 6.3s9.8 18.2 6.3 28l-178 496.9c-5 13.9-18.1 23.1-32.8 23.1-14.2 0-27-8.6-32.3-21.7l-64.2-158c-4.5-11-2.5-23.6 5.2-32.6l94.5-112.4c5.1-6.1 4.7-15-.9-20.6s-14.6-6-20.6-.9l-112.4 94.3c-9.1 7.6-21.6 9.6-32.6 5.2L38.1 216.8c-13.1-5.3-21.7-18.1-21.7-32.3 0-14.7 9.2-27.8 23.1-32.8z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.path", "navigation.indexes", "navigation.tabs", "navigation.tabs.sticky", "navigation.prune", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.select", "content.code.annotate", "content.tabs.link", "content.tooltips", "content.action.edit", "content.action.view"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

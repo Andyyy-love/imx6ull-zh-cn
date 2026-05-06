@@ -1,0 +1,5031 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="IMX-Forge，专注于IMX6ULL的教程文档网站">
+      
+      
+        <meta name="author" content="Charliechen114514">
+      
+      
+        <link rel="canonical" href="https://awesome-embedded-learning-studio.github.io/imx-forge/scripts/lib/logging.sh/">
+      
+      
+        <link rel="prev" href="../driver_buildlib.sh/">
+      
+      
+        <link rel="next" href="../bash/lib_common.sh/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../Awesome-Embedded.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>logging.sh - 日志工具库详解 - IMX-Forge的教程文档</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#loggingsh---日志工具库详解" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../.." title="IMX-Forge的教程文档" class="md-header__button md-logo" aria-label="IMX-Forge的教程文档" data-md-component="logo">
+      
+  <img src="../../../Awesome-Embedded.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            IMX-Forge的教程文档
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              logging.sh - 日志工具库详解
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换至暗色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换至暗色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="切换至亮色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换至亮色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  欢迎来到 IMX-Forge 教程文档
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../QUICK_START/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  IMX-Forge 快速入门指南
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../architecture/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Architecture
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../ci/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Ci
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../development/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../logo/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Logo
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../modules/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Modules
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Scripts
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../todo/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Todo
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../tutorial/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tutorial
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="IMX-Forge的教程文档" class="md-nav__button md-logo" aria-label="IMX-Forge的教程文档" data-md-component="logo">
+      
+  <img src="../../../Awesome-Embedded.png" alt="logo">
+
+    </a>
+    IMX-Forge的教程文档
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    欢迎来到 IMX-Forge 教程文档
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../QUICK_START/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IMX-Forge 快速入门指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../architecture/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../ci/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ci
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../development/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../logo/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logo
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../modules/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scripts
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Scripts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../apply_patches.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    apply_patches.sh 说明文档
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../manual_mount_nfs.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    manual_mount_nfs.sh - 手动 NFS 挂载辅助脚本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../merge_overlay_rootfs.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    merge_overlay_rootfs.sh - RootFS叠加层合并脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../patch_maker.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    patch_maker.sh - 补丁生成工具详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-all.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    release-all.sh - 迷你 Linux 发行版统一构建脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../varified_rootfs_ok.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    varified_rootfs_ok.sh - RootFS 验证和补全脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_8" id="__nav_8_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build helper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Build helper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../build_helper/build-busybox.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    build-busybox.sh - BusyBox构建脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../build_helper/build-linux.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    build-linux.sh - Linux内核构建脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../build_helper/build-mainline-linux.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    build-mainline-linux.sh - 主线Linux内核构建脚本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../build_helper/build-uboot.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    build-uboot.sh - U-Boot构建脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_9" id="__nav_8_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Document
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Document
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../document/mkdocs_dev.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    mkdocs_dev.sh - MkDocs 文档开发环境管理器
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../driver_helper/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Driver helper
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8_10" id="__nav_8_10_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Driver helper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    驱动开发基建系统 - 架构设计
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/best_practices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    最佳实践指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/build_driver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    build_driver.sh - 驱动构建脚本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/build_driver.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    build_driver.sh - 驱动构建统一入口脚本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    driver_helper.conf - 配置文件说明
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/deploy_driver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    deploy_driver.sh - 驱动部署脚本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/deploy_driver.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    deploy_driver.sh - 驱动部署脚本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    驱动开发基建系统 - 系统总览
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/review_driver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    review_driver.sh - 驱动审查脚本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/review_driver.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    review_driver.sh - 驱动构建产物审查脚本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/show_device_tree/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    show_device_tree.sh - 设备树查看脚本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/show_device_tree.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    show_device_tree.sh - 设备树节点美化打印脚本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/template_creator.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    template_creator.sh - 交互式驱动创建脚本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    错误排查指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../driver_helper/workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    驱动开发工作流程指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_11" id="__nav_8_11_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/example_driver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Example Driver 验证指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_12" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_12" id="__nav_8_12_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Init
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Init
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../init/env-init.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    env-init.sh - 主机依赖检查脚本
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_13" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_8_13" id="__nav_8_13_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lib
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_13_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Lib
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../driver_buildlib/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    driver_buildlib.sh - 核心构建库
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../driver_buildlib.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    driver_buildlib.sh - 驱动构建核心库
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    logging.sh - 日志工具库详解
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    logging.sh - 日志工具库详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#脚本概述" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        脚本概述
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="脚本概述">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#核心功能" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        核心功能
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#设计理念" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        设计理念
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#依赖关系" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        依赖关系
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#使用方法" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        使用方法
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="使用方法">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#基本用法" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        基本用法
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#后备模式" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        后备模式
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-参考" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API 参考
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="API 参考">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#颜色常量" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        颜色常量
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="颜色常量">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#导出的颜色变量" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        导出的颜色变量
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#向后兼容的别名" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        向后兼容的别名
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#日志函数" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        日志函数
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="日志函数">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#log_info" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        log_info()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log_error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        log_error()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log_warn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        log_warn()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log_debug" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        log_debug()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log_cmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        log_cmd()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#设计决策" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        设计决策
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="设计决策">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#为什么使用-ansi-转义序列" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么使用 ANSI 转义序列
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#为什么错误信息输出到-stderr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么错误信息输出到 stderr
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#为什么导出颜色变量" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么导出颜色变量
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#为什么调试信息默认关闭" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么调试信息默认关闭
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#颜色设计" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        颜色设计
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="颜色设计">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#颜色选择理由" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        颜色选择理由
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#颜色对比度" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        颜色对比度
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#扩展和定制" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        扩展和定制
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="扩展和定制">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#添加新的日志级别" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        添加新的日志级别
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#添加时间戳" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        添加时间戳
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#添加文件输出" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        添加文件输出
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#格式化输出" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        格式化输出
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#最佳实践" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        最佳实践
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="最佳实践">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#何时使用-log_info" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        何时使用 log_info()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#何时使用-log_error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        何时使用 log_error()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#何时使用-log_warn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        何时使用 log_warn()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#何时使用-log_debug" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        何时使用 log_debug()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#何时使用-log_cmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        何时使用 log_cmd()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#常见问题" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        常见问题
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="常见问题">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q-为什么我的终端没有颜色" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: 为什么我的终端没有颜色？
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-如何完全禁用颜色" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: 如何完全禁用颜色？
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-为什么-log_error-输出到-stderr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: 为什么 log_error() 输出到 stderr？
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-可以在非脚本环境中使用吗" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: 可以在非脚本环境中使用吗？
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#相关文档" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        相关文档
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../bash/lib_common.sh/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bash
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_14" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_14" id="__nav_8_14_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logo helper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_14">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Logo helper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../logo_helper/logo_helper.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    logo_helper.sh - Logo转换工具详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_15" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_15" id="__nav_8_15_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release builder
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_15_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_15">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Release builder
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release_builder/build_release_busybox.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    build_release_busybox.sh - BusyBox发布构建脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release_builder/build_release_linux.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    build_release_linux.sh - Linux内核发布构建脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release_builder/build_release_uboot.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    build_release_uboot.sh - U-Boot发布构建脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_16" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_16" id="__nav_8_16_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Server helper
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_16_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_16">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Server helper
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../server_helper/copy_to_tftp.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    copy_to_tftp.sh - TFTP文件复制脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_17" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_17" id="__nav_8_17_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Third party install
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_17_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_17">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Third party install
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../third_party_install/install_firmwares.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    install_firmwares.sh - i.MX 固件安装脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../third_party_install/install_fonts.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    install_fonts.sh - 字体下载和安装脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../third_party_install/install_libc.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    install_libc.sh - libc 库安装脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../third_party_install/install_qt_with_compile.sh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    install_qt_with_compile.sh - Qt6 编译安装脚本详解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../third_party_install/config/qt/qt_fonts_env.sh/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Config
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../todo/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Todo
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../tutorial/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#脚本概述" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        脚本概述
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="脚本概述">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#核心功能" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        核心功能
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#设计理念" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        设计理念
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#依赖关系" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        依赖关系
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#使用方法" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        使用方法
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="使用方法">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#基本用法" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        基本用法
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#后备模式" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        后备模式
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-参考" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API 参考
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="API 参考">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#颜色常量" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        颜色常量
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="颜色常量">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#导出的颜色变量" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        导出的颜色变量
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#向后兼容的别名" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        向后兼容的别名
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#日志函数" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        日志函数
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="日志函数">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#log_info" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        log_info()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log_error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        log_error()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log_warn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        log_warn()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log_debug" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        log_debug()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log_cmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        log_cmd()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#设计决策" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        设计决策
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="设计决策">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#为什么使用-ansi-转义序列" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么使用 ANSI 转义序列
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#为什么错误信息输出到-stderr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么错误信息输出到 stderr
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#为什么导出颜色变量" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么导出颜色变量
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#为什么调试信息默认关闭" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么调试信息默认关闭
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#颜色设计" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        颜色设计
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="颜色设计">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#颜色选择理由" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        颜色选择理由
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#颜色对比度" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        颜色对比度
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#扩展和定制" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        扩展和定制
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="扩展和定制">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#添加新的日志级别" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        添加新的日志级别
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#添加时间戳" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        添加时间戳
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#添加文件输出" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        添加文件输出
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#格式化输出" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        格式化输出
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#最佳实践" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        最佳实践
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="最佳实践">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#何时使用-log_info" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        何时使用 log_info()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#何时使用-log_error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        何时使用 log_error()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#何时使用-log_warn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        何时使用 log_warn()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#何时使用-log_debug" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        何时使用 log_debug()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#何时使用-log_cmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        何时使用 log_cmd()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#常见问题" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        常见问题
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="常见问题">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q-为什么我的终端没有颜色" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: 为什么我的终端没有颜色？
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-如何完全禁用颜色" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: 如何完全禁用颜色？
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-为什么-log_error-输出到-stderr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: 为什么 log_error() 输出到 stderr？
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-可以在非脚本环境中使用吗" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: 可以在非脚本环境中使用吗？
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#相关文档" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        相关文档
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="导航栏" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    欢迎来到 IMX-Forge 教程文档
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Scripts
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../driver_buildlib/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Lib
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="loggingsh---日志工具库详解">logging.sh - 日志工具库详解<a class="headerlink" href="#loggingsh---日志工具库详解" title="链接到此章节">&para;</a></h1>
+<h2 id="脚本概述">脚本概述<a class="headerlink" href="#脚本概述" title="链接到此章节">&para;</a></h2>
+<p><code>logging.sh</code> 是 IMX-Forge 项目的共享日志工具库，为所有构建脚本提供统一的日志输出格式和颜色支持。它是一个轻量级的日志抽象层，使脚本输出更加一致和易读。</p>
+<h3 id="核心功能">核心功能<a class="headerlink" href="#核心功能" title="链接到此章节">&para;</a></h3>
+<ul>
+<li><strong>彩色输出</strong>：支持不同日志级别的颜色显示</li>
+<li><strong>统一格式</strong>：所有脚本使用相同的日志格式</li>
+<li><strong>调试支持</strong>：可选的调试日志级别</li>
+<li><strong>向后兼容</strong>：提供带 <code>LOG_</code> 前缀和不带前缀的两种颜色变量</li>
+<li><strong>命令记录</strong>：专门用于记录执行的命令</li>
+</ul>
+<h3 id="设计理念">设计理念<a class="headerlink" href="#设计理念" title="链接到此章节">&para;</a></h3>
+<p>这个库遵循"简单即美"的设计原则。它只做一件事：格式化日志输出。不涉及日志文件、日志轮转等复杂功能，保持脚本轻量和易于理解。</p>
+<p><strong>为什么需要统一的日志库</strong>：</p>
+<ol>
+<li><strong>一致性</strong>：所有脚本的输出风格统一</li>
+<li><strong>可读性</strong>：颜色和格式让输出更易读</li>
+<li><strong>可维护性</strong>：修改日志格式只需改一个文件</li>
+<li><strong>可复用</strong>：所有构建脚本都可以使用</li>
+</ol>
+<h3 id="依赖关系">依赖关系<a class="headerlink" href="#依赖关系" title="链接到此章节">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1"></a><a href="#__codelineno-0-1"><span class="linenos" data-linenos="1 "></span></a>logging.sh
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2"></a><a href="#__codelineno-0-2"><span class="linenos" data-linenos="2 "></span></a>    └─ (无依赖，完全独立)
+</span></code></pre></div>
+<p>使用方：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1"></a><a href="#__codelineno-1-1"><span class="linenos" data-linenos="1 "></span></a>├─ build-linux.sh
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2"></a><a href="#__codelineno-1-2"><span class="linenos" data-linenos="2 "></span></a>├─ build-uboot.sh
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3"></a><a href="#__codelineno-1-3"><span class="linenos" data-linenos="3 "></span></a>├─ build-busybox.sh
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4"></a><a href="#__codelineno-1-4"><span class="linenos" data-linenos="4 "></span></a>└─ ... (其他脚本)
+</span></code></pre></div>
+<h2 id="使用方法">使用方法<a class="headerlink" href="#使用方法" title="链接到此章节">&para;</a></h2>
+<h3 id="基本用法">基本用法<a class="headerlink" href="#基本用法" title="链接到此章节">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1"></a><a href="#__codelineno-2-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="ch">#!/bin/bash</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2"></a><a href="#__codelineno-2-2"><span class="linenos" data-linenos=" 2 "></span></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3"></a><a href="#__codelineno-2-3"><span class="linenos" data-linenos=" 3 "></span></a><span class="c1"># 获取脚本目录</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4"></a><a href="#__codelineno-2-4"><span class="linenos" data-linenos=" 4 "></span></a><span class="nv">SCRIPT_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>dirname<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="k">)</span><span class="s2">&quot;</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5"></a><a href="#__codelineno-2-5"><span class="linenos" data-linenos=" 5 "></span></a><span class="nv">SCRIPT_LIB_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/../lib&quot;</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6"></a><a href="#__codelineno-2-6"><span class="linenos" data-linenos=" 6 "></span></a>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7"></a><a href="#__codelineno-2-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="c1"># 加载日志库</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8"></a><a href="#__codelineno-2-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_LIB_DIR</span><span class="si">}</span><span class="s2">/logging.sh&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9"></a><a href="#__codelineno-2-9"><span class="linenos" data-linenos=" 9 "></span></a><span class="w">    </span><span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_LIB_DIR</span><span class="si">}</span><span class="s2">/logging.sh&quot;</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10"></a><a href="#__codelineno-2-10"><span class="linenos" data-linenos="10 "></span></a><span class="k">else</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11"></a><a href="#__codelineno-2-11"><span class="linenos" data-linenos="11 "></span></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Error: logging.sh not found&quot;</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12"></a><a href="#__codelineno-2-12"><span class="linenos" data-linenos="12 "></span></a><span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13"></a><a href="#__codelineno-2-13"><span class="linenos" data-linenos="13 "></span></a><span class="k">fi</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14"></a><a href="#__codelineno-2-14"><span class="linenos" data-linenos="14 "></span></a>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15"></a><a href="#__codelineno-2-15"><span class="linenos" data-linenos="15 "></span></a><span class="c1"># 使用日志函数</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16"></a><a href="#__codelineno-2-16"><span class="linenos" data-linenos="16 "></span></a>log_info<span class="w"> </span><span class="s2">&quot;Starting build process...&quot;</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17"></a><a href="#__codelineno-2-17"><span class="linenos" data-linenos="17 "></span></a>log_warn<span class="w"> </span><span class="s2">&quot;This is a warning&quot;</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18"></a><a href="#__codelineno-2-18"><span class="linenos" data-linenos="18 "></span></a>log_error<span class="w"> </span><span class="s2">&quot;This is an error&quot;</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19"></a><a href="#__codelineno-2-19"><span class="linenos" data-linenos="19 "></span></a>log_debug<span class="w"> </span><span class="s2">&quot;This is debug info&quot;</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20"></a><a href="#__codelineno-2-20"><span class="linenos" data-linenos="20 "></span></a>log_cmd<span class="w"> </span><span class="s2">&quot;make -j8&quot;</span>
+</span></code></pre></div>
+<h3 id="后备模式">后备模式<a class="headerlink" href="#后备模式" title="链接到此章节">&para;</a></h3>
+<p>如果 <code>logging.sh</code> 不可用，构建脚本会使用内嵌的备用定义：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1"></a><a href="#__codelineno-3-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_LIB_DIR</span><span class="si">}</span><span class="s2">/logging.sh&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2"></a><a href="#__codelineno-3-2"><span class="linenos" data-linenos=" 2 "></span></a><span class="w">    </span><span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_LIB_DIR</span><span class="si">}</span><span class="s2">/logging.sh&quot;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3"></a><a href="#__codelineno-3-3"><span class="linenos" data-linenos=" 3 "></span></a><span class="k">else</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4"></a><a href="#__codelineno-3-4"><span class="linenos" data-linenos=" 4 "></span></a><span class="w">    </span><span class="c1"># 后备定义</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5"></a><a href="#__codelineno-3-5"><span class="linenos" data-linenos=" 5 "></span></a><span class="w">    </span><span class="nv">RED</span><span class="o">=</span><span class="s1">&#39;\033[0;31m&#39;</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6"></a><a href="#__codelineno-3-6"><span class="linenos" data-linenos=" 6 "></span></a><span class="w">    </span><span class="nv">GREEN</span><span class="o">=</span><span class="s1">&#39;\033[0;32m&#39;</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7"></a><a href="#__codelineno-3-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="w">    </span><span class="nv">YELLOW</span><span class="o">=</span><span class="s1">&#39;\033[1;33m&#39;</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8"></a><a href="#__codelineno-3-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="w">    </span><span class="nv">BLUE</span><span class="o">=</span><span class="s1">&#39;\033[0;34m&#39;</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9"></a><a href="#__codelineno-3-9"><span class="linenos" data-linenos=" 9 "></span></a><span class="w">    </span><span class="nv">NC</span><span class="o">=</span><span class="s1">&#39;\033[0m&#39;</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10"></a><a href="#__codelineno-3-10"><span class="linenos" data-linenos="10 "></span></a><span class="w">    </span>log_info<span class="o">()</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">GREEN</span><span class="si">}</span><span class="s2">[INFO]</span><span class="si">${</span><span class="nv">NC</span><span class="si">}</span><span class="s2"> </span><span class="nv">$1</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11"></a><a href="#__codelineno-3-11"><span class="linenos" data-linenos="11 "></span></a><span class="w">    </span>log_error<span class="o">()</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">RED</span><span class="si">}</span><span class="s2">[ERROR]</span><span class="si">${</span><span class="nv">NC</span><span class="si">}</span><span class="s2"> </span><span class="nv">$1</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12"></a><a href="#__codelineno-3-12"><span class="linenos" data-linenos="12 "></span></a><span class="w">    </span>log_warn<span class="o">()</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">YELLOW</span><span class="si">}</span><span class="s2">[WARN]</span><span class="si">${</span><span class="nv">NC</span><span class="si">}</span><span class="s2"> </span><span class="nv">$1</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13"></a><a href="#__codelineno-3-13"><span class="linenos" data-linenos="13 "></span></a><span class="w">    </span>log_debug<span class="o">()</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DEBUG</span><span class="k">:-</span><span class="nv">0</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BLUE</span><span class="si">}</span><span class="s2">[DEBUG]</span><span class="si">${</span><span class="nv">NC</span><span class="si">}</span><span class="s2"> </span><span class="nv">$1</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">fi</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14"></a><a href="#__codelineno-3-14"><span class="linenos" data-linenos="14 "></span></a><span class="w">    </span>log_cmd<span class="o">()</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">YELLOW</span><span class="si">}</span><span class="s2">[CMD]</span><span class="si">${</span><span class="nv">NC</span><span class="si">}</span><span class="s2"> </span><span class="nv">$1</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15"></a><a href="#__codelineno-3-15"><span class="linenos" data-linenos="15 "></span></a><span class="k">fi</span>
+</span></code></pre></div>
+<p>这种设计确保即使日志库缺失，脚本也能正常工作。</p>
+<h2 id="api-参考">API 参考<a class="headerlink" href="#api-参考" title="链接到此章节">&para;</a></h2>
+<h3 id="颜色常量">颜色常量<a class="headerlink" href="#颜色常量" title="链接到此章节">&para;</a></h3>
+<h4 id="导出的颜色变量">导出的颜色变量<a class="headerlink" href="#导出的颜色变量" title="链接到此章节">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>变量名</th>
+<th>ANSI 转义序列</th>
+<th>颜色</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LOG_RED</code></td>
+<td><code>\033[0;31m</code></td>
+<td>红色</td>
+<td>错误信息</td>
+</tr>
+<tr>
+<td><code>LOG_GREEN</code></td>
+<td><code>\033[0;32m</code></td>
+<td>绿色</td>
+<td>一般信息</td>
+</tr>
+<tr>
+<td><code>LOG_YELLOW</code></td>
+<td><code>\033[1;33m</code></td>
+<td>黄色</td>
+<td>警告信息</td>
+</tr>
+<tr>
+<td><code>LOG_BLUE</code></td>
+<td><code>\033[0;34m</code></td>
+<td>蓝色</td>
+<td>调试信息</td>
+</tr>
+<tr>
+<td><code>LOG_NC</code></td>
+<td><code>\033[0m</code></td>
+<td>无颜色</td>
+<td>重置颜色</td>
+</tr>
+</tbody>
+</table>
+<h4 id="向后兼容的别名">向后兼容的别名<a class="headerlink" href="#向后兼容的别名" title="链接到此章节">&para;</a></h4>
+<p>为了向后兼容，同时导出不带 <code>LOG_</code> 前缀的版本：</p>
+<table>
+<thead>
+<tr>
+<th>别名</th>
+<th>指向</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RED</code></td>
+<td><code>LOG_RED</code></td>
+</tr>
+<tr>
+<td><code>GREEN</code></td>
+<td><code>LOG_GREEN</code></td>
+</tr>
+<tr>
+<td><code>YELLOW</code></td>
+<td><code>LOG_YELLOW</code></td>
+</tr>
+<tr>
+<td><code>BLUE</code></td>
+<td><code>LOG_BLUE</code></td>
+</tr>
+<tr>
+<td><code>NC</code></td>
+<td><code>LOG_NC</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>为什么需要两套变量</strong>：</p>
+<ul>
+<li><code>LOG_*</code> 前缀：避免与脚本中可能定义的同名变量冲突</li>
+<li>无前缀版本：保持与旧代码的兼容性</li>
+</ul>
+<h3 id="日志函数">日志函数<a class="headerlink" href="#日志函数" title="链接到此章节">&para;</a></h3>
+<h4 id="log_info">log_info()<a class="headerlink" href="#log_info" title="链接到此章节">&para;</a></h4>
+<p><strong>作用</strong>：输出一般信息（绿色）。</p>
+<p><strong>语法</strong>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1"></a><a href="#__codelineno-4-1"><span class="linenos" data-linenos="1 "></span></a>log_info<span class="w"> </span><span class="s2">&quot;message&quot;</span>
+</span></code></pre></div>
+<p><strong>参数</strong>：</p>
+<ul>
+<li><code>$1</code>：要输出的消息字符串</li>
+</ul>
+<p><strong>输出格式</strong>：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1"></a><a href="#__codelineno-5-1"><span class="linenos" data-linenos="1 "></span></a>[INFO] message
+</span></code></pre></div>
+<p><strong>颜色</strong>：绿色</p>
+<p><strong>使用场景</strong>：</p>
+<ul>
+<li>构建步骤的开始和完成</li>
+<li>检查通过的信息</li>
+<li>一般性进度信息</li>
+</ul>
+<p><strong>示例</strong>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1"></a><a href="#__codelineno-6-1"><span class="linenos" data-linenos="1 "></span></a>log_info<span class="w"> </span><span class="s2">&quot;Starting U-Boot build...&quot;</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2"></a><a href="#__codelineno-6-2"><span class="linenos" data-linenos="2 "></span></a>log_info<span class="w"> </span><span class="s2">&quot;All dependencies found&quot;</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3"></a><a href="#__codelineno-6-3"><span class="linenos" data-linenos="3 "></span></a>log_info<span class="w"> </span><span class="s2">&quot;Build completed successfully&quot;</span>
+</span></code></pre></div>
+<h4 id="log_error">log_error()<a class="headerlink" href="#log_error" title="链接到此章节">&para;</a></h4>
+<p><strong>作用</strong>：输出错误信息（红色），重定向到 stderr。</p>
+<p><strong>语法</strong>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1"></a><a href="#__codelineno-7-1"><span class="linenos" data-linenos="1 "></span></a>log_error<span class="w"> </span><span class="s2">&quot;message&quot;</span>
+</span></code></pre></div>
+<p><strong>参数</strong>：</p>
+<ul>
+<li><code>$1</code>：要输出的错误消息字符串</li>
+</ul>
+<p><strong>输出格式</strong>：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1"></a><a href="#__codelineno-8-1"><span class="linenos" data-linenos="1 "></span></a>[ERROR] message
+</span></code></pre></div>
+<p><strong>颜色</strong>：红色</p>
+<p><strong>输出流</strong>：stderr (<code>&gt;&amp;2</code>)</p>
+<p><strong>使用场景</strong>：</p>
+<ul>
+<li>致命错误</li>
+<li>检查失败</li>
+<li>构建失败</li>
+</ul>
+<p><strong>示例</strong>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1"></a><a href="#__codelineno-9-1"><span class="linenos" data-linenos="1 "></span></a>log_error<span class="w"> </span><span class="s2">&quot;Cross compiler not found&quot;</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2"></a><a href="#__codelineno-9-2"><span class="linenos" data-linenos="2 "></span></a>log_error<span class="w"> </span><span class="s2">&quot;Defconfig file not found&quot;</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3"></a><a href="#__codelineno-9-3"><span class="linenos" data-linenos="3 "></span></a>log_error<span class="w"> </span><span class="s2">&quot;Build failed&quot;</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4"></a><a href="#__codelineno-9-4"><span class="linenos" data-linenos="4 "></span></a>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5"></a><a href="#__codelineno-9-5"><span class="linenos" data-linenos="5 "></span></a><span class="c1"># 通常后跟 exit 1</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6"></a><a href="#__codelineno-9-6"><span class="linenos" data-linenos="6 "></span></a>log_error<span class="w"> </span><span class="s2">&quot;Cannot continue&quot;</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7"></a><a href="#__codelineno-9-7"><span class="linenos" data-linenos="7 "></span></a><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+</span></code></pre></div>
+<p><strong>为什么重定向到 stderr</strong>：</p>
+<p>按照 Unix 惯例，正常输出到 stdout，错误信息到 stderr。这样用户可以分别捕获：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1"></a><a href="#__codelineno-10-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 只捕获正常输出</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2"></a><a href="#__codelineno-10-2"><span class="linenos" data-linenos="2 "></span></a>./script.sh<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3"></a><a href="#__codelineno-10-3"><span class="linenos" data-linenos="3 "></span></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4"></a><a href="#__codelineno-10-4"><span class="linenos" data-linenos="4 "></span></a><span class="c1"># 分别保存</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5"></a><a href="#__codelineno-10-5"><span class="linenos" data-linenos="5 "></span></a>./script.sh<span class="w"> </span>&gt;<span class="w"> </span>output.log<span class="w"> </span><span class="m">2</span>&gt;<span class="w"> </span>error.log
+</span></code></pre></div>
+<h4 id="log_warn">log_warn()<a class="headerlink" href="#log_warn" title="链接到此章节">&para;</a></h4>
+<p><strong>作用</strong>：输出警告信息（黄色）。</p>
+<p><strong>语法</strong>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1"></a><a href="#__codelineno-11-1"><span class="linenos" data-linenos="1 "></span></a>log_warn<span class="w"> </span><span class="s2">&quot;message&quot;</span>
+</span></code></pre></div>
+<p><strong>参数</strong>：</p>
+<ul>
+<li><code>$1</code>：要输出的警告消息字符串</li>
+</ul>
+<p><strong>输出格式</strong>：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1"></a><a href="#__codelineno-12-1"><span class="linenos" data-linenos="1 "></span></a>[WARN] message
+</span></code></pre></div>
+<p><strong>颜色</strong>：黄色</p>
+<p><strong>使用场景</strong>：</p>
+<ul>
+<li>非致命问题</li>
+<li>可选依赖缺失</li>
+<li>配置建议</li>
+</ul>
+<p><strong>示例</strong>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1"></a><a href="#__codelineno-13-1"><span class="linenos" data-linenos="1 "></span></a>log_warn<span class="w"> </span><span class="s2">&quot;Optional package not found: ccache&quot;</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2"></a><a href="#__codelineno-13-2"><span class="linenos" data-linenos="2 "></span></a>log_warn<span class="w"> </span><span class="s2">&quot;Using existing configuration&quot;</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3"></a><a href="#__codelineno-13-3"><span class="linenos" data-linenos="3 "></span></a>log_warn<span class="w"> </span><span class="s2">&quot;This operation may take a while&quot;</span>
+</span></code></pre></div>
+<h4 id="log_debug">log_debug()<a class="headerlink" href="#log_debug" title="链接到此章节">&para;</a></h4>
+<p><strong>作用</strong>：输出调试信息（蓝色），仅在启用调试模式时输出。</p>
+<p><strong>语法</strong>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1"></a><a href="#__codelineno-14-1"><span class="linenos" data-linenos="1 "></span></a>log_debug<span class="w"> </span><span class="s2">&quot;message&quot;</span>
+</span></code></pre></div>
+<p><strong>参数</strong>：</p>
+<ul>
+<li><code>$1</code>：要输出的调试消息字符串</li>
+</ul>
+<p><strong>输出格式</strong>：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1"></a><a href="#__codelineno-15-1"><span class="linenos" data-linenos="1 "></span></a>[DEBUG] message
+</span></code></pre></div>
+<p><strong>颜色</strong>：蓝色</p>
+<p><strong>触发条件</strong>：<code>DEBUG</code> 环境变量设置为 <code>"1"</code></p>
+<p><strong>使用场景</strong>：</p>
+<ul>
+<li>详细的执行流程</li>
+<li>变量值输出</li>
+<li>跟踪复杂逻辑</li>
+</ul>
+<p><strong>示例</strong>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1"></a><a href="#__codelineno-16-1"><span class="linenos" data-linenos="1 "></span></a>log_debug<span class="w"> </span><span class="s2">&quot;Configuration file: </span><span class="si">${</span><span class="nv">CONFIG_FILE</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2"></a><a href="#__codelineno-16-2"><span class="linenos" data-linenos="2 "></span></a>log_debug<span class="w"> </span><span class="s2">&quot;Toolchain version: </span><span class="si">${</span><span class="nv">GCC_VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3"></a><a href="#__codelineno-16-3"><span class="linenos" data-linenos="3 "></span></a>log_debug<span class="w"> </span><span class="s2">&quot;Skipping distclean (fast build mode)&quot;</span>
+</span></code></pre></div>
+<p><strong>启用调试模式</strong>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1"></a><a href="#__codelineno-17-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 方法1：环境变量</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2"></a><a href="#__codelineno-17-2"><span class="linenos" data-linenos="2 "></span></a><span class="nv">DEBUG</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>./scripts/build_helper/build-linux.sh
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3"></a><a href="#__codelineno-17-3"><span class="linenos" data-linenos="3 "></span></a>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4"></a><a href="#__codelineno-17-4"><span class="linenos" data-linenos="4 "></span></a><span class="c1"># 方法2：在脚本中设置</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5"></a><a href="#__codelineno-17-5"><span class="linenos" data-linenos="5 "></span></a><span class="nb">export</span><span class="w"> </span><span class="nv">DEBUG</span><span class="o">=</span><span class="m">1</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6"></a><a href="#__codelineno-17-6"><span class="linenos" data-linenos="6 "></span></a>./scripts/build_helper/build-linux.sh
+</span></code></pre></div>
+<h4 id="log_cmd">log_cmd()<a class="headerlink" href="#log_cmd" title="链接到此章节">&para;</a></h4>
+<p><strong>作用</strong>：输出将要执行的命令（黄色）。</p>
+<p><strong>语法</strong>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1"></a><a href="#__codelineno-18-1"><span class="linenos" data-linenos="1 "></span></a>log_cmd<span class="w"> </span><span class="s2">&quot;command&quot;</span>
+</span></code></pre></div>
+<p><strong>参数</strong>：</p>
+<ul>
+<li><code>$1</code>：要显示的命令字符串</li>
+</ul>
+<p><strong>输出格式</strong>：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1"></a><a href="#__codelineno-19-1"><span class="linenos" data-linenos="1 "></span></a>[CMD] command
+</span></code></pre></div>
+<p><strong>颜色</strong>：黄色</p>
+<p><strong>使用场景</strong>：</p>
+<ul>
+<li>显示即将执行的 make 命令</li>
+<li>显示复杂的命令行</li>
+<li>调试构建问题</li>
+</ul>
+<p><strong>示例</strong>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1"></a><a href="#__codelineno-20-1"><span class="linenos" data-linenos="1 "></span></a><span class="nb">local</span><span class="w"> </span><span class="nv">cmd</span><span class="o">=</span><span class="s2">&quot;make -C </span><span class="si">${</span><span class="nv">SRC_DIR</span><span class="si">}</span><span class="s2"> ARCH=arm -j8&quot;</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2"></a><a href="#__codelineno-20-2"><span class="linenos" data-linenos="2 "></span></a>log_cmd<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">cmd</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3"></a><a href="#__codelineno-20-3"><span class="linenos" data-linenos="3 "></span></a><span class="si">${</span><span class="nv">cmd</span><span class="si">}</span>
+</span></code></pre></div>
+<p><strong>设计考虑</strong>：</p>
+<p>为什么需要单独的 <code>log_cmd()</code> 而不是用 <code>log_info()</code>？</p>
+<ol>
+<li><strong>视觉区分</strong>：命令输出与普通信息有视觉区别</li>
+<li><strong>可复制性</strong>：用户可以直接复制命令执行</li>
+<li><strong>一致性</strong>：所有脚本使用相同格式显示命令</li>
+</ol>
+<h2 id="设计决策">设计决策<a class="headerlink" href="#设计决策" title="链接到此章节">&para;</a></h2>
+<h3 id="为什么使用-ansi-转义序列">为什么使用 ANSI 转义序列<a class="headerlink" href="#为什么使用-ansi-转义序列" title="链接到此章节">&para;</a></h3>
+<p>ANSI 转义序列是终端控制的标准方式：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1"></a><a href="#__codelineno-21-1"><span class="linenos" data-linenos="1 "></span></a><span class="se">\0</span><span class="m">33</span><span class="o">[</span><span class="m">0</span><span class="p">;</span>31m<span class="w">  </span><span class="c1"># 红色</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2"></a><a href="#__codelineno-21-2"><span class="linenos" data-linenos="2 "></span></a><span class="se">\0</span><span class="m">33</span><span class="o">[</span><span class="m">0</span><span class="p">;</span>32m<span class="w">  </span><span class="c1"># 绿色</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3"></a><a href="#__codelineno-21-3"><span class="linenos" data-linenos="3 "></span></a><span class="se">\0</span><span class="m">33</span><span class="o">[</span><span class="m">1</span><span class="p">;</span>33m<span class="w">  </span><span class="c1"># 粗体黄色</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4"></a><a href="#__codelineno-21-4"><span class="linenos" data-linenos="4 "></span></a><span class="se">\0</span><span class="m">33</span><span class="o">[</span>0m<span class="w">     </span><span class="c1"># 重置</span>
+</span></code></pre></div>
+<p><strong>为什么不使用 tput</strong>：</p>
+<p><code>tput</code> 是更高级的终端控制工具，但它：</p>
+<ol>
+<li>依赖外部命令</li>
+<li>性能稍差</li>
+<li>对于简单的颜色支持，ANSI 转义序列足够</li>
+</ol>
+<p>ANSI 转义序列被几乎所有现代终端支持。</p>
+<h3 id="为什么错误信息输出到-stderr">为什么错误信息输出到 stderr<a class="headerlink" href="#为什么错误信息输出到-stderr" title="链接到此章节">&para;</a></h3>
+<p>这是 Unix 的标准做法：</p>
+<ol>
+<li><strong>管道友好</strong>：<code>./script.sh | grep something</code> 不会包含错误信息</li>
+<li><strong>日志分离</strong>：可以分别保存标准输出和错误输出</li>
+<li><strong>工具兼容</strong>：与各种 Unix 工具配合良好</li>
+</ol>
+<p>示例：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1"></a><a href="#__codelineno-22-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 只保存正常输出</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2"></a><a href="#__codelineno-22-2"><span class="linenos" data-linenos="2 "></span></a>./script.sh<span class="w"> </span>&gt;<span class="w"> </span>output.log<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3"></a><a href="#__codelineno-22-3"><span class="linenos" data-linenos="3 "></span></a>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4"></a><a href="#__codelineno-22-4"><span class="linenos" data-linenos="4 "></span></a><span class="c1"># 分别保存</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5"></a><a href="#__codelineno-22-5"><span class="linenos" data-linenos="5 "></span></a>./script.sh<span class="w"> </span><span class="m">1</span>&gt;output.log<span class="w"> </span><span class="m">2</span>&gt;error.log
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6"></a><a href="#__codelineno-22-6"><span class="linenos" data-linenos="6 "></span></a>
+</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7"></a><a href="#__codelineno-22-7"><span class="linenos" data-linenos="7 "></span></a><span class="c1"># 合并保存</span>
+</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8"></a><a href="#__codelineno-22-8"><span class="linenos" data-linenos="8 "></span></a>./script.sh<span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>combined.log
+</span></code></pre></div>
+<h3 id="为什么导出颜色变量">为什么导出颜色变量<a class="headerlink" href="#为什么导出颜色变量" title="链接到此章节">&para;</a></h3>
+<p>使用 <code>export</code> 导出颜色变量，让子进程也能访问：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1"></a><a href="#__codelineno-23-1"><span class="linenos" data-linenos="1 "></span></a><span class="nb">export</span><span class="w"> </span><span class="nv">LOG_RED</span><span class="o">=</span><span class="s1">&#39;\033[0;31m&#39;</span>
+</span></code></pre></div>
+<p><strong>好处</strong>：</p>
+<ol>
+<li><strong>子脚本可用</strong>：被调用的脚本可以直接使用</li>
+<li><strong>避免重复定义</strong>：不需要在每个脚本中重新定义</li>
+<li><strong>一致性</strong>：所有脚本使用相同的颜色</li>
+</ol>
+<p><strong>示例</strong>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1"></a><a href="#__codelineno-24-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 主脚本</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2"></a><a href="#__codelineno-24-2"><span class="linenos" data-linenos="2 "></span></a><span class="nb">source</span><span class="w"> </span>scripts/lib/logging.sh
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3"></a><a href="#__codelineno-24-3"><span class="linenos" data-linenos="3 "></span></a>./subscript.sh<span class="w">  </span><span class="c1"># 子脚本可以访问 LOG_RED 等变量</span>
+</span></code></pre></div>
+<h3 id="为什么调试信息默认关闭">为什么调试信息默认关闭<a class="headerlink" href="#为什么调试信息默认关闭" title="链接到此章节">&para;</a></h3>
+<p>调试信息可能会：</p>
+<ol>
+<li><strong>干扰正常输出</strong>：大量调试信息让用户难以找到关键信息</li>
+<li><strong>影响性能</strong>：频繁的输出（尤其是终端）有性能开销</li>
+<li><strong>不必要</strong>：大多数情况下用户不需要这些信息</li>
+</ol>
+<p>使用环境变量控制而不是修改脚本：</p>
+<ol>
+<li><strong>不需要修改代码</strong>：启用/禁用不需要改脚本</li>
+<li><strong>临时调试</strong>：<code>DEBUG=1 ./script.sh</code> 临时调试</li>
+<li><strong>生产环境</strong>：默认关闭，保持输出干净</li>
+</ol>
+<h2 id="颜色设计">颜色设计<a class="headerlink" href="#颜色设计" title="链接到此章节">&para;</a></h2>
+<h3 id="颜色选择理由">颜色选择理由<a class="headerlink" href="#颜色选择理由" title="链接到此章节">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>级别</th>
+<th>颜色</th>
+<th>ANSI</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>INFO</td>
+<td>绿色</td>
+<td><code>0;32</code></td>
+<td>表示正常、成功</td>
+</tr>
+<tr>
+<td>ERROR</td>
+<td>红色</td>
+<td><code>0;31m</code></td>
+<td>表示错误、停止（通用约定）</td>
+</tr>
+<tr>
+<td>WARN</td>
+<td>黄色</td>
+<td><code>1;33m</code></td>
+<td>表示注意（高亮黄更醒目）</td>
+</tr>
+<tr>
+<td>DEBUG</td>
+<td>蓝色</td>
+<td><code>0;34m</code></td>
+<td>表示信息性、技术性</td>
+</tr>
+<tr>
+<td>CMD</td>
+<td>黄色</td>
+<td><code>1;33m</code></td>
+<td>与 WARN 相同，表示"注意这个"</td>
+</tr>
+</tbody>
+</table>
+<p><strong>颜色心理学</strong>：</p>
+<ul>
+<li><strong>绿色</strong>：安全、成功、继续</li>
+<li><strong>红色</strong>：危险、错误、停止</li>
+<li><strong>黄色</strong>：注意、警告、重要</li>
+<li><strong>蓝色</strong>：信息、技术、中性</li>
+</ul>
+<h3 id="颜色对比度">颜色对比度<a class="headerlink" href="#颜色对比度" title="链接到此章节">&para;</a></h3>
+<p>所有颜色都经过选择，确保在深色和浅色终端背景上都有良好的对比度：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1"></a><a href="#__codelineno-25-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 绿色 - 深色背景</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2"></a><a href="#__codelineno-25-2"><span class="linenos" data-linenos="2 "></span></a><span class="nv">LOG_GREEN</span><span class="o">=</span><span class="s1">&#39;\033[0;32m&#39;</span>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3"></a><a href="#__codelineno-25-3"><span class="linenos" data-linenos="3 "></span></a>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4"></a><a href="#__codelineno-25-4"><span class="linenos" data-linenos="4 "></span></a><span class="c1"># 红色 - 深色背景</span>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5"></a><a href="#__codelineno-25-5"><span class="linenos" data-linenos="5 "></span></a><span class="nv">LOG_RED</span><span class="o">=</span><span class="s1">&#39;\033[0;31m&#39;</span>
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6"></a><a href="#__codelineno-25-6"><span class="linenos" data-linenos="6 "></span></a>
+</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7"></a><a href="#__codelineno-25-7"><span class="linenos" data-linenos="7 "></span></a><span class="c1"># 黄色 - 使用粗体增强对比</span>
+</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8"></a><a href="#__codelineno-25-8"><span class="linenos" data-linenos="8 "></span></a><span class="nv">LOG_YELLOW</span><span class="o">=</span><span class="s1">&#39;\033[1;33m&#39;</span>
+</span></code></pre></div>
+<p><strong>无颜色模式</strong>：</p>
+<p>如果需要禁用所有颜色，可以设置：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1"></a><a href="#__codelineno-26-1"><span class="linenos" data-linenos="1 "></span></a><span class="nb">export</span><span class="w"> </span><span class="nv">LOG_RED</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2"></a><a href="#__codelineno-26-2"><span class="linenos" data-linenos="2 "></span></a><span class="nb">export</span><span class="w"> </span><span class="nv">LOG_GREEN</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3"></a><a href="#__codelineno-26-3"><span class="linenos" data-linenos="3 "></span></a><span class="nb">export</span><span class="w"> </span><span class="nv">LOG_YELLOW</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4"></a><a href="#__codelineno-26-4"><span class="linenos" data-linenos="4 "></span></a><span class="nb">export</span><span class="w"> </span><span class="nv">LOG_BLUE</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5"></a><a href="#__codelineno-26-5"><span class="linenos" data-linenos="5 "></span></a><span class="nb">export</span><span class="w"> </span><span class="nv">LOG_NC</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+</span></code></pre></div>
+<p>这在某些情况下很有用：</p>
+<ol>
+<li>日志文件</li>
+<li>CI/CD 环境</li>
+<li>不支持颜色的终端</li>
+</ol>
+<h2 id="扩展和定制">扩展和定制<a class="headerlink" href="#扩展和定制" title="链接到此章节">&para;</a></h2>
+<h3 id="添加新的日志级别">添加新的日志级别<a class="headerlink" href="#添加新的日志级别" title="链接到此章节">&para;</a></h3>
+<p>如果需要添加新的日志级别（如 TRACE）：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1"></a><a href="#__codelineno-27-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="c1"># 编辑 logging.sh</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2"></a><a href="#__codelineno-27-2"><span class="linenos" data-linenos=" 2 "></span></a><span class="c1"># 添加颜色</span>
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3"></a><a href="#__codelineno-27-3"><span class="linenos" data-linenos=" 3 "></span></a><span class="nb">export</span><span class="w"> </span><span class="nv">LOG_CYAN</span><span class="o">=</span><span class="s1">&#39;\033[0;36m&#39;</span>
+</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4"></a><a href="#__codelineno-27-4"><span class="linenos" data-linenos=" 4 "></span></a>
+</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5"></a><a href="#__codelineno-27-5"><span class="linenos" data-linenos=" 5 "></span></a><span class="c1"># 添加函数</span>
+</span><span id="__span-27-6"><a id="__codelineno-27-6" name="__codelineno-27-6"></a><a href="#__codelineno-27-6"><span class="linenos" data-linenos=" 6 "></span></a>log_trace<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-27-7"><a id="__codelineno-27-7" name="__codelineno-27-7"></a><a href="#__codelineno-27-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DEBUG</span><span class="k">:-</span><span class="nv">0</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+</span><span id="__span-27-8"><a id="__codelineno-27-8" name="__codelineno-27-8"></a><a href="#__codelineno-27-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="w">        </span><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">LOG_CYAN</span><span class="si">}</span><span class="s2">[TRACE]</span><span class="si">${</span><span class="nv">LOG_NC</span><span class="si">}</span><span class="s2"> </span><span class="nv">$1</span><span class="s2">&quot;</span>
+</span><span id="__span-27-9"><a id="__codelineno-27-9" name="__codelineno-27-9"></a><a href="#__codelineno-27-9"><span class="linenos" data-linenos=" 9 "></span></a><span class="w">    </span><span class="k">fi</span>
+</span><span id="__span-27-10"><a id="__codelineno-27-10" name="__codelineno-27-10"></a><a href="#__codelineno-27-10"><span class="linenos" data-linenos="10 "></span></a><span class="o">}</span>
+</span></code></pre></div>
+<h3 id="添加时间戳">添加时间戳<a class="headerlink" href="#添加时间戳" title="链接到此章节">&para;</a></h3>
+<p>如果需要日志带时间戳：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1"></a><a href="#__codelineno-28-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 修改 log_info 等函数</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2"></a><a href="#__codelineno-28-2"><span class="linenos" data-linenos="2 "></span></a>log_info<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3"></a><a href="#__codelineno-28-3"><span class="linenos" data-linenos="3 "></span></a><span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">timestamp</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span><span class="s1">&#39;+%Y-%m-%d %H:%M:%S&#39;</span><span class="k">)</span>
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4"></a><a href="#__codelineno-28-4"><span class="linenos" data-linenos="4 "></span></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">LOG_GREEN</span><span class="si">}</span><span class="s2">[</span><span class="si">${</span><span class="nv">timestamp</span><span class="si">}</span><span class="s2">][INFO]</span><span class="si">${</span><span class="nv">LOG_NC</span><span class="si">}</span><span class="s2"> </span><span class="nv">$1</span><span class="s2">&quot;</span>
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5"></a><a href="#__codelineno-28-5"><span class="linenos" data-linenos="5 "></span></a><span class="o">}</span>
+</span></code></pre></div>
+<h3 id="添加文件输出">添加文件输出<a class="headerlink" href="#添加文件输出" title="链接到此章节">&para;</a></h3>
+<p>如果需要同时输出到文件：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1"></a><a href="#__codelineno-29-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 添加日志文件变量</span>
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2"></a><a href="#__codelineno-29-2"><span class="linenos" data-linenos="2 "></span></a><span class="nb">export</span><span class="w"> </span><span class="nv">LOG_FILE</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/build.log&quot;</span>
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3"></a><a href="#__codelineno-29-3"><span class="linenos" data-linenos="3 "></span></a>
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4"></a><a href="#__codelineno-29-4"><span class="linenos" data-linenos="4 "></span></a><span class="c1"># 修改 log_info 等函数</span>
+</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5"></a><a href="#__codelineno-29-5"><span class="linenos" data-linenos="5 "></span></a>log_info<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-29-6"><a id="__codelineno-29-6" name="__codelineno-29-6"></a><a href="#__codelineno-29-6"><span class="linenos" data-linenos="6 "></span></a><span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">msg</span><span class="o">=</span><span class="s2">&quot;[INFO] </span><span class="nv">$1</span><span class="s2">&quot;</span>
+</span><span id="__span-29-7"><a id="__codelineno-29-7" name="__codelineno-29-7"></a><a href="#__codelineno-29-7"><span class="linenos" data-linenos="7 "></span></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">LOG_GREEN</span><span class="si">}${</span><span class="nv">msg</span><span class="si">}${</span><span class="nv">LOG_NC</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-29-8"><a id="__codelineno-29-8" name="__codelineno-29-8"></a><a href="#__codelineno-29-8"><span class="linenos" data-linenos="8 "></span></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">msg</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">LOG_FILE</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-29-9"><a id="__codelineno-29-9" name="__codelineno-29-9"></a><a href="#__codelineno-29-9"><span class="linenos" data-linenos="9 "></span></a><span class="o">}</span>
+</span></code></pre></div>
+<h3 id="格式化输出">格式化输出<a class="headerlink" href="#格式化输出" title="链接到此章节">&para;</a></h3>
+<p>如果需要结构化输出（如 JSON）：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1"></a><a href="#__codelineno-30-1"><span class="linenos" data-linenos="1 "></span></a>log_json<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2"></a><a href="#__codelineno-30-2"><span class="linenos" data-linenos="2 "></span></a><span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">level</span><span class="o">=</span><span class="nv">$1</span>
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3"></a><a href="#__codelineno-30-3"><span class="linenos" data-linenos="3 "></span></a><span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">message</span><span class="o">=</span><span class="nv">$2</span>
+</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4"></a><a href="#__codelineno-30-4"><span class="linenos" data-linenos="4 "></span></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;{\&quot;level\&quot;:\&quot;</span><span class="si">${</span><span class="nv">level</span><span class="si">}</span><span class="s2">\&quot;,\&quot;message\&quot;:\&quot;</span><span class="si">${</span><span class="nv">message</span><span class="si">}</span><span class="s2">\&quot;,\&quot;timestamp\&quot;:\&quot;</span><span class="k">$(</span>date<span class="w"> </span>-Iseconds<span class="k">)</span><span class="s2">\&quot;}&quot;</span>
+</span><span id="__span-30-5"><a id="__codelineno-30-5" name="__codelineno-30-5"></a><a href="#__codelineno-30-5"><span class="linenos" data-linenos="5 "></span></a><span class="o">}</span>
+</span></code></pre></div>
+<h2 id="最佳实践">最佳实践<a class="headerlink" href="#最佳实践" title="链接到此章节">&para;</a></h2>
+<h3 id="何时使用-log_info">何时使用 log_info()<a class="headerlink" href="#何时使用-log_info" title="链接到此章节">&para;</a></h3>
+<ul>
+<li>构建步骤的开始和结束</li>
+<li>检查通过的信息</li>
+<li>进度信息</li>
+<li>成功操作的确认</li>
+</ul>
+<h3 id="何时使用-log_error">何时使用 log_error()<a class="headerlink" href="#何时使用-log_error" title="链接到此章节">&para;</a></h3>
+<ul>
+<li>致命错误（会导致脚本退出）</li>
+<li>必需的依赖缺失</li>
+<li>无法恢复的失败</li>
+</ul>
+<p><strong>最佳实践</strong>：log_error() 后通常跟 exit 1</p>
+<h3 id="何时使用-log_warn">何时使用 log_warn()<a class="headerlink" href="#何时使用-log_warn" title="链接到此章节">&para;</a></h3>
+<ul>
+<li>非致命问题</li>
+<li>可选依赖缺失</li>
+<li>使用默认值</li>
+<li>可能的注意事项</li>
+</ul>
+<h3 id="何时使用-log_debug">何时使用 log_debug()<a class="headerlink" href="#何时使用-log_debug" title="链接到此章节">&para;</a></h3>
+<ul>
+<li>开发调试信息</li>
+<li>变量值输出</li>
+<li>详细执行流程</li>
+<li>复杂逻辑跟踪</li>
+</ul>
+<p><strong>不要在正常输出中使用 log_debug()</strong>，保持正常输出的简洁。</p>
+<h3 id="何时使用-log_cmd">何时使用 log_cmd()<a class="headerlink" href="#何时使用-log_cmd" title="链接到此章节">&para;</a></h3>
+<ul>
+<li>显示即将执行的命令</li>
+<li>复杂的构建命令</li>
+<li>调试命令执行问题</li>
+</ul>
+<p><strong>最佳实践</strong>：在执行命令前调用 log_cmd() 显示命令</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1"></a><a href="#__codelineno-31-1"><span class="linenos" data-linenos="1 "></span></a><span class="nb">local</span><span class="w"> </span><span class="nv">cmd</span><span class="o">=</span><span class="s2">&quot;make -j8&quot;</span>
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2"></a><a href="#__codelineno-31-2"><span class="linenos" data-linenos="2 "></span></a>log_cmd<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">cmd</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3"></a><a href="#__codelineno-31-3"><span class="linenos" data-linenos="3 "></span></a><span class="si">${</span><span class="nv">cmd</span><span class="si">}</span>
+</span></code></pre></div>
+<h2 id="常见问题">常见问题<a class="headerlink" href="#常见问题" title="链接到此章节">&para;</a></h2>
+<h3 id="q-为什么我的终端没有颜色">Q: 为什么我的终端没有颜色？<a class="headerlink" href="#q-为什么我的终端没有颜色" title="链接到此章节">&para;</a></h3>
+<p>A: 可能的原因：</p>
+<ol>
+<li>终端不支持 ANSI 颜色</li>
+<li>使用了管道或重定向</li>
+<li>环境变量禁用了颜色</li>
+</ol>
+<p>解决方案：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1"></a><a href="#__codelineno-32-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 检查终端类型</span>
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2"></a><a href="#__codelineno-32-2"><span class="linenos" data-linenos="2 "></span></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$TERM</span>
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3"></a><a href="#__codelineno-32-3"><span class="linenos" data-linenos="3 "></span></a>
+</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4"></a><a href="#__codelineno-32-4"><span class="linenos" data-linenos="4 "></span></a><span class="c1"># 强制启用颜色（某些情况）</span>
+</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5"></a><a href="#__codelineno-32-5"><span class="linenos" data-linenos="5 "></span></a><span class="nb">export</span><span class="w"> </span><span class="nv">TERM</span><span class="o">=</span>xterm-256color
+</span></code></pre></div>
+<h3 id="q-如何完全禁用颜色">Q: 如何完全禁用颜色？<a class="headerlink" href="#q-如何完全禁用颜色" title="链接到此章节">&para;</a></h3>
+<p>A: 设置环境变量：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1"></a><a href="#__codelineno-33-1"><span class="linenos" data-linenos="1 "></span></a><span class="nb">export</span><span class="w"> </span><span class="nv">NO_COLOR</span><span class="o">=</span><span class="m">1</span>
+</span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2"></a><a href="#__codelineno-33-2"><span class="linenos" data-linenos="2 "></span></a><span class="c1"># 或者</span>
+</span><span id="__span-33-3"><a id="__codelineno-33-3" name="__codelineno-33-3"></a><a href="#__codelineno-33-3"><span class="linenos" data-linenos="3 "></span></a><span class="nb">export</span><span class="w"> </span><span class="nv">TERM</span><span class="o">=</span>dumb
+</span></code></pre></div>
+<p>然后修改 logging.sh 检查这些变量：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1"></a><a href="#__codelineno-34-1"><span class="linenos" data-linenos="1 "></span></a><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">NO_COLOR</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">TERM</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;dumb&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+</span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2"></a><a href="#__codelineno-34-2"><span class="linenos" data-linenos="2 "></span></a><span class="w">    </span><span class="nv">LOG_RED</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+</span><span id="__span-34-3"><a id="__codelineno-34-3" name="__codelineno-34-3"></a><a href="#__codelineno-34-3"><span class="linenos" data-linenos="3 "></span></a><span class="w">    </span><span class="nv">LOG_GREEN</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+</span><span id="__span-34-4"><a id="__codelineno-34-4" name="__codelineno-34-4"></a><a href="#__codelineno-34-4"><span class="linenos" data-linenos="4 "></span></a><span class="w">    </span><span class="nv">LOG_YELLOW</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+</span><span id="__span-34-5"><a id="__codelineno-34-5" name="__codelineno-34-5"></a><a href="#__codelineno-34-5"><span class="linenos" data-linenos="5 "></span></a><span class="w">    </span><span class="nv">LOG_BLUE</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+</span><span id="__span-34-6"><a id="__codelineno-34-6" name="__codelineno-34-6"></a><a href="#__codelineno-34-6"><span class="linenos" data-linenos="6 "></span></a><span class="w">    </span><span class="nv">LOG_NC</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+</span><span id="__span-34-7"><a id="__codelineno-34-7" name="__codelineno-34-7"></a><a href="#__codelineno-34-7"><span class="linenos" data-linenos="7 "></span></a><span class="k">fi</span>
+</span></code></pre></div>
+<h3 id="q-为什么-log_error-输出到-stderr">Q: 为什么 log_error() 输出到 stderr？<a class="headerlink" href="#q-为什么-log_error-输出到-stderr" title="链接到此章节">&para;</a></h3>
+<p>A: 这是 Unix 标准做法，便于：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1"></a><a href="#__codelineno-35-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1"># 分离正常输出和错误</span>
+</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2"></a><a href="#__codelineno-35-2"><span class="linenos" data-linenos="2 "></span></a>./script.sh<span class="w"> </span>&gt;<span class="w"> </span>output.txt<span class="w"> </span><span class="m">2</span>&gt;<span class="w"> </span>error.txt
+</span><span id="__span-35-3"><a id="__codelineno-35-3" name="__codelineno-35-3"></a><a href="#__codelineno-35-3"><span class="linenos" data-linenos="3 "></span></a>
+</span><span id="__span-35-4"><a id="__codelineno-35-4" name="__codelineno-35-4"></a><a href="#__codelineno-35-4"><span class="linenos" data-linenos="4 "></span></a><span class="c1"># 只看错误</span>
+</span><span id="__span-35-5"><a id="__codelineno-35-5" name="__codelineno-35-5"></a><a href="#__codelineno-35-5"><span class="linenos" data-linenos="5 "></span></a>./script.sh<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span>&gt;/dev/null
+</span></code></pre></div>
+<h3 id="q-可以在非脚本环境中使用吗">Q: 可以在非脚本环境中使用吗？<a class="headerlink" href="#q-可以在非脚本环境中使用吗" title="链接到此章节">&para;</a></h3>
+<p>A: 可以，在交互式 shell 中：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1"></a><a href="#__codelineno-36-1"><span class="linenos" data-linenos="1 "></span></a><span class="nb">source</span><span class="w"> </span>/path/to/imx-forge/scripts/lib/logging.sh
+</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2"></a><a href="#__codelineno-36-2"><span class="linenos" data-linenos="2 "></span></a>log_info<span class="w"> </span><span class="s2">&quot;Hello from interactive shell!&quot;</span>
+</span></code></pre></div>
+<h2 id="相关文档">相关文档<a class="headerlink" href="#相关文档" title="链接到此章节">&para;</a></h2>
+<ul>
+<li><a href="../build_helper/build-linux.sh">build-linux.sh</a> - 使用 logging.sh 的脚本示例</li>
+<li><a href="../build_helper/build-uboot.sh">build-uboot.sh</a> - 使用 logging.sh 的脚本示例</li>
+<li><a href="../build_helper/build-busybox.sh">build-busybox.sh</a> - 使用 logging.sh 的脚本示例</li>
+</ul>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="最后更新">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月8日 12:05:52 CST">2026年4月8日 12:05:52</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="创建日期">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年3月15日 20:07:11 CST">2026年3月15日 20:07:11</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+        
+          
+          <a href="../driver_buildlib.sh/" class="md-footer__link md-footer__link--prev" aria-label="上一页: driver_buildlib.sh - 驱动构建核心库">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              <div class="md-ellipsis">
+                driver_buildlib.sh - 驱动构建核心库
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../bash/lib_common.sh/" class="md-footer__link md-footer__link--next" aria-label="下一页: lib_common.sh - IMX-Forge 脚本公共库">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                下一页
+              </span>
+              <div class="md-ellipsis">
+                lib_common.sh - IMX-Forge 脚本公共库
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 Charliechen - 保留所有权利
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/Awesome-Embedded-Learning-Studio" target="_blank" rel="noopener" title="GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="mailto:725610365@qq.com" target="_blank" rel="noopener" title="发送邮件" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M536.4-26.3c9.8-3.5 20.6-1 28 6.3s9.8 18.2 6.3 28l-178 496.9c-5 13.9-18.1 23.1-32.8 23.1-14.2 0-27-8.6-32.3-21.7l-64.2-158c-4.5-11-2.5-23.6 5.2-32.6l94.5-112.4c5.1-6.1 4.7-15-.9-20.6s-14.6-6-20.6-.9l-112.4 94.3c-9.1 7.6-21.6 9.6-32.6 5.2L38.1 216.8c-13.1-5.3-21.7-18.1-21.7-32.3 0-14.7 9.2-27.8 23.1-32.8z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.tracking", "navigation.sections", "navigation.path", "navigation.indexes", "navigation.tabs", "navigation.tabs.sticky", "navigation.prune", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.select", "content.code.annotate", "content.tabs.link", "content.tooltips", "content.action.edit", "content.action.view"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
