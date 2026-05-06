@@ -21,7 +21,48 @@
 
 </div>
 
+
 ---
+## 代码采用的是patch补丁进行托管，提交均提交补丁文件
+以内核linux-imx源码为例
+![alt text](image.png)
+每次修改会导致linux-imx的文件改变
+操作如下。
+
+先进入 Linux 源码目录：
+```
+cd /workspace/third_party/linux-imx
+```
+查看当前修改：
+```
+git status
+git diff
+```
+如果有新增文件，也要加进去：
+```
+git add .
+```
+然后确认暂存区内容：
+```
+git diff --cached --stat
+```
+确认里面包含你想保留的全部修改后，重新生成 patch：
+```
+git diff --cached > ../../patches/linux-imx/linux-imx-latest.patch
+```
+然后回到主仓库提交：
+```
+cd /workspace
+git add patches/linux-imx/linux-imx-latest.patch
+git commit -m "更新 linux-imx 补丁"
+git push origin HEAD:main
+```
+这种方式生成的是：
+
+旧补丁内容 + 你新修改内容
+
+也就是一个完整的新补丁。
+
 ## docker的使用
 ```c
 # 运行容器（挂载项目目录）
