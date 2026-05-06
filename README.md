@@ -22,6 +22,14 @@
 </div>
 
 ---
+## docker的使用
+```c
+# 运行容器（挂载项目目录）
+docker run -it --rm \
+    -v $(pwd):/workspace \
+    -w /workspace \
+    imx-forge:latest
+```
 
 ## ✨ 为什么选择 IMX-Forge？
 
