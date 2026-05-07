@@ -1502,7 +1502,7 @@ index 23d533152673..e0a61023d6ea 100644
  		.pm		= &mxsfb_pm_ops,
  	},
 diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index a1da779f304d..2726459d6885 100644
+index a1da779f304d..3abdb03ba438 100644
 --- a/drivers/gpu/drm/panel/panel-simple.c
 +++ b/drivers/gpu/drm/panel/panel-simple.c
 @@ -4656,7 +4656,38 @@ static const struct panel_desc arm_rtsm = {
@@ -1514,9 +1514,9 @@ index a1da779f304d..2726459d6885 100644
 +	{
 +		.clock = 30000 ,
 +		.hdisplay = 800 ,
-+		.hsync_start = 800 + 40 ,
-+		.hsync_end = 800 + 40 + 48 ,
-+		.htotal = 800 + 40 + 48 + 88 ,
++		.hsync_start = 800 + 48 ,
++		.hsync_end = 800 + 48 + 40 ,
++		.htotal = 800 + 48 + 40 + 40 ,
 +		.vdisplay = 480 ,
 +		.vsync_start = 480 + 13 ,
 +		.vsync_end = 480 + 13 + 3 ,
@@ -1532,7 +1532,7 @@ index a1da779f304d..2726459d6885 100644
 + 		.width = 110 ,
 +		.height = 60 ,
 +	},
-+	.bus_format = MEDIA_BUS_FMT_RGB565_1X16 ,
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X24 ,
 +};
 +
 +
