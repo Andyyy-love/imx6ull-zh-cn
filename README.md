@@ -25,7 +25,9 @@
 ---
 ## 代码采用的是patch补丁进行托管，提交均提交补丁文件
 以内核linux-imx源码为例
+
 ![alt text](image.png)
+
 每次修改会导致linux-imx的文件改变
 操作如下。
 
@@ -64,7 +66,26 @@ git push origin HEAD:main
 也就是一个完整的新补丁。
 
 ## docker的使用
+如果您在中国大陆，建议先配置 Docker 镜像加速器：
+```
+cd docker
+sudo bash setup-mirror.sh  # 一键配置国内镜像源
+```
+
+```
+# 进入项目目录
+cd /path/to/imx-forge/docker
+
+# 国内用户使用优化的 Dockerfile
+DOCKER_BUILDKIT=1 docker build -f Dockerfile.cn -t imx-forge:latest .
+
+# 国际用户使用标准 Dockerfile
+DOCKER_BUILDKIT=1 docker build -t imx-forge:latest .
+```
+
 ```c
+# 返回项目根目录
+cd ..
 # 运行容器（挂载项目目录）
 docker run -it --rm \
     -v $(pwd):/workspace \
