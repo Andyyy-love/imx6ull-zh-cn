@@ -62,10 +62,10 @@ index 000000000000..f4511f82357c
 +
 diff --git a/arch/arm/boot/dts/nxp/imx/imx6ull-aes.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ull-aes.dtsi
 new file mode 100644
-index 000000000000..cd10d8e0f162
+index 000000000000..c14cf19bf1c9
 --- /dev/null
 +++ b/arch/arm/boot/dts/nxp/imx/imx6ull-aes.dtsi
-@@ -0,0 +1,811 @@
+@@ -0,0 +1,821 @@
 +// SPDX-License-Identifier: GPL-2.0
 +//
 +// Copyright (C) 2015 Freescale Semiconductor, Inc.
@@ -235,15 +235,16 @@ index 000000000000..cd10d8e0f162
 +		compatible = "ovti,ov5640";
 +		reg = <0x3c>;
 +		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_csi1 &pinctrl_camera_clock>;
++		pinctrl-0 = <&pinctrl_csi1
++			     &csi_pwn_rst>;
 +		clocks = <&clks IMX6UL_CLK_CSI>;
 +		clock-names = "csi_mclk";
-+		pwn-gpios = <&gpio_spi 6 1>;
-+		rst-gpios = <&gpio_spi 5 0>;
++		pwn-gpios = <&gpio1 4 1>;
++		rst-gpios = <&gpio1 2 0>;
 +		csi_id = <0>;
 +		mclk = <24000000>;
 +		mclk_source = <0>;
-+		status = "disabled";
++		status = "okay";
 +		port {
 +			ov5640_ep: endpoint {
 +				remote-endpoint = <&csi1_ep>;
@@ -327,6 +328,8 @@ index 000000000000..cd10d8e0f162
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&pinctrl_i2c1>;
 +	status = "okay";
++
++
 +
 +	magnetometer@e {
 +		compatible = "fsl,mag3110";
@@ -447,7 +450,7 @@ index 000000000000..cd10d8e0f162
 +	xnur-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
 +	measure-delay-time = <0xffff>;
 +	pre-charge-time = <0xfff>;
-+	status = "okay";
++	status = "disabled";
 +};
 +
 +&uart1 {
@@ -520,6 +523,13 @@ index 000000000000..cd10d8e0f162
 +
 +&iomuxc {
 +	pinctrl-names = "default";
++	
++	csi_pwn_rst: csi_pwn_rstgrp {
++			fsl,pins = <
++				MX6UL_PAD_GPIO1_IO02__GPIO1_IO02	0x10b0
++				MX6UL_PAD_GPIO1_IO04__GPIO1_IO04	0x10b0
++			>;
++		};
 +
 +	pinctrl_camera_clock: cameraclockgrp {
 +		fsl,pins = <
@@ -879,7 +889,7 @@ index 000000000000..cd10d8e0f162
 +
 diff --git a/arch/arm/configs/imx_aes_defconfig b/arch/arm/configs/imx_aes_defconfig
 new file mode 100644
-index 000000000000..945c2bbb0893
+index 000000000000..272622c84144
 --- /dev/null
 +++ b/arch/arm/configs/imx_aes_defconfig
 @@ -0,0 +1,605 @@
@@ -1186,16 +1196,16 @@ index 000000000000..945c2bbb0893
 +CONFIG_V4L_PLATFORM_DRIVERS=y
 +CONFIG_V4L_MEM2MEM_DRIVERS=y
 +CONFIG_VIDEO_MUX=y
-+CONFIG_VIDEO_MXC_CAPTURE=m
-+CONFIG_VIDEO_MXC_CSI_CAMERA=m
++CONFIG_VIDEO_MXC_CAPTURE=y
++CONFIG_VIDEO_MXC_CSI_CAMERA=y
 +CONFIG_MXC_VADC=m
 +CONFIG_MXC_MIPI_CSI=m
-+CONFIG_MXC_CAMERA_OV5640=m
-+CONFIG_MXC_CAMERA_OV5640_V2=m
++CONFIG_MXC_CAMERA_OV5640=y
++CONFIG_MXC_CAMERA_OV5640_V2=y
 +CONFIG_MXC_CAMERA_OV5640_MIPI=m
 +CONFIG_MXC_CAMERA_OV5640_MIPI_V2=m
 +CONFIG_MXC_TVIN_ADV7180=m
-+CONFIG_MXC_IPU_DEVICE_QUEUE_SDC=m
++CONFIG_MXC_IPU_DEVICE_QUEUE_SDC=y
 +CONFIG_VIDEO_MXC_OUTPUT=y
 +CONFIG_VIDEO_MXC_IPU_OUTPUT=y
 +CONFIG_VIDEO_MXC_PXP_V4L2=y
