@@ -62,10 +62,10 @@ index 000000000000..f4511f82357c
 +
 diff --git a/arch/arm/boot/dts/nxp/imx/imx6ull-aes.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ull-aes.dtsi
 new file mode 100644
-index 000000000000..c14cf19bf1c9
+index 000000000000..a52e2d8b62ad
 --- /dev/null
 +++ b/arch/arm/boot/dts/nxp/imx/imx6ull-aes.dtsi
-@@ -0,0 +1,821 @@
+@@ -0,0 +1,843 @@
 +// SPDX-License-Identifier: GPL-2.0
 +//
 +// Copyright (C) 2015 Freescale Semiconductor, Inc.
@@ -250,6 +250,17 @@ index 000000000000..c14cf19bf1c9
 +				remote-endpoint = <&csi1_ep>;
 +			};
 +		};
++	};
++	goodix_ts@5d {
++                compatible = "goodix,gt9xx", "goodix,gt1151";
++                reg = <0x14>;
++                status = "okay";
++                interrupt-parent = <&gpio1>;
++                interrupts = <9 0>;
++                pinctrl-0 = <&ts_int_pin
++			     &ts_reset_pin>;
++		goodix,rst-gpio = <&gpio5 9  GPIO_ACTIVE_LOW>;
++		goodix,irq-gpio = <&gpio1 9  GPIO_ACTIVE_LOW>;
 +	};
 +};
 +
@@ -528,6 +539,17 @@ index 000000000000..c14cf19bf1c9
 +			fsl,pins = <
 +				MX6UL_PAD_GPIO1_IO02__GPIO1_IO02	0x10b0
 +				MX6UL_PAD_GPIO1_IO04__GPIO1_IO04	0x10b0
++			>;
++		};
++	ts_int_pin: ts_int_pin_mux {
++			fsl,pins = <
++				MX6UL_PAD_GPIO1_IO09__GPIO1_IO09	0x79
++			>;
++		};
++	
++	ts_reset_pin: ts_reset_pin_mux {
++			fsl,pins = <
++				MX6ULL_PAD_SNVS_TAMPER9__GPIO5_IO09	0x79
 +			>;
 +		};
 +
